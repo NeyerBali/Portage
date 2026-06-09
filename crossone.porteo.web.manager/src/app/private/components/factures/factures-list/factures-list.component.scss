@@ -1,0 +1,8 @@
+.page-head { margin-bottom: var(--sp-6); }
+.kpis { grid-template-columns: repeat(3, 1fr); margin-bottom: var(--sp-6); }
+.toolbar { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-4); border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; }
+.toolbar .search { flex: 1; min-width: 220px; padding: 9px 13px; border: 1px solid var(--border-default); border-radius: var(--r-sm); background: var(--bg-surface); color: var(--text-default); font-family: inherit; }
+.toolbar .search:focus { outline: none; border-color: var(--border-brand); box-shadow: var(--ring); }
+.overdue-date { color: var(--error-600); font-weight: 600; }
+.loading-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-6); color: var(--text-muted); justify-content: center; }
+@media (max-width: 1080px) { .kpis { grid-template-columns: 1fr; } }

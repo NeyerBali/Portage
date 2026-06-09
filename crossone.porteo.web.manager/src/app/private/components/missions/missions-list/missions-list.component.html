@@ -1,0 +1,118 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">{{ isAdmin ? 'Gestion' : 'Mes missions' }}</p>
+      <h1 class="h2">Missions</h1>
+    </div>
+    <button *ngIf="isAdmin" class="btn btn-primary" (click)="openCreate()">＋ Nouvelle mission</button>
+  </header>
+
+  <div class="card">
+    <!-- Barre d'outils -->
+    <div class="toolbar">
+      <input class="search" type="text" placeholder="Rechercher une mission, un client…" (input)="onSearch($any($event.target).value)" />
+      <div class="segmented">
+        <button [class.active]="!params.statut" (click)="quickStatus(null)">Toutes</button>
+        <button *ngFor="let s of statuts" [class.active]="params.statut === s.value" (click)="quickStatus(s.value)">{{ s.label }}</button>
+      </div>
+      <button class="btn btn-secondary" (click)="showFilters = !showFilters">
+        ⚲ Filtres <span *ngIf="activeFilterCount" class="badge en_cours">{{ activeFilterCount }}</span>
+      </button>
+    </div>
+
+    <!-- Panneau filtres -->
+    <div class="filters" *ngIf="showFilters">
+      <div class="field" *ngIf="isAdmin">
+        <label>Client</label>
+        <select [(ngModel)]="params.clientId">
+          <option [ngValue]="null">Tous</option>
+          <option *ngFor="let c of clients" [ngValue]="c.id">{{ c.raisonSociale }}</option>
+        </select>
+      </div>
+      <div class="field" *ngIf="isAdmin">
+        <label>Consultant</label>
+        <select [(ngModel)]="params.consultantId">
+          <option [ngValue]="null">Tous</option>
+          <option *ngFor="let c of consultants" [ngValue]="c.id">{{ c.prenom }} {{ c.nom }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Démarrage après</label>
+        <input type="date" [(ngModel)]="params.debutApres" />
+      </div>
+      <div class="field">
+        <label>Démarrage avant</label>
+        <input type="date" [(ngModel)]="params.debutAvant" />
+      </div>
+      <div class="filters-actions">
+        <button class="btn btn-ghost" (click)="resetFilters()">Réinitialiser</button>
+        <button class="btn btn-primary" (click)="applyFilters()">Appliquer</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead>
+          <tr>
+            <th class="sortable" [class.sorted]="params.sortBy==='titre'" (click)="sort('titre')">Mission {{ sortIcon('titre') }}</th>
+            <th *ngIf="isAdmin" class="sortable" [class.sorted]="params.sortBy==='client'" (click)="sort('client')">Client {{ sortIcon('client') }}</th>
+            <th *ngIf="isAdmin" class="sortable" [class.sorted]="params.sortBy==='consultant'" (click)="sort('consultant')">Consultant {{ sortIcon('consultant') }}</th>
+            <th class="sortable" [class.sorted]="params.sortBy==='debut'" (click)="sort('debut')">Période {{ sortIcon('debut') }}</th>
+            <th class="sortable" [class.sorted]="params.sortBy==='statut'" (click)="sort('statut')">Statut {{ sortIcon('statut') }}</th>
+            <th class="num sortable" [class.sorted]="params.sortBy==='montant'" (click)="sort('montant')">Montant {{ sortIcon('montant') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of (missions$ | async)">
+            <td>
+              <strong>{{ m.titre }}</strong>
+              <div class="caption text-subtle mono">MIS-{{ m.id | number:'4.0-0' }}</div>
+            </td>
+            <td *ngIf="isAdmin">{{ m.clientNom }}</td>
+            <td *ngIf="isAdmin">
+              <div class="person">
+                <span class="avatar" [style.background]="avatarColor(m.consultantNom)">{{ initials(m.consultantNom) }}</span>
+                <span>{{ m.consultantNom }}</span>
+              </div>
+            </td>
+            <td>{{ m.dateDebut | date:'dd/MM/yy' }} → {{ m.dateFin | date:'dd/MM/yy' }}</td>
+            <td><app-status-badge [status]="m.statut" kind="mission"></app-status-badge></td>
+            <td class="num">{{ m.montant | number:'1.0-0' }} €</td>
+            <td>
+              <div class="row-actions">
+                <button class="btn btn-icon btn-ghost" title="Éditer" (click)="openEdit(m)">✎</button>
+                <button class="btn btn-icon btn-ghost" title="Supprimer" (click)="confirmDelete(m)">🗑</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Skeleton -->
+      <div *ngIf="loading$ | async" class="loading-row"><span class="spin"></span> Chargement…</div>
+
+      <!-- État vide -->
+      <app-empty-state *ngIf="(missions$ | async)?.length === 0 && !(loading$ | async)"
+        icon="◆" title="Aucune mission"
+        [message]="activeFilterCount || params.search ? 'Aucun résultat pour ces filtres.' : 'Créez votre première mission pour démarrer.'">
+        <button *ngIf="isAdmin && !activeFilterCount && !params.search" class="btn btn-primary mt-4" (click)="openCreate()">＋ Nouvelle mission</button>
+      </app-empty-state>
+    </div>
+
+    <!-- Pagination -->
+    <ng-container *ngIf="{ total: (total$ | async) || 0, page: (page$ | async) || 1, size: (pageSize$ | async) || 8 } as p">
+      <div class="paginator" *ngIf="p.total > 0">
+        <span class="caption text-muted">
+          {{ (p.page - 1) * p.size + 1 }}–{{ min(p.page * p.size, p.total) }} sur {{ p.total }}
+        </span>
+        <div class="pages">
+          <button (click)="goPage(p.page - 1, p.total, p.size)" [disabled]="p.page === 1">‹</button>
+          <button class="active">{{ p.page }}</button>
+          <button (click)="goPage(p.page + 1, p.total, p.size)" [disabled]="p.page >= ceil(p.total, p.size)">›</button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

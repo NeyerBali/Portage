@@ -1,0 +1,48 @@
+services:
+  # ---------- Base de données PostgreSQL (persistante) ----------
+  postgres:
+    image: postgres:16-alpine
+    container_name: porteo-postgres
+    environment:
+      POSTGRES_DB: porteo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - porteo-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d porteo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------- API .NET 8 (EF Core + Dapper + JWT + Quartz) ----------
+  api:
+    build:
+      context: ./crossone.porteo.erp
+    container_name: porteo-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__CnxString: "Host=postgres;Port=5432;Database=porteo;Username=postgres;Password=root"
+      AppSettings__Token: "porteo_super_secret_jwt_signing_key_please_change_in_production_2026_0123456789"
+      # Cron de relance des factures impayées (toutes les 5 min en démo) :
+      Scheduler__RelanceCron: "0 0/5 * * * ?"
+    ports:
+      - "5080:8080"
+
+  # ---------- Frontend Angular servi par Nginx (proxy /api) ----------
+  web:
+    build:
+      context: ./crossone.porteo.web.manager
+    container_name: porteo-web
+    depends_on:
+      - api
+    ports:
+      - "8090:80"
+
+volumes:
+  porteo-pgdata:

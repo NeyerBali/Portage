@@ -1,0 +1,6 @@
+.page-head { margin-bottom: var(--sp-6); }
+.toolbar { padding: var(--sp-4); border-bottom: 1px solid var(--border-subtle); }
+.toolbar .search { width: 100%; max-width: 360px; padding: 9px 13px; border: 1px solid var(--border-default); border-radius: var(--r-sm); background: var(--bg-surface); color: var(--text-default); font-family: inherit; }
+.toolbar .search:focus { outline: none; border-color: var(--border-brand); box-shadow: var(--ring); }
+.clickable { cursor: pointer; }
+.loading-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-6); color: var(--text-muted); justify-content: center; }

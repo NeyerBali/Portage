@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Quartz" Version="3.9.0" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Porteo.Models\Porteo.Models.csproj" />
+    <ProjectReference Include="..\Porteo.ModelViews\Porteo.ModelViews.csproj" />
+    <ProjectReference Include="..\Porteo.Repositories\Porteo.Repositories.csproj" />
+    <ProjectReference Include="..\Porteo.Services\Porteo.Services.csproj" />
+  </ItemGroup>
+
+</Project>

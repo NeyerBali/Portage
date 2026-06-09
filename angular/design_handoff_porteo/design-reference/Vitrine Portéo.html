@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portéo — Le portage salarial, piloté avec clarté</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="vitrine.css">
+<script>try{var p=localStorage.getItem('porteo-vitrine-palette');if(p)document.documentElement.setAttribute('data-palette',p);var t=localStorage.getItem('porteo-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="v-nav" id="nav">
+  <div class="inner">
+    <a class="v-logo" href="#top">
+      <span class="m"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="var(--accent)"/></svg></span>
+      <span>Portéo</span>
+    </a>
+    <div class="v-links">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#produit">Le produit</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="Charte Portéo.html">Design</a>
+    </div>
+    <div class="v-nav-cta">
+      <a class="v-btn v-btn-ghost" href="App Portéo.html">Se connecter</a>
+      <a class="v-btn v-btn-primary" href="App Portéo.html">Demander une démo</a>
+      <button class="v-btn v-btn-outline v-burger" id="burger" aria-label="Menu" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div id="mobileMenu" style="display:none; background:var(--bg-surface); border-bottom:1px solid var(--border-default); box-shadow:var(--shadow-lg)">
+    <div style="display:flex; flex-direction:column; padding:14px 32px 22px; gap:4px">
+      <a href="#features" class="mm-link">Fonctionnalités</a>
+      <a href="#produit" class="mm-link">Le produit</a>
+      <a href="#tarifs" class="mm-link">Tarifs</a>
+      <a href="Charte Portéo.html" class="mm-link">Design</a>
+      <a class="v-btn v-btn-primary" href="App Portéo.html" style="justify-content:center; margin-top:10px">Demander une démo</a>
+    </div>
+  </div>
+</nav>
+
+<span id="top"></span>
+
+<!-- HERO -->
+<header class="v-hero">
+  <div class="v-hero-bg"></div>
+  <div class="v-wrap">
+    <div class="grid">
+      <div>
+        <span class="v-eyebrow"><span style="width:7px;height:7px;border-radius:999px;background:var(--emerald-500)"></span>Plateforme de portage salarial</span>
+        <h1 class="v-h1">Vos missions, vos consultants, vos factures — <em>enfin réunis.</em></h1>
+        <p class="v-sub">Portéo donne aux sociétés de portage une vision complète et en temps réel : pilotez le chiffre d'affaires, suivez chaque mission de la signature au paiement, et offrez à vos consultants un espace clair et autonome.</p>
+        <div class="v-hero-actions">
+          <a class="v-btn v-btn-primary v-btn-lg" href="App Portéo.html">Lancer la démo<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a class="v-btn v-btn-outline v-btn-lg" href="#produit">Découvrir le produit</a>
+        </div>
+        <div class="v-hero-note">
+          <span class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Sans engagement</span>
+          <span class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> RGPD & 2FA</span>
+          <span class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Mise en place en 48 h</span>
+        </div>
+      </div>
+
+      <!-- product window mock -->
+      <div style="position:relative">
+        <div class="v-window">
+          <div class="v-winbar">
+            <span class="dot" style="background:#ED6A5E"></span><span class="dot" style="background:#F4BF50"></span><span class="dot" style="background:#61C554"></span>
+            <span class="url">app.porteo.fr/tableau-de-bord</span>
+          </div>
+          <div class="v-winbody">
+            <div class="v-winnav">
+              <i style="background:var(--emerald-700)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 13h7V4H4zM13 9h7V4h-7zM4 20h7v-5H4zM13 20h7v-9h-7z"/></svg></i>
+              <i class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg></i>
+              <i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></i>
+              <i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/></svg></i>
+            </div>
+            <div>
+              <div class="v-mock-kpis">
+                <div class="v-mock-kpi"><div class="lbl">CA</div><div class="val">1,1 M€</div></div>
+                <div class="v-mock-kpi"><div class="lbl">Missions</div><div class="val">6</div></div>
+                <div class="v-mock-kpi"><div class="lbl">Impayé</div><div class="val">194 k€</div></div>
+              </div>
+              <div class="v-mock-chart">
+                <div class="ct">Chiffre d'affaires · 12 mois</div>
+                <svg viewBox="0 0 320 90" width="100%" height="90" preserveAspectRatio="none">
+                  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--emerald-400)" stop-opacity="0.35"/><stop offset="100%" stop-color="var(--emerald-400)" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0,70 C30,66 40,50 70,52 C100,54 110,40 140,38 C170,36 180,28 210,26 C240,24 250,16 280,14 L320,10 L320,90 L0,90 Z" fill="url(#g)"/>
+                  <path d="M0,70 C30,66 40,50 70,52 C100,54 110,40 140,38 C170,36 180,28 210,26 C240,24 250,16 280,14 L320,10" fill="none" stroke="var(--emerald-600)" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-float" style="bottom:-22px; left:-26px; animation-delay:.6s">
+          <span class="fi" style="background:var(--bg-brand-soft); color:var(--emerald-700)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text-strong)">Facture payée</div><div style="font-size:12px;color:var(--text-subtle)">43 200 € — Atlas Banque</div></div>
+        </div>
+        <div class="v-float" style="top:-18px; right:-20px">
+          <span class="fi" style="background:var(--info-50); color:var(--info-600)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text-strong)">+18 %</div><div style="font-size:12px;color:var(--text-subtle)">CA sur l'année</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- TRUST -->
+<section class="v-trust v-wrap">
+  <p>Conçu pour les métiers du portage et du conseil</p>
+  <div class="row">
+    <span>Banque</span><span>Énergie</span><span>Pharma</span><span>Industrie</span><span>Assurance</span><span>Conseil</span>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="v-sec v-wrap" id="features">
+  <div class="v-sec-head reveal">
+    <span class="v-tag">Tout-en-un</span>
+    <h2 class="v-h2">Une seule plateforme pour tout le cycle de portage</h2>
+    <p class="v-lead">De l'arrivée du consultant à l'encaissement de la facture, chaque étape est suivie, reliée et mesurée.</p>
+  </div>
+  <div class="v-feat-grid">
+    <div class="v-feat reveal">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 12h6M9 16h4"/></svg></span>
+      <h3>Gestion des missions</h3>
+      <p>Créez, filtrez, triez et suivez vos missions. Statuts clairs — brouillon, en cours, terminée, facturée — et historique complet pour chaque dossier.</p>
+    </div>
+    <div class="v-feat reveal">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87M9 21v-2a4 4 0 0 1 3-3.87M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></span>
+      <h3>Consultants & clients</h3>
+      <p>Un vivier de consultants avec compétences, TJM et taux d'occupation. Chaque client affiche la liste de ses missions en un coup d'œil.</p>
+    </div>
+    <div class="v-feat reveal">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/></svg></span>
+      <h3>Facturation suivie</h3>
+      <p>Émettez vos factures, suivez les échéances et repérez les retards instantanément. HT, TVA et TTC calculés automatiquement.</p>
+    </div>
+    <div class="v-feat reveal">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h7V4H4zM13 9h7V4h-7zM4 20h7v-5H4zM13 20h7v-9h-7z"/></svg></span>
+      <h3>Tableaux de bord</h3>
+      <p>CA mensuel, répartition des missions, top clients, taux d'occupation. Des graphiques lisibles pour décider vite et bien.</p>
+    </div>
+    <div class="v-feat reveal">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></span>
+      <h3>Espaces par rôle</h3>
+      <p>L'administrateur pilote tout ; le consultant ne voit que ses missions, son CA et son CRA. Deux expériences, une seule plateforme.</p>
+    </div>
+    <div class="v-feat reveal">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+      <h3>Sécurité & conformité</h3>
+      <p>Double authentification, gestion fine des accès et conformité RGPD. Vos données et celles de vos clients restent protégées.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT SHOWCASE -->
+<section class="v-sec v-wrap" id="produit" style="padding-top:0">
+  <div class="v-sec-head reveal">
+    <span class="v-tag">Le produit</span>
+    <h2 class="v-h2">Pensé pour aller à l'essentiel</h2>
+  </div>
+
+  <div class="v-split reveal">
+    <div>
+      <span class="v-tag">Au cœur du métier</span>
+      <h3>La gestion des missions, sans friction</h3>
+      <p>Un tableau puissant : recherche, tri par colonne, filtres par statut, client, consultant et plage de dates, pagination et actions rapides. Créez ou modifiez une mission dans une modale claire, avec validation en temps réel.</p>
+      <ul class="v-checks">
+        <li><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Filtres combinables et recherche instantanée</li>
+        <li><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Création & édition en modale, montant calculé automatiquement</li>
+        <li><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Liens directs vers le client, le consultant et les factures</li>
+      </ul>
+    </div>
+    <div class="v-split-media">
+      <div class="v-media-bar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/></svg> Missions</div>
+      <table class="v-mtable">
+        <tr><td><div style="font-weight:600;color:var(--text-strong)">Migration Data Lake</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text-subtle)">MIS-2026-0142</div></td><td>Atlas Banque</td><td><span class="v-mbadge" style="color:#2D7FF9;background:#2D7FF914"><span class="d" style="background:#2D7FF9"></span>En cours</span></td></tr>
+        <tr><td><div style="font-weight:600;color:var(--text-strong)">Audit sécurité SI</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text-subtle)">MIS-2025-0097</div></td><td>Quanta Assur.</td><td><span class="v-mbadge" style="color:#15A66A;background:#15A66A14"><span class="d" style="background:#15A66A"></span>Terminée</span></td></tr>
+        <tr><td><div style="font-weight:600;color:var(--text-strong)">Portail client B2B</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text-subtle)">MIS-2025-0118</div></td><td>Atlas Banque</td><td><span class="v-mbadge" style="color:#8B5CF6;background:#8B5CF614"><span class="d" style="background:#8B5CF6"></span>Facturée</span></td></tr>
+        <tr><td><div style="font-weight:600;color:var(--text-strong)">Design System Mobile</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text-subtle)">MIS-2026-0151</div></td><td>Maelis Retail</td><td><span class="v-mbadge" style="color:#2D7FF9;background:#2D7FF914"><span class="d" style="background:#2D7FF9"></span>En cours</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="v-split flip reveal">
+    <div>
+      <span class="v-tag">Vision à 360°</span>
+      <h3>Des tableaux de bord qui parlent</h3>
+      <p>Le dashboard administrateur réunit le chiffre d'affaires, les missions actives, les consultants et les factures impayées. Courbe de CA, répartition par statut et top clients : tout est là pour piloter l'activité.</p>
+      <ul class="v-checks">
+        <li><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>KPIs clés et tendances en un écran</li>
+        <li><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Graphiques clairs : courbe, donut, barres</li>
+        <li><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Thème clair / sombre et palettes de couleur</li>
+      </ul>
+    </div>
+    <div class="v-split-media" style="padding:22px">
+      <div class="v-mock-kpis" style="margin-bottom:16px">
+        <div class="v-mock-kpi"><div class="lbl">Chiffre d'affaires</div><div class="val">1,1 M€</div></div>
+        <div class="v-mock-kpi"><div class="lbl">Missions actives</div><div class="val">6</div></div>
+        <div class="v-mock-kpi"><div class="lbl">Consultants</div><div class="val">7</div></div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center">
+        <svg width="120" height="120" viewBox="0 0 120 120" style="flex:none">
+          <circle cx="60" cy="60" r="46" fill="none" stroke="var(--bg-sunken)" stroke-width="16"/>
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#2D7FF9" stroke-width="16" stroke-dasharray="116 173" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#15A66A" stroke-width="16" stroke-dasharray="58 231" stroke-dashoffset="-116" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#8B5CF6" stroke-width="16" stroke-dasharray="43 246" stroke-dashoffset="-174" transform="rotate(-90 60 60)"/>
+        </svg>
+        <div style="flex:1;display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="width:9px;height:9px;border-radius:3px;background:#2D7FF9"></span>En cours<b style="margin-left:auto;font-family:var(--font-mono)">6</b></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="width:9px;height:9px;border-radius:3px;background:#15A66A"></span>Terminée<b style="margin-left:auto;font-family:var(--font-mono)">3</b></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="width:9px;height:9px;border-radius:3px;background:#8B5CF6"></span>Facturée<b style="margin-left:auto;font-family:var(--font-mono)">3</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="v-sec v-wrap">
+  <div class="v-sec-head reveal">
+    <span class="v-tag">Mise en route</span>
+    <h2 class="v-h2">Opérationnel en trois étapes</h2>
+  </div>
+  <div class="v-steps">
+    <div class="v-step reveal"><div class="n">01</div><h4>Importez vos données</h4><p>Consultants, clients et missions en cours : on vous accompagne pour tout reprendre proprement, sans rien perdre.</p></div>
+    <div class="v-step reveal"><div class="n">02</div><h4>Invitez votre équipe</h4><p>Créez les comptes administrateurs et consultants. Chacun reçoit son accès sécurisé avec double authentification.</p></div>
+    <div class="v-step reveal"><div class="n">03</div><h4>Pilotez au quotidien</h4><p>Suivez le CA, gérez les missions et facturez. Vos tableaux de bord se mettent à jour en temps réel.</p></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="v-wrap" style="padding:0 32px">
+  <div class="v-stats reveal">
+    <div class="rib"></div>
+    <div class="v-stats-grid">
+      <div class="v-stat"><div class="big">480<em>+</em></div><div class="lbl">Missions gérées</div></div>
+      <div class="v-stat"><div class="big">2,8<em> M€</em></div><div class="lbl">CA suivi par an</div></div>
+      <div class="v-stat"><div class="big">96<em>%</em></div><div class="lbl">Taux d'occupation</div></div>
+      <div class="v-stat"><div class="big">48<em> h</em></div><div class="lbl">Pour démarrer</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="v-sec v-wrap">
+  <div class="v-quote reveal">
+    <div class="mark">“</div>
+    <blockquote>Avant Portéo, nos missions vivaient dans cinq tableurs. Aujourd'hui tout est <em>relié, suivi et mesuré</em> — on a gagné une journée par semaine sur l'administratif.</blockquote>
+    <div class="who">
+      <span class="av">EM</span>
+      <div style="text-align:left"><div style="font-weight:700;color:var(--text-strong)">Élise Marchand</div><div style="font-size:14px;color:var(--text-subtle)">Responsable portage, société de conseil</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="v-sec v-wrap" id="tarifs">
+  <div class="v-sec-head reveal">
+    <span class="v-tag">Tarifs</span>
+    <h2 class="v-h2">Une formule pour chaque structure</h2>
+    <p class="v-lead">Sans frais cachés. Changez ou résiliez à tout moment.</p>
+  </div>
+  <div class="v-price-grid">
+    <div class="v-plan reveal">
+      <div class="pn">Essentiel</div>
+      <div class="pp">49 €<span>/mois</span></div>
+      <div class="pd">Pour les structures qui démarrent le portage.</div>
+      <ul>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Jusqu'à 10 consultants</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Missions & clients illimités</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Tableau de bord standard</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Support par e-mail</li>
+      </ul>
+      <a class="v-btn v-btn-outline" href="App Portéo.html" style="justify-content:center">Commencer</a>
+    </div>
+    <div class="v-plan pop reveal">
+      <div class="pn">Croissance</div>
+      <div class="pp">129 €<span>/mois</span></div>
+      <div class="pd">Pour les sociétés de portage en pleine expansion.</div>
+      <ul>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Consultants illimités</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Facturation & relances avancées</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Dashboards & exports personnalisés</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Espaces consultants illimités</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Support prioritaire</li>
+      </ul>
+      <a class="v-btn v-btn-primary" href="App Portéo.html" style="justify-content:center">Demander une démo</a>
+    </div>
+    <div class="v-plan reveal">
+      <div class="pn">Entreprise</div>
+      <div class="pp">Sur devis</div>
+      <div class="pd">Pour les groupes avec besoins spécifiques.</div>
+      <ul>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Tout le plan Croissance</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>SSO & rôles personnalisés</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>API & intégrations comptables</li>
+        <li><span class="ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Accompagnement dédié</li>
+      </ul>
+      <a class="v-btn v-btn-outline" href="App Portéo.html" style="justify-content:center">Nous contacter</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="v-wrap" style="padding:0 32px">
+  <div class="v-cta reveal">
+    <div class="rib"></div>
+    <h2>Donnez de la clarté à votre activité de portage</h2>
+    <p>Lancez la démo interactive — aucune inscription, toutes les fonctionnalités.</p>
+    <div class="acts">
+      <a class="v-btn v-btn-mint v-btn-lg" href="App Portéo.html">Lancer la démo</a>
+      <a class="v-btn v-btn-ondark v-btn-lg" href="Composants Portéo.html">Explorer le design</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="v-wrap">
+  <div class="v-footer">
+    <div class="v-foot-grid">
+      <div class="v-foot-about">
+        <a class="v-logo" href="#top"><span class="m"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="var(--accent)"/></svg></span><span>Portéo</span></a>
+        <p>La plateforme qui réunit missions, consultants et factures pour les métiers du portage salarial.</p>
+      </div>
+      <div><h5>Produit</h5><a href="#features">Fonctionnalités</a><a href="#produit">Le produit</a><a href="#tarifs">Tarifs</a><a href="App Portéo.html">Démo</a></div>
+      <div><h5>Design</h5><a href="Charte Portéo.html">Charte</a><a href="Composants Portéo.html">Composants</a><a href="index.html">Système</a></div>
+      <div><h5>Société</h5><a href="#">À propos</a><a href="#">Sécurité & RGPD</a><a href="#">Contact</a></div>
+    </div>
+    <div class="v-foot-bottom">
+      <span>© 2026 Portéo — Système de design fictif à but de démonstration.</span>
+      <span>Fait avec soin · Fintech éditorial</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // sticky nav
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+  onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+  // mobile menu
+  const burger = document.getElementById('burger'), mm = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    const open = mm.style.display === 'block';
+    mm.style.display = open ? 'none' : 'block';
+    burger.setAttribute('aria-expanded', String(!open));
+    nav.classList.add('scrolled');
+  });
+  mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { mm.style.display = 'none'; }));
+  // smooth anchor
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href')); if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth' }); }
+  }));
+  // reveal on scroll (with safety net so content can never stay hidden)
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+    setTimeout(() => reveals.forEach(el => el.classList.add('in')), 2500);
+  } else {
+    reveals.forEach(el => el.classList.add('in'));
+  }
+  // theme follow
+  try { const t = localStorage.getItem('porteo-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e) {}
+</script>
+</body>
+</html>

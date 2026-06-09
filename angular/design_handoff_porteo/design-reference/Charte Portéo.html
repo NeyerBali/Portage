@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portéo — Charte de design</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 var(--sp-7); }
+  .page { padding-bottom: var(--sp-12); }
+
+  /* ---- top bar ---- */
+  .chrome {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg-app) 86%, transparent);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .chrome-in { display: flex; align-items: center; justify-content: space-between; height: var(--topbar-h); }
+  .brand-row { display: flex; align-items: center; gap: var(--sp-3); }
+  .seg { display: flex; gap: 2px; background: var(--bg-sunken); padding: 3px; border-radius: var(--r-pill); }
+  .seg button {
+    border: 0; background: transparent; cursor: pointer; padding: 7px 16px;
+    border-radius: var(--r-pill); font-size: var(--t-sm); font-weight: 600; color: var(--text-muted);
+    transition: all var(--dur) var(--ease);
+  }
+  .seg button[aria-pressed="true"] { background: var(--bg-surface-2); color: var(--text-strong); box-shadow: var(--shadow-sm); }
+
+  /* ---- hero ---- */
+  .hero { padding: var(--sp-11) 0 var(--sp-9); }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: var(--t-overline); letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--emerald-600); font-weight: 600;
+  }
+  [data-theme="dark"] .eyebrow { color: var(--emerald-400); }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 500; font-size: clamp(40px, 6vw, var(--t-display));
+    line-height: 1.04; letter-spacing: -0.02em; color: var(--text-strong); margin: var(--sp-4) 0 var(--sp-5);
+    max-width: 16ch;
+  }
+  .hero h1 em { font-style: italic; color: var(--emerald-700); }
+  [data-theme="dark"] .hero h1 em { color: var(--emerald-400); }
+  .hero p { font-size: var(--t-body-lg); line-height: var(--t-body-lg-lh); color: var(--text-muted); max-width: 62ch; }
+
+  /* ---- section ---- */
+  section { padding: var(--sp-9) 0; border-top: 1px solid var(--border-subtle); }
+  .sec-head { display: flex; align-items: baseline; gap: var(--sp-4); margin-bottom: var(--sp-7); }
+  .sec-num { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--emerald-600); font-weight: 600; }
+  [data-theme="dark"] .sec-num { color: var(--emerald-400); }
+  .sec-head h2 { font-family: var(--font-display); font-weight: 500; font-size: var(--t-h2); letter-spacing: -0.01em; color: var(--text-strong); }
+  .lead { color: var(--text-muted); max-width: 64ch; margin-bottom: var(--sp-7); }
+
+  .card {
+    background: var(--bg-surface); border: 1px solid var(--border-default);
+    border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  }
+
+  /* ---- logo ---- */
+  .logo-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--sp-5); }
+  .logo-cell { padding: var(--sp-8); display: flex; flex-direction: column; gap: var(--sp-5); align-items: flex-start; justify-content: center; min-height: 200px; }
+  .logo-cell.dark { background: var(--ink-950); border-color: var(--ink-800); }
+  .wordmark { display: flex; align-items: center; gap: 14px; }
+  .mark { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--emerald-700); box-shadow: var(--shadow-brand); flex: none; }
+  .mark.lg { width: 72px; height: 72px; border-radius: 18px; }
+  .wm-text { font-family: var(--font-display); font-weight: 600; font-size: 30px; letter-spacing: -0.02em; color: var(--text-strong); }
+  .logo-cell.dark .wm-text { color: #F1F6F3; }
+  .wm-text .dot { color: var(--emerald-500); }
+  .logo-cell.dark .wm-text .dot { color: var(--emerald-400); }
+  .tiny { font-family: var(--font-mono); font-size: var(--t-caption); color: var(--text-subtle); letter-spacing: 0.04em; }
+  .mark-row { display: flex; gap: var(--sp-4); align-items: center; flex-wrap: wrap; }
+
+  /* ---- palette ---- */
+  .scale { display: grid; grid-template-columns: repeat(11, 1fr); border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--border-default); }
+  .scale.semantic { grid-template-columns: repeat(auto-fit, minmax(80px,1fr)); }
+  .swatch { aspect-ratio: 1 / 1.25; position: relative; display: flex; align-items: flex-end; padding: 8px; }
+  .swatch span { font-family: var(--font-mono); font-size: 10px; font-weight: 500; }
+  .swatch small { position: absolute; top: 8px; left: 8px; font-family: var(--font-mono); font-size: 10px; opacity: 0.7; }
+  .scale-label { font-weight: 600; font-size: var(--t-sm); margin: var(--sp-6) 0 var(--sp-3); color: var(--text-strong); display: flex; align-items: center; gap: 8px; }
+  .scale-label::before { content:""; width: 6px; height: 6px; border-radius: 999px; background: var(--emerald-500); }
+
+  .sem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--sp-3); }
+  .sem-tile { border-radius: var(--r-md); border: 1px solid var(--border-default); overflow: hidden; }
+  .sem-top { height: 64px; }
+  .sem-meta { padding: 10px 12px; }
+  .sem-meta b { display: block; font-size: var(--t-sm); color: var(--text-strong); }
+  .sem-meta code { font-family: var(--font-mono); font-size: var(--t-caption); color: var(--text-subtle); }
+
+  /* status chips */
+  .chips { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+  .chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 10px; border-radius: var(--r-pill); font-size: var(--t-sm); font-weight: 600; border: 1px solid; }
+  .chip .dotc { width: 7px; height: 7px; border-radius: 999px; }
+
+  /* ---- type ---- */
+  .type-card { padding: var(--sp-8); }
+  .specimen { border-bottom: 1px dashed var(--border-default); padding: var(--sp-5) 0; display: grid; grid-template-columns: 130px 1fr; gap: var(--sp-5); align-items: baseline; }
+  .specimen:last-child { border-bottom: 0; }
+  .specimen .meta { font-family: var(--font-mono); font-size: var(--t-caption); color: var(--text-subtle); line-height: 1.5; }
+  .ff-display { font-family: var(--font-display); }
+  .ff-sans { font-family: var(--font-sans); }
+  .ff-mono { font-family: var(--font-mono); }
+  .specimen .demo { color: var(--text-strong); }
+
+  .font-pair { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-4); margin-bottom: var(--sp-6); }
+  .font-pill { padding: var(--sp-5); border: 1px solid var(--border-default); border-radius: var(--r-md); background: var(--bg-surface); }
+  .font-pill .big { font-size: 40px; line-height: 1; color: var(--text-strong); margin-bottom: 10px; }
+  .font-pill .nm { font-weight: 700; font-size: var(--t-sm); color: var(--text-strong); }
+  .font-pill .ro { font-size: var(--t-caption); color: var(--text-subtle); }
+
+  /* ---- tokens grids ---- */
+  .tok-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: var(--sp-4); }
+  .sp-row { display: flex; align-items: center; gap: var(--sp-4); padding: 7px 0; }
+  .sp-bar { height: 14px; background: var(--emerald-400); border-radius: 3px; }
+  .sp-meta { font-family: var(--font-mono); font-size: var(--t-caption); color: var(--text-muted); min-width: 96px; }
+  .radii { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
+  .radii .ri { width: 84px; }
+  .radii .box { height: 64px; background: var(--bg-brand-soft); border: 1.5px solid var(--emerald-400); }
+  .radii .tiny { margin-top: 6px; display:block; }
+  .shadows { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: var(--sp-6); }
+  .sh { height: 88px; border-radius: var(--r-md); background: var(--bg-surface-2); display: grid; place-items: end center; padding-bottom: 8px; }
+  .sh span { font-family: var(--font-mono); font-size: var(--t-caption); color: var(--text-subtle); }
+
+  /* states */
+  .states { display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: center; }
+  .btnp { font-family: var(--font-sans); font-weight: 600; font-size: var(--t-body); padding: 11px 20px; border-radius: var(--r-sm); border: 0; cursor: pointer; color: var(--text-onbrand); background: var(--primary); }
+  [data-theme="dark"] .btnp { color: var(--text-onaccent); }
+  .btnp.hover { background: var(--primary-hover); }
+  .btnp.focus { box-shadow: var(--ring); }
+  .btnp.disabled { opacity: 0.45; cursor: not-allowed; }
+  .footer { padding: var(--sp-9) 0; color: var(--text-subtle); font-size: var(--t-sm); border-top: 1px solid var(--border-subtle); }
+  @media (max-width: 860px){ .logo-grid, .font-pair { grid-template-columns: 1fr; } .specimen { grid-template-columns: 1fr; gap: 8px; } .scale { grid-template-columns: repeat(6,1fr); } }
+</style>
+</head>
+<body>
+<div class="chrome">
+  <div class="wrap chrome-in">
+    <div class="brand-row">
+      <span class="mark" style="width:32px;height:32px;border-radius:9px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#3DDC97" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#3DDC97"/></svg>
+      </span>
+      <strong style="font-family:var(--font-display);font-weight:600;font-size:18px;letter-spacing:-0.01em;color:var(--text-strong)">Portéo</strong>
+      <span class="tiny" style="margin-left:6px">/ Charte de design</span>
+    </div>
+    <div class="seg" role="group" aria-label="Thème">
+      <button aria-pressed="true" onclick="setTheme('light',this)">Clair</button>
+      <button aria-pressed="false" onclick="setTheme('dark',this)">Sombre</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <header class="hero wrap">
+    <p class="eyebrow">Direction artistique · Fintech éditorial</p>
+    <h1>Une plateforme de portage qui <em>inspire confiance.</em></h1>
+    <p>Portéo allie la rigueur d'un outil financier à la chaleur d'une revue éditoriale : beaucoup de blanc, une serif élégante en titres, un vert émeraude profond comme signature, et une mint vive pour les moments-clés. Sobre, premium, lisible — pensé pour gérer des consultants, des missions et des factures sans jamais sembler austère.</p>
+  </header>
+
+  <!-- LOGO -->
+  <section class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Logo & marque</h2></div>
+    <p class="lead">Le monogramme : un <b>P</b> dont la panse forme un arc ascendant — l'idée de <i>porter</i>, d'élever le consultant — ponctué d'un point qui rappelle l'accent aigu de « Porté<span style="color:var(--emerald-600)">o</span> ». Wordmark en Newsreader, jamais inférieur à 20px de hauteur.</p>
+    <div class="logo-grid">
+      <div class="card logo-cell">
+        <div class="wordmark">
+          <span class="mark lg">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#3DDC97" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#3DDC97"/></svg>
+          </span>
+          <span class="wm-text">Portéo</span>
+        </div>
+        <span class="tiny">Wordmark principal · fond clair</span>
+      </div>
+      <div class="card logo-cell dark">
+        <div class="wordmark">
+          <span class="mark lg" style="background:var(--emerald-600)">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#3DDC97" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#3DDC97"/></svg>
+          </span>
+          <span class="wm-text">Portéo</span>
+        </div>
+        <span class="tiny" style="color:var(--ink-400)">Version sombre · accent mint conservé</span>
+      </div>
+    </div>
+    <div style="margin-top:var(--sp-5)" class="card logo-cell">
+      <span class="tiny">Déclinaisons icône — app, favicon, avatar</span>
+      <div class="mark-row">
+        <span class="mark" style="width:56px;height:56px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#3DDC97" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#3DDC97"/></svg></span>
+        <span class="mark" style="width:56px;height:56px;background:var(--emerald-400)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#06241C" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#06241C"/></svg></span>
+        <span class="mark" style="width:56px;height:56px;background:var(--ink-950)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#3DDC97" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#3DDC97"/></svg></span>
+        <span class="mark" style="width:56px;height:56px;background:transparent;border:1.5px solid var(--border-strong)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="var(--emerald-700)" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="var(--emerald-700)"/></svg></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLORS -->
+  <section class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Palette de couleurs</h2></div>
+    <p class="lead">Une seule famille de marque (émeraude), une encre neutre légèrement verte pour le texte et les surfaces, et des couleurs sémantiques calibrées AA. Tous les codes HEX sont des tokens dans <code class="ff-mono" style="font-size:12px">tokens.css</code>.</p>
+
+    <div class="scale-label">Émeraude — marque <span class="tiny" style="margin-left:auto;font-weight:400">primaire = 700 · accent = 400</span></div>
+    <div class="scale" id="scale-emerald"></div>
+
+    <div class="scale-label">Encre — neutres</div>
+    <div class="scale" id="scale-ink"></div>
+
+    <div class="scale-label">Couleurs sémantiques</div>
+    <div class="sem-grid" id="sem-grid"></div>
+
+    <div class="scale-label">Hues de statut — badges</div>
+    <div class="chips" id="status-chips"></div>
+  </section>
+
+  <!-- TYPE -->
+  <section class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Typographie</h2></div>
+    <p class="lead">Newsreader (serif éditoriale, optique variable) pour les titres et chiffres-clés ; Hanken Grotesk pour toute l'interface ; JetBrains Mono pour les identifiants, montants tabulaires et codes.</p>
+    <div class="font-pair">
+      <div class="font-pill"><div class="big ff-display">Ag</div><div class="nm">Newsreader</div><div class="ro">Display · 400 / 500 / 600 · italique</div></div>
+      <div class="font-pill"><div class="big ff-sans">Ag</div><div class="nm">Hanken Grotesk</div><div class="ro">UI & texte · 400→800</div></div>
+      <div class="font-pill"><div class="big ff-mono">Ag</div><div class="nm">JetBrains Mono</div><div class="ro">Données · 400 / 500 / 600</div></div>
+    </div>
+    <div class="card type-card">
+      <div class="specimen"><div class="meta">Display<br>56 / 60 · 500</div><div class="demo ff-display" style="font-size:var(--t-display);line-height:var(--t-display-lh);font-weight:500;letter-spacing:-0.02em">Chiffre d'affaires</div></div>
+      <div class="specimen"><div class="meta">H1<br>42 / 48 · 500</div><div class="demo ff-display" style="font-size:var(--t-h1);line-height:var(--t-h1-lh);font-weight:500;letter-spacing:-0.015em">Gestion des missions</div></div>
+      <div class="specimen"><div class="meta">H2<br>32 / 40 · 500</div><div class="demo ff-display" style="font-size:var(--t-h2);line-height:var(--t-h2-lh);font-weight:500">Tableau de bord</div></div>
+      <div class="specimen"><div class="meta">H3<br>25 / 32 · 600</div><div class="demo ff-sans" style="font-size:var(--t-h3);line-height:var(--t-h3-lh);font-weight:600">Détail de la mission</div></div>
+      <div class="specimen"><div class="meta">H4 / titre carte<br>20 / 28 · 600</div><div class="demo ff-sans" style="font-size:var(--t-h4);line-height:var(--t-h4-lh);font-weight:600">Factures impayées</div></div>
+      <div class="specimen"><div class="meta">Corps<br>15 / 23 · 400</div><div class="demo ff-sans" style="font-size:var(--t-body);line-height:var(--t-body-lh)">Le consultant est rattaché à un client via une mission. Chaque mission peut générer une ou plusieurs factures suivies jusqu'au paiement.</div></div>
+      <div class="specimen"><div class="meta">Mono / montant<br>15 · 500 · tabular</div><div class="demo ff-mono" style="font-size:16px;font-weight:500;color:var(--emerald-700)">128 450,00 €&nbsp;&nbsp;·&nbsp;&nbsp;MIS-2026-0142</div></div>
+      <div class="specimen"><div class="meta">Overline<br>11.5 · 0.18em</div><div class="demo ff-mono eyebrow">Section · Portage salarial</div></div>
+    </div>
+  </section>
+
+  <!-- TOKENS -->
+  <section class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Espacement, rayons, ombres</h2></div>
+    <p class="lead">Échelle d'espacement en base 4/8. Rayons doux mais peu marqués (style éditorial). Ombres très diffuses, jamais dures.</p>
+    <div class="tok-grid">
+      <div class="card" style="padding:var(--sp-6)">
+        <div class="scale-label" style="margin-top:0">Espacement</div>
+        <div id="spacing"></div>
+      </div>
+      <div class="card" style="padding:var(--sp-6)">
+        <div class="scale-label" style="margin-top:0">Rayons</div>
+        <div class="radii">
+          <div class="ri"><div class="box" style="border-radius:var(--r-xs)"></div><span class="tiny">xs · 4</span></div>
+          <div class="ri"><div class="box" style="border-radius:var(--r-sm)"></div><span class="tiny">sm · 7</span></div>
+          <div class="ri"><div class="box" style="border-radius:var(--r-md)"></div><span class="tiny">md · 10</span></div>
+          <div class="ri"><div class="box" style="border-radius:var(--r-lg)"></div><span class="tiny">lg · 14</span></div>
+          <div class="ri"><div class="box" style="border-radius:var(--r-xl)"></div><span class="tiny">xl · 20</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:var(--sp-7);margin-top:var(--sp-4)">
+      <div class="scale-label" style="margin-top:0">Élévation</div>
+      <div class="shadows">
+        <div class="sh" style="box-shadow:var(--shadow-xs)"><span>xs</span></div>
+        <div class="sh" style="box-shadow:var(--shadow-sm)"><span>sm</span></div>
+        <div class="sh" style="box-shadow:var(--shadow-md)"><span>md</span></div>
+        <div class="sh" style="box-shadow:var(--shadow-lg)"><span>lg</span></div>
+        <div class="sh" style="box-shadow:var(--shadow-xl)"><span>xl</span></div>
+      </div>
+    </div>
+    <div class="card" style="padding:var(--sp-7);margin-top:var(--sp-4)">
+      <div class="scale-label" style="margin-top:0">États interactifs — bouton primaire</div>
+      <div class="states">
+        <button class="btnp">Par défaut</button>
+        <button class="btnp hover">Survol</button>
+        <button class="btnp focus">Focus (anneau)</button>
+        <button class="btnp disabled">Désactivé</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer wrap">
+    <strong style="color:var(--text-muted)">Portéo</strong> — Système de design · Fintech éditorial. Tokens exportables vers SCSS / thème Angular Material (Material 16 + CDK). Prochaines étapes : écrans Auth → Layout → Dashboards → CRUD Missions → Modules → Composants.
+  </footer>
+</div>
+
+<script>
+function setTheme(t, btn){
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed','false'));
+  btn.setAttribute('aria-pressed','true');
+  try{ localStorage.setItem('porteo-theme', t); }catch(e){}
+}
+(function(){ try{ var t=localStorage.getItem('porteo-theme'); if(t==='dark'){ document.documentElement.setAttribute('data-theme','dark'); document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b.textContent==='Sombre'?'true':'false')); } }catch(e){} })();
+
+// build emerald scale
+var emerald = [['50','#EEFBF4'],['100','#D4F5E3'],['200','#A8ECC9'],['300','#74DFAC'],['400','#3DDC97'],['500','#23B584'],['600','#169070'],['700','#0E5C4A'],['800','#0B4538'],['900','#093528'],['950','#06241C']];
+var ink = [['0','#FCFDFC'],['50','#F6F8F7'],['100','#EDF1EF'],['200','#DEE4E1'],['300','#C6CFCA'],['400','#9BA8A1'],['500','#76847C'],['600','#586860'],['700','#3C4843'],['800','#243029'],['900','#16201C']];
+function fill(id, arr){
+  var html = arr.map(function(c){
+    var idx = parseInt(c[0],10);
+    var dark = (arr===emerald ? idx>=400 : idx>=400);
+    return '<div class="swatch" style="background:'+c[1]+';color:'+(dark?'#fff':'#0D1512')+'"><small>'+c[0]+'</small><span>'+c[1]+'</span></div>';
+  }).join('');
+  document.getElementById(id).innerHTML = html;
+}
+fill('scale-emerald', emerald);
+fill('scale-ink', ink);
+
+var sem = [['Succès','#15A66A','--success-500'],['Avertissement','#E29215','--warning-500'],['Erreur','#D8483B','--error-500'],['Info','#2D7FF9','--info-500']];
+document.getElementById('sem-grid').innerHTML = sem.map(function(s){
+  return '<div class="sem-tile"><div class="sem-top" style="background:'+s[1]+'"></div><div class="sem-meta"><b>'+s[0]+'</b><code>'+s[1]+'</code></div></div>';
+}).join('');
+
+var statuses = [['Brouillon','#64748B'],['En cours','#2D7FF9'],['Terminée','#15A66A'],['Facturée','#8B5CF6'],['Annulée','#B0443A']];
+document.getElementById('status-chips').innerHTML = statuses.map(function(s){
+  return '<span class="chip" style="color:'+s[1]+';border-color:'+s[1]+'33;background:'+s[1]+'14"><span class="dotc" style="background:'+s[1]+'"></span>'+s[0]+'</span>';
+}).join('');
+
+var sp = [['1',4],['2',8],['3',12],['4',16],['5',20],['6',24],['7',32],['8',40],['9',48],['10',64]];
+document.getElementById('spacing').innerHTML = sp.map(function(s){
+  return '<div class="sp-row"><span class="sp-meta">--sp-'+s[0]+' · '+s[1]+'px</span><div class="sp-bar" style="width:'+s[1]+'px"></div></div>';
+}).join('');
+</script>
+</body>
+</html>

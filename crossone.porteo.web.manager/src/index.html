@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Portéo — Gestion de portage salarial</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portéo — plateforme de gestion de consultants et de missions en portage salarial.">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Polices du système de design : Newsreader (display) · Hanken Grotesk (sans) · JetBrains Mono (mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Applique thème + palette mémorisés AVANT le rendu (pas de flash) -->
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem('porteo-theme') || 'light';
+        var palette = localStorage.getItem('porteo-palette') || 'emerald';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (palette && palette !== 'emerald') document.documentElement.setAttribute('data-palette', palette);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

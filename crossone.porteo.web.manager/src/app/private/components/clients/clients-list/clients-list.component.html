@@ -1,0 +1,41 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Référentiel</p>
+      <h1 class="h2">Clients</h1>
+    </div>
+    <button class="btn btn-primary" (click)="create()">＋ Nouveau client</button>
+  </header>
+
+  <div class="card">
+    <div class="toolbar">
+      <input class="search" type="text" placeholder="Rechercher un client…" [(ngModel)]="search" />
+    </div>
+
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead>
+          <tr>
+            <th>Client</th><th>Secteur</th><th>Ville</th><th>Missions</th><th class="num">CA cumulé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of filtered" (click)="open(c)" class="clickable">
+            <td>
+              <div class="person">
+                <span class="avatar" style="background: var(--ink-700)">▢</span>
+                <div class="meta"><strong>{{ c.raisonSociale }}</strong><small class="mono">{{ c.siret }}</small></div>
+              </div>
+            </td>
+            <td>{{ c.secteur }}</td>
+            <td>{{ c.ville }}</td>
+            <td><span class="badge en_cours"><span class="dot"></span>{{ c.nombreMissions }} · {{ c.missionsActives }} actives</span></td>
+            <td class="num">{{ c.caCumule | number:'1.0-0' }} €</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && filtered.length === 0" icon="◢" title="Aucun client" message="Ajoutez un client pour commencer."></app-empty-state>
+    </div>
+  </div>
+</div>

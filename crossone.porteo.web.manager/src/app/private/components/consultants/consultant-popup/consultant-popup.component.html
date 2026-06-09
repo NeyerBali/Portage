@@ -1,0 +1,71 @@
+<div class="modal">
+  <header class="modal-head">
+    <span class="modal-icon">◉</span>
+    <div class="grow">
+      <h3 class="h4">{{ isEdit ? 'Modifier le consultant' : 'Nouveau consultant' }}</h3>
+      <p class="caption text-subtle">Profil du consultant porté.</p>
+    </div>
+    <button class="btn btn-icon btn-ghost" (click)="cancel()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="modal-body">
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.prenom.touched && f.prenom.invalid">
+        <label>Prénom <span class="req">*</span></label>
+        <input type="text" formControlName="prenom" />
+        <div class="field-error" *ngIf="f.prenom.touched && f.prenom.invalid">⚠ Le prénom est requis.</div>
+      </div>
+      <div class="field" [class.invalid]="f.nom.touched && f.nom.invalid">
+        <label>Nom <span class="req">*</span></label>
+        <input type="text" formControlName="nom" />
+        <div class="field-error" *ngIf="f.nom.touched && f.nom.invalid">⚠ Le nom est requis.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.email.touched && f.email.invalid">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" formControlName="email" />
+        <div class="field-error" *ngIf="f.email.touched && f.email.errors?.['required']">⚠ L'email est requis.</div>
+        <div class="field-error" *ngIf="f.email.touched && f.email.errors?.['email']">⚠ Format d'email invalide.</div>
+      </div>
+      <div class="field"><label>Téléphone</label><input type="text" formControlName="telephone" /></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.specialite.touched && f.specialite.invalid">
+        <label>Métier / spécialité <span class="req">*</span></label>
+        <input type="text" formControlName="specialite" />
+        <div class="field-error" *ngIf="f.specialite.touched && f.specialite.invalid">⚠ La spécialité est requise.</div>
+      </div>
+      <div class="field" [class.invalid]="f.tjm.touched && f.tjm.invalid">
+        <label>TJM (€) <span class="req">*</span></label>
+        <input type="number" formControlName="tjm" min="0" />
+        <div class="field-error" *ngIf="f.tjm.touched && f.tjm.invalid">⚠ Le TJM doit être supérieur à 0.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.ville.touched && f.ville.invalid">
+        <label>Ville <span class="req">*</span></label>
+        <input type="text" formControlName="ville" />
+        <div class="field-error" *ngIf="f.ville.touched && f.ville.invalid">⚠ La ville est requise.</div>
+      </div>
+      <div class="field">
+        <label>Statut</label>
+        <select formControlName="statut"><option value="active">Actif</option><option value="paused">En pause</option></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Compétences</label>
+      <input type="text" formControlName="competences" placeholder="Angular, .NET, SQL (séparées par des virgules)" />
+      <span class="field-hint">Liste séparée par des virgules.</span>
+    </div>
+
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary">{{ isEdit ? 'Enregistrer' : 'Créer le consultant' }}</button>
+    </footer>
+  </form>
+</div>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portéo — Composants</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app.css">
+<style>
+  .chrome { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg-app) 86%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border-subtle); }
+  .chrome-in { max-width: 1140px; margin: 0 auto; padding: 0 var(--sp-7); height: var(--topbar-h); display: flex; align-items: center; justify-content: space-between; }
+  .brand-row { display: flex; align-items: center; gap: 11px; }
+  .seg2 { display: flex; gap: 2px; background: var(--bg-sunken); padding: 3px; border-radius: var(--r-pill); }
+  .seg2 button { border: 0; background: transparent; cursor: pointer; padding: 7px 16px; border-radius: var(--r-pill); font-size: var(--t-sm); font-weight: 600; color: var(--text-muted); }
+  .seg2 button[aria-pressed="true"] { background: var(--bg-surface-2); color: var(--text-strong); box-shadow: var(--shadow-sm); }
+  .eyebrow { font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+<div class="chrome">
+  <div class="chrome-in">
+    <div class="brand-row">
+      <span style="width:32px;height:32px;border-radius:9px;background:var(--emerald-700);display:grid;place-items:center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 19V7.5C6 6.4 6.9 5.5 8 5.5h5.2c3 0 5.3 2.2 5.3 5s-2.3 5-5.3 5H10" stroke="#3DDC97" stroke-width="2.4" stroke-linecap="round"/><circle cx="9.6" cy="18.6" r="1.7" fill="#3DDC97"/></svg>
+      </span>
+      <strong style="font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--text-strong)">Portéo</strong>
+      <span style="font-family:var(--font-mono);font-size:12.5px;color:var(--text-subtle)">/ Composants</span>
+    </div>
+    <div class="seg2" role="group" aria-label="Thème">
+      <button aria-pressed="true" onclick="setTheme('light',this)">Clair</button>
+      <button aria-pressed="false" onclick="setTheme('dark',this)">Sombre</button>
+    </div>
+  </div>
+</div>
+
+<div id="root"></div>
+
+<script>
+function setTheme(t, btn){ document.documentElement.setAttribute('data-theme', t); document.querySelectorAll('.seg2 button').forEach(b=>b.setAttribute('aria-pressed','false')); btn.setAttribute('aria-pressed','true'); try{ localStorage.setItem('porteo-theme', t); }catch(e){} }
+(function(){ try{ var t=localStorage.getItem('porteo-theme'); if(t==='dark'){ document.documentElement.setAttribute('data-theme','dark'); document.querySelectorAll('.seg2 button').forEach(b=>b.setAttribute('aria-pressed', b.textContent==='Sombre'?'true':'false')); } }catch(e){} })();
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="jsx/icons.jsx"></script>
+<script type="text/babel" src="jsx/data.jsx"></script>
+<script type="text/babel" src="jsx/ui.jsx"></script>
+<script type="text/babel" src="jsx/showcase.jsx"></script>
+</body>
+</html>

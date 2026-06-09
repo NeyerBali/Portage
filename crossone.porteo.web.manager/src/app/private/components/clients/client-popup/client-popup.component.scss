@@ -1,0 +1,7 @@
+.modal { display: flex; flex-direction: column; max-height: 90vh; }
+.modal-head { display: flex; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-5) var(--sp-6); border-bottom: 1px solid var(--border-subtle); }
+.modal-icon { width: 44px; height: 44px; border-radius: var(--r-md); background: var(--bg-brand-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.modal-body { padding: var(--sp-6); overflow-y: auto; }
+.modal-foot { display: flex; justify-content: flex-end; gap: var(--sp-3); padding-top: var(--sp-4); margin-top: var(--sp-2); border-top: 1px solid var(--border-subtle); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+@media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }

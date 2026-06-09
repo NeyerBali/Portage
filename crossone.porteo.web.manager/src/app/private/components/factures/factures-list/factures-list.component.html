@@ -1,0 +1,58 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Facturation</p>
+      <h1 class="h2">Factures</h1>
+    </div>
+    <button *ngIf="isAdmin" class="btn btn-primary" (click)="create()">＋ Nouvelle facture</button>
+  </header>
+
+  <!-- KPIs -->
+  <section class="grid kpis">
+    <div class="card card-pad kpi"><div class="kpi-value">{{ encaisse | number:'1.0-0' }} €</div><div class="kpi-label">Encaissé</div></div>
+    <div class="card card-pad kpi"><div class="kpi-value">{{ emis | number:'1.0-0' }} €</div><div class="kpi-label">Émis en attente</div></div>
+    <div class="card card-pad kpi"><div class="kpi-value" style="color: var(--error-600)">{{ retard | number:'1.0-0' }} €</div><div class="kpi-label">En retard</div></div>
+  </section>
+
+  <div class="card">
+    <div class="toolbar">
+      <input class="search" type="text" placeholder="Rechercher une facture…" [(ngModel)]="search" />
+      <div class="segmented">
+        <button [class.active]="!statutFilter" (click)="statutFilter=null">Toutes</button>
+        <button *ngFor="let s of statuts" [class.active]="statutFilter===s.value" (click)="statutFilter=s.value">{{ s.label }}</button>
+      </div>
+    </div>
+
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead>
+          <tr>
+            <th>Facture</th><th>Mission</th><th *ngIf="isAdmin">Client</th><th>Émise le</th><th>Échéance</th><th>Statut</th><th class="num">Montant TTC</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of filtered">
+            <td class="mono">{{ f.numero }}</td>
+            <td>{{ f.missionTitre }}</td>
+            <td *ngIf="isAdmin">{{ f.clientNom }}</td>
+            <td>{{ f.dateEmission | date:'dd/MM/yy' }}</td>
+            <td [class.overdue-date]="isOverdue(f)">{{ f.dateEcheance | date:'dd/MM/yy' }}</td>
+            <td>
+              <app-status-badge *ngIf="!isOverdue(f)" [status]="f.statut" kind="facture"></app-status-badge>
+              <span *ngIf="isOverdue(f)" class="badge overdue"><span class="dot"></span>En retard</span>
+            </td>
+            <td class="num">{{ f.montantTTC | number:'1.2-2' }} €</td>
+            <td>
+              <div class="row-actions" *ngIf="isAdmin">
+                <button *ngIf="f.statut !== 'payee'" class="btn btn-icon btn-ghost" title="Marquer payée" (click)="markPaid(f)">✓</button>
+                <button class="btn btn-icon btn-ghost" title="Supprimer" (click)="remove(f)">🗑</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && filtered.length === 0" icon="▤" title="Aucune facture" message="Les factures apparaîtront ici."></app-empty-state>
+    </div>
+  </div>
+</div>

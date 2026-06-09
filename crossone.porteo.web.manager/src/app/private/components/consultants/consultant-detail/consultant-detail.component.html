@@ -1,0 +1,56 @@
+<div class="page fade-in" *ngIf="consultant as c">
+  <a class="back" (click)="back()">‹ Retour aux consultants</a>
+
+  <header class="detail-head">
+    <span class="big-avatar">{{ initials() }}</span>
+    <div class="grow">
+      <div class="flex items-center gap-3">
+        <h1 class="h2">{{ c.prenom }} {{ c.nom }}</h1>
+        <app-status-badge [status]="c.statut" kind="consultant"></app-status-badge>
+      </div>
+      <p class="text-muted">{{ c.specialite }} · {{ c.ville }}</p>
+    </div>
+    <div class="flex gap-2">
+      <a class="btn btn-secondary" [href]="'mailto:' + c.email">✉ Contacter</a>
+      <button class="btn btn-secondary" (click)="edit()">✎ Modifier</button>
+      <button class="btn btn-ghost" (click)="remove()">🗑</button>
+    </div>
+  </header>
+
+  <div class="detail-grid">
+    <div class="card card-pad coord">
+      <div class="h5 mb-4">Coordonnées</div>
+      <dl>
+        <dt>Email</dt><dd>{{ c.email }}</dd>
+        <dt>Téléphone</dt><dd>{{ c.telephone || '—' }}</dd>
+        <dt>TJM</dt><dd class="mono">{{ c.tjm | number:'1.0-0' }} €/j</dd>
+      </dl>
+      <div class="h5 mt-6 mb-4">Compétences</div>
+      <div class="chips"><span class="chip" *ngFor="let s of competences()">{{ s }}</span></div>
+      <div class="h5 mt-6 mb-4">Taux d'occupation</div>
+      <div class="track"><div class="fill" [style.width.%]="occupation"></div></div>
+      <p class="caption text-subtle mt-2">{{ c.missionsActives }} mission(s) active(s) sur {{ c.nombreMissions }}</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="h5">Missions assignées</div></div>
+      <div class="p-table-wrap">
+        <table class="p-table">
+          <thead><tr><th>Mission</th><th>Client</th><th>Période</th><th>Statut</th><th class="num">Montant</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let m of c.missions">
+              <td><strong>{{ m.titre }}</strong></td>
+              <td>{{ m.clientNom }}</td>
+              <td>{{ m.dateDebut | date:'dd/MM/yy' }} → {{ m.dateFin | date:'dd/MM/yy' }}</td>
+              <td><app-status-badge [status]="m.statut" kind="mission"></app-status-badge></td>
+              <td class="num">{{ m.montant | number:'1.0-0' }} €</td>
+            </tr>
+          </tbody>
+        </table>
+        <app-empty-state *ngIf="c.missions.length === 0" icon="◆" title="Aucune mission" message="Ce consultant n'a pas de mission assignée."></app-empty-state>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>

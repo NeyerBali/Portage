@@ -1,0 +1,72 @@
+<div class="page fade-in">
+  <header class="page-head">
+    <div>
+      <p class="overline">Tableau de bord {{ isAdmin ? 'administrateur' : 'consultant' }}</p>
+      <h1 class="h2">{{ greeting }} 👋</h1>
+    </div>
+  </header>
+
+  <!-- Bandeau consultant -->
+  <div class="alert warning" *ngIf="!isAdmin">
+    <span>⏱</span> Pensez à compléter votre compte-rendu d'activité (CRA) avant la fin du mois.
+  </div>
+
+  <!-- KPIs -->
+  <section class="grid kpis">
+    <div class="card card-pad kpi" *ngFor="let k of kpis">
+      <div class="kpi-top">
+        <span class="kpi-icon">{{ kpiIcon(k.cle) }}</span>
+      </div>
+      <div class="kpi-value">
+        <span *ngIf="k.format === 'currency'">{{ k.valeur | number:'1.0-0' }} €</span>
+        <span *ngIf="k.format !== 'currency'">{{ k.valeur | number:'1.0-0' }}</span>
+      </div>
+      <div class="kpi-label">{{ k.libelle }}</div>
+    </div>
+    <ng-container *ngIf="loading && !kpis.length">
+      <div class="card card-pad" *ngFor="let i of [1,2,3,4]"><div class="skeleton" style="height:64px"></div></div>
+    </ng-container>
+  </section>
+
+  <!-- Graphiques -->
+  <section class="grid charts">
+    <div class="card">
+      <div class="card-header"><div><div class="h5">Chiffre d'affaires</div><span class="caption text-subtle">12 derniers mois</span></div></div>
+      <div class="card-pad"><app-area-chart [points]="area"></app-area-chart></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="h5">Missions par statut</div></div>
+      <div class="card-pad">
+        <app-donut-chart [segments]="donut"></app-donut-chart>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid charts" *ngIf="isAdmin">
+    <div class="card">
+      <div class="card-header"><div class="h5">Top 5 clients</div></div>
+      <div class="card-pad">
+        <app-bar-list [items]="topClients"></app-bar-list>
+        <app-empty-state *ngIf="!topClients.length" icon="◢" title="Aucun client" message="Ajoutez des clients pour voir le classement."></app-empty-state>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="h5">Dernières activités</div></div>
+      <div class="card-pad">
+        <ul class="timeline">
+          <li *ngFor="let a of activites">
+            <span class="t-dot"></span>
+            <div>
+              <strong>{{ a.titre }}</strong>
+              <p class="caption text-muted">{{ a.description }}</p>
+              <span class="caption text-subtle">{{ a.date | date:'dd MMM yyyy' }}</span>
+            </div>
+          </li>
+        </ul>
+        <app-empty-state *ngIf="!activites.length" icon="◷" title="Rien à afficher" message="Les activités récentes apparaîtront ici."></app-empty-state>
+      </div>
+    </div>
+  </section>
+</div>

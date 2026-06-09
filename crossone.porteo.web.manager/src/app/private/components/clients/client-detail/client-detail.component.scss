@@ -1,0 +1,11 @@
+.back { color: var(--text-muted); font-size: var(--t-sm); cursor: pointer; display: inline-block; margin-bottom: var(--sp-4); }
+.back:hover { color: var(--primary); }
+.detail-head { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-6); }
+.big-avatar { width: 60px; height: 60px; border-radius: var(--r-lg); background: var(--bg-brand-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.kpis { grid-template-columns: repeat(4, 1fr); margin-bottom: var(--sp-6); }
+.detail-grid { display: grid; grid-template-columns: 320px 1fr; gap: var(--sp-6); }
+.coord dl { display: grid; grid-template-columns: 1fr; gap: var(--sp-3); margin: 0; }
+.coord dt { font-size: var(--t-caption); color: var(--text-subtle); text-transform: uppercase; letter-spacing: .05em; }
+.coord dd { margin: 0 0 var(--sp-2); color: var(--text-default); }
+.loading-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-9); color: var(--text-muted); justify-content: center; }
+@media (max-width: 1080px) { .kpis { grid-template-columns: repeat(2,1fr); } .detail-grid { grid-template-columns: 1fr; } }

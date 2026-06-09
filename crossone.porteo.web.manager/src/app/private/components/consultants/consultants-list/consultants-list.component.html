@@ -1,0 +1,35 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Référentiel</p>
+      <h1 class="h2">Consultants</h1>
+    </div>
+    <button class="btn btn-primary" (click)="create()">＋ Nouveau consultant</button>
+  </header>
+
+  <div class="toolbar card card-pad">
+    <input class="search" type="text" placeholder="Rechercher un consultant…" [(ngModel)]="search" />
+  </div>
+
+  <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+
+  <div class="cards-grid" *ngIf="!loading">
+    <article class="card card-pad consultant-card" *ngFor="let c of filtered" (click)="open(c)">
+      <div class="cc-head">
+        <span class="avatar" style="background: var(--primary)">{{ initials(c) }}</span>
+        <app-status-badge [status]="c.statut" kind="consultant"></app-status-badge>
+      </div>
+      <h3 class="h5">{{ c.prenom }} {{ c.nom }}</h3>
+      <p class="caption text-muted">{{ c.specialite }} · {{ c.ville }}</p>
+      <div class="chips">
+        <span class="chip" *ngFor="let s of competences(c)">{{ s }}</span>
+      </div>
+      <div class="cc-foot">
+        <span class="mono">{{ c.tjm | number:'1.0-0' }} €/j</span>
+        <span class="caption text-subtle">{{ c.nombreMissions }} · {{ c.missionsActives }} actives</span>
+      </div>
+    </article>
+  </div>
+
+  <app-empty-state *ngIf="!loading && filtered.length === 0" icon="◉" title="Aucun consultant" message="Ajoutez un consultant pour commencer."></app-empty-state>
+</div>

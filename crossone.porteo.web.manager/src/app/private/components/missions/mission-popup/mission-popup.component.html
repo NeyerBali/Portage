@@ -1,0 +1,87 @@
+<div class="modal">
+  <header class="modal-head">
+    <span class="modal-icon">◆</span>
+    <div class="grow">
+      <h3 class="h4">{{ isEdit ? 'Modifier la mission' : 'Nouvelle mission' }}</h3>
+      <p class="caption text-subtle">Renseignez les informations de la mission de portage.</p>
+    </div>
+    <button class="btn btn-icon btn-ghost" (click)="cancel()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="modal-body">
+    <div class="field" [class.invalid]="f.titre.touched && f.titre.invalid">
+      <label>Intitulé <span class="req">*</span></label>
+      <input type="text" formControlName="titre" placeholder="Ex. Refonte portail client" />
+      <div class="field-error" *ngIf="f.titre.touched && f.titre.errors?.['required']">⚠ L'intitulé est requis.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.clientId.touched && f.clientId.invalid">
+        <label>Client <span class="req">*</span></label>
+        <select formControlName="clientId">
+          <option [ngValue]="null" disabled>Sélectionner…</option>
+          <option *ngFor="let c of data.clients" [ngValue]="c.id">{{ c.raisonSociale }}</option>
+        </select>
+        <div class="field-error" *ngIf="f.clientId.touched && f.clientId.errors?.['required']">⚠ Le client est requis.</div>
+      </div>
+
+      <div class="field" [class.invalid]="f.consultantId.touched && f.consultantId.invalid">
+        <label>Consultant <span class="req">*</span></label>
+        <select formControlName="consultantId">
+          <option [ngValue]="null" disabled>Sélectionner…</option>
+          <option *ngFor="let c of data.consultants" [ngValue]="c.id">{{ c.prenom }} {{ c.nom }}</option>
+        </select>
+        <div class="field-error" *ngIf="f.consultantId.touched && f.consultantId.errors?.['required']">⚠ Le consultant est requis.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.dateDebut.touched && f.dateDebut.invalid">
+        <label>Date de début <span class="req">*</span></label>
+        <input type="date" formControlName="dateDebut" />
+        <div class="field-error" *ngIf="f.dateDebut.touched && f.dateDebut.errors?.['required']">⚠ Date de début requise.</div>
+      </div>
+      <div class="field" [class.invalid]="(f.dateFin.touched && f.dateFin.invalid) || (form.errors?.['dateRange'] && f.dateFin.touched)">
+        <label>Date de fin <span class="req">*</span></label>
+        <input type="date" formControlName="dateFin" />
+        <div class="field-error" *ngIf="f.dateFin.touched && f.dateFin.errors?.['required']">⚠ Date de fin requise.</div>
+        <div class="field-error" *ngIf="form.errors?.['dateRange'] && f.dateFin.touched && !f.dateFin.errors?.['required']">⚠ La fin doit être ≥ au début.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.tjm.touched && f.tjm.invalid">
+        <label>TJM (€) <span class="req">*</span></label>
+        <input type="number" formControlName="tjm" min="0" placeholder="650" />
+        <div class="field-error" *ngIf="f.tjm.touched && f.tjm.invalid">⚠ Le TJM doit être supérieur à 0.</div>
+      </div>
+      <div class="field" [class.invalid]="f.jours.touched && f.jours.invalid">
+        <label>Jours <span class="req">*</span></label>
+        <input type="number" formControlName="jours" min="1" placeholder="40" />
+        <div class="field-error" *ngIf="f.jours.touched && f.jours.invalid">⚠ Le nombre de jours doit être supérieur à 0.</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Statut</label>
+      <select formControlName="statut">
+        <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea formControlName="description" placeholder="Détails de la mission (optionnel)"></textarea>
+    </div>
+
+    <div class="amount-preview">
+      <span>Montant total estimé</span>
+      <strong class="mono">{{ montant | number:'1.0-0' }} €</strong>
+    </div>
+
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary">{{ isEdit ? 'Enregistrer' : 'Créer la mission' }}</button>
+    </footer>
+  </form>
+</div>

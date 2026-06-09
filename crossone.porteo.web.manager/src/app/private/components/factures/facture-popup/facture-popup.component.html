@@ -1,0 +1,58 @@
+<div class="modal">
+  <header class="modal-head">
+    <span class="modal-icon">▤</span>
+    <div class="grow">
+      <h3 class="h4">Nouvelle facture</h3>
+      <p class="caption text-subtle">Le client est déduit de la mission sélectionnée.</p>
+    </div>
+    <button class="btn btn-icon btn-ghost" (click)="cancel()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="modal-body">
+    <div class="field" [class.invalid]="f.missionId.touched && f.missionId.invalid">
+      <label>Mission <span class="req">*</span></label>
+      <select formControlName="missionId">
+        <option [ngValue]="null" disabled>Sélectionner…</option>
+        <option *ngFor="let m of data.missions" [ngValue]="m.id">{{ m.titre }} — {{ m.clientNom }}</option>
+      </select>
+      <div class="field-error" *ngIf="f.missionId.touched && f.missionId.invalid">⚠ La mission est requise.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.montantHT.touched && f.montantHT.invalid">
+        <label>Montant HT (€) <span class="req">*</span></label>
+        <input type="number" formControlName="montantHT" min="0" />
+        <div class="field-error" *ngIf="f.montantHT.touched && f.montantHT.invalid">⚠ Le montant doit être supérieur à 0.</div>
+      </div>
+      <div class="field"><label>Taux TVA (%)</label><input type="number" formControlName="tauxTva" min="0" /></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.dateEmission.touched && f.dateEmission.invalid">
+        <label>Date d'émission <span class="req">*</span></label>
+        <input type="date" formControlName="dateEmission" />
+        <div class="field-error" *ngIf="f.dateEmission.touched && f.dateEmission.invalid">⚠ Date d'émission requise.</div>
+      </div>
+      <div class="field" [class.invalid]="(f.dateEcheance.touched && f.dateEcheance.invalid) || (form.errors?.['dateRange'] && f.dateEcheance.touched)">
+        <label>Échéance <span class="req">*</span></label>
+        <input type="date" formControlName="dateEcheance" />
+        <div class="field-error" *ngIf="f.dateEcheance.touched && f.dateEcheance.errors?.['required']">⚠ Échéance requise.</div>
+        <div class="field-error" *ngIf="form.errors?.['dateRange'] && f.dateEcheance.touched && !f.dateEcheance.errors?.['required']">⚠ L'échéance doit être ≥ à l'émission.</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Statut</label>
+      <select formControlName="statut">
+        <option value="brouillon">Brouillon</option><option value="emise">Émise</option><option value="payee">Payée</option>
+      </select>
+    </div>
+
+    <div class="amount-preview"><span>Montant TTC</span><strong class="mono">{{ ttc | number:'1.2-2' }} €</strong></div>
+
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary">Créer la facture</button>
+    </footer>
+  </form>
+</div>

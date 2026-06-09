@@ -1,0 +1,57 @@
+<div class="modal">
+  <header class="modal-head">
+    <span class="modal-icon">◢</span>
+    <div class="grow">
+      <h3 class="h4">{{ isEdit ? 'Modifier le client' : 'Nouveau client' }}</h3>
+      <p class="caption text-subtle">Coordonnées de l'entreprise cliente.</p>
+    </div>
+    <button class="btn btn-icon btn-ghost" (click)="cancel()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="modal-body">
+    <div class="field" [class.invalid]="f.raisonSociale.touched && f.raisonSociale.invalid">
+      <label>Raison sociale <span class="req">*</span></label>
+      <input type="text" formControlName="raisonSociale" />
+      <div class="field-error" *ngIf="f.raisonSociale.touched && f.raisonSociale.invalid">⚠ La raison sociale est requise.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.secteur.touched && f.secteur.invalid">
+        <label>Secteur <span class="req">*</span></label>
+        <input type="text" formControlName="secteur" />
+        <div class="field-error" *ngIf="f.secteur.touched && f.secteur.invalid">⚠ Le secteur est requis.</div>
+      </div>
+      <div class="field"><label>SIRET</label><input type="text" formControlName="siret" /></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.contact.touched && f.contact.invalid">
+        <label>Contact <span class="req">*</span></label>
+        <input type="text" formControlName="contact" />
+        <div class="field-error" *ngIf="f.contact.touched && f.contact.invalid">⚠ Le contact est requis.</div>
+      </div>
+      <div class="field" [class.invalid]="f.email.touched && f.email.invalid">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" formControlName="email" />
+        <div class="field-error" *ngIf="f.email.touched && f.email.errors?.['required']">⚠ L'email est requis.</div>
+        <div class="field-error" *ngIf="f.email.touched && f.email.errors?.['email']">⚠ Format d'email invalide.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" [class.invalid]="f.ville.touched && f.ville.invalid">
+        <label>Ville <span class="req">*</span></label>
+        <input type="text" formControlName="ville" />
+        <div class="field-error" *ngIf="f.ville.touched && f.ville.invalid">⚠ La ville est requise.</div>
+      </div>
+      <div class="field"><label>Téléphone</label><input type="text" formControlName="telephone" /></div>
+    </div>
+
+    <div class="field"><label>Adresse</label><input type="text" formControlName="adresse" /></div>
+
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary">{{ isEdit ? 'Enregistrer' : 'Créer le client' }}</button>
+    </footer>
+  </form>
+</div>

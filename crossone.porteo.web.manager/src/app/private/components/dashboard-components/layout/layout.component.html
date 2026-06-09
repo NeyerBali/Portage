@@ -1,0 +1,74 @@
+<div class="shell" [class.collapsed]="collapsed">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo">P</span>
+      <span class="word" *ngIf="!collapsed">Portéo</span>
+    </div>
+
+    <div class="role-card" *ngIf="!collapsed">
+      <span class="avatar" style="background: var(--primary)">{{ initials }}</span>
+      <div class="meta">
+        <strong>{{ auth.fullName }}</strong>
+        <small>{{ roleLabel }}</small>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a *ngFor="let item of nav" [routerLink]="item.route" routerLinkActive="active"
+         class="nav-item" [title]="item.label">
+        <span class="ic">{{ item.icon }}</span>
+        <span class="lbl" *ngIf="!collapsed">{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <button class="collapse-btn" (click)="collapsed = !collapsed">
+      {{ collapsed ? '»' : '« Replier le menu' }}
+    </button>
+  </aside>
+
+  <!-- Zone principale -->
+  <div class="main">
+    <header class="topbar">
+      <div class="flex items-center gap-3">
+        <button class="btn btn-icon btn-ghost mobile-only" (click)="collapsed = !collapsed">☰</button>
+        <span class="brand-mini">Portéo</span>
+      </div>
+
+      <div class="flex items-center gap-2 ml-auto">
+        <!-- Palette -->
+        <div class="dd">
+          <button class="btn btn-icon btn-ghost" (click)="palettesOpen = !palettesOpen" title="Palette de couleurs">🎨</button>
+          <div class="dd-menu" *ngIf="palettesOpen">
+            <button *ngFor="let p of palettes" class="dd-row" (click)="setPalette(p.value)">
+              <span class="sw" [style.background]="p.swatch"></span>{{ p.label }}
+              <span *ngIf="theme.palette === p.value" class="check">✓</span>
+            </button>
+          </div>
+        </div>
+        <!-- Thème -->
+        <button class="btn btn-icon btn-ghost" (click)="theme.toggleTheme()" title="Thème clair/sombre">
+          {{ (theme.theme$ | async) === 'dark' ? '☀' : '☾' }}
+        </button>
+        <!-- Menu utilisateur -->
+        <div class="dd">
+          <button class="user-btn" (click)="userMenuOpen = !userMenuOpen">
+            <span class="avatar" style="background: var(--primary)">{{ initials }}</span>
+            <span class="u-meta">
+              <strong>{{ auth.fullName }}</strong>
+              <small>{{ roleLabel }}</small>
+            </span>
+          </button>
+          <div class="dd-menu right" *ngIf="userMenuOpen">
+            <a class="dd-row" routerLink="/parametres" (click)="userMenuOpen = false">⚙ Paramètres</a>
+            <button class="dd-row danger" (click)="logout()">⎋ Déconnexion</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

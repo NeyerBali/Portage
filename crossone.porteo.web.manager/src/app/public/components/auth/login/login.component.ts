@@ -1,0 +1,61 @@
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/core/auth/auth.service';
+
+@Component({
+  selector: 'app-login',
+  standalone: false,
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+})
+export class LoginComponent {
+  showPassword = false;
+  loading = false;
+
+  form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+    remember: [true],
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService,
+  ) {}
+
+  get f() { return this.form.controls; }
+
+  fill(role: 'admin' | 'consultant'): void {
+    this.form.patchValue({
+      email: role === 'admin' ? 'admin@porteo.dev' : 'consultant@porteo.dev',
+      password: 'Porteo2026!',
+    });
+  }
+
+  submit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toastr.warning('Veuillez corriger le formulaire.', 'Formulaire incomplet');
+      return;
+    }
+    this.loading = true;
+    const { email, password } = this.form.value;
+    this.auth.login({ email: email!, password: password! }).subscribe({
+      next: res => {
+        this.loading = false;
+        this.toastr.success(`Bienvenue ${res.fullName} !`, 'Connexion réussie');
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(returnUrl);
+      },
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Email ou mot de passe incorrect.', 'Échec de connexion');
+      },
+    });
+  }
+}

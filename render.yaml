@@ -1,0 +1,34 @@
+# Blueprint Render — déploiement de l'API .NET + PostgreSQL
+# Doc : https://render.com/docs/blueprint-spec
+# Pousse ce dépôt sur GitHub puis, dans Render : New + > Blueprint > sélectionne le repo.
+
+databases:
+  - name: porteo-db
+    databaseName: porteo
+    user: porteo
+    plan: free
+
+services:
+  - type: web
+    name: porteo-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./crossone.porteo.erp/Dockerfile
+    dockerContext: ./crossone.porteo.erp
+    healthCheckPath: /swagger/index.html
+    autoDeploy: true
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # Clé de signature JWT (≥ 64 caractères pour HMAC-SHA512). À changer en vrai prod.
+      - key: AppSettings__Token
+        value: porteo_super_secret_jwt_signing_key_please_change_in_production_2026_0123456789
+      # Chaîne de connexion fournie par la base ci-dessus (format URL postgres://… ,
+      # normalisé automatiquement par l'API en chaîne Npgsql).
+      - key: ConnectionStrings__CnxString
+        fromDatabase:
+          name: porteo-db
+          property: connectionString
+      # Relance des factures impayées toutes les 30 min (démo).
+      - key: Scheduler__RelanceCron
+        value: "0 0/30 * * * ?"

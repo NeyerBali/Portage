@@ -1,0 +1,64 @@
+<div class="auth-shell">
+  <!-- Panneau éditorial sombre -->
+  <aside class="auth-aside">
+    <div class="brand">
+      <span class="logo">P</span>
+      <span class="word">Portéo</span>
+    </div>
+    <div class="aside-body">
+      <h1 class="display">Le portage salarial,<br />enfin limpide.</h1>
+      <p>Pilotez vos consultants, missions et factures depuis une plateforme unique, claire et temps réel.</p>
+      <div class="stats">
+        <div><strong>+250</strong><span>consultants</span></div>
+        <div><strong>1 200</strong><span>missions</span></div>
+        <div><strong>98%</strong><span>satisfaction</span></div>
+      </div>
+    </div>
+    <p class="aside-foot">© 2026 Portéo · Crossone</p>
+  </aside>
+
+  <!-- Formulaire -->
+  <main class="auth-main">
+    <div class="auth-card fade-in">
+      <h2 class="h3">Connexion</h2>
+      <p class="text-muted mb-4">Accédez à votre espace de gestion.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field" [class.invalid]="f.email.touched && f.email.invalid">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" formControlName="email" placeholder="vous@entreprise.fr" autocomplete="username" />
+          <div class="field-error" *ngIf="f.email.touched && f.email.errors?.['required']">⚠ L'email est requis.</div>
+          <div class="field-error" *ngIf="f.email.touched && f.email.errors?.['email']">⚠ Format d'email invalide.</div>
+        </div>
+
+        <div class="field" [class.invalid]="f.password.touched && f.password.invalid">
+          <label>Mot de passe <span class="req">*</span></label>
+          <div class="pw">
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="pw-toggle" (click)="showPassword = !showPassword">{{ showPassword ? '🙈' : '👁' }}</button>
+          </div>
+          <div class="field-error" *ngIf="f.password.touched && f.password.errors?.['required']">⚠ Le mot de passe est requis.</div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4">
+          <label class="remember"><input type="checkbox" formControlName="remember" /> Se souvenir de moi</label>
+          <a class="link">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="loading">
+          <span *ngIf="!loading">Se connecter</span>
+          <span *ngIf="loading" class="spin"></span>
+        </button>
+      </form>
+
+      <div class="demo">
+        <p class="overline">Comptes de démonstration</p>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm grow" (click)="fill('admin')">👤 Admin</button>
+          <button class="btn btn-secondary btn-sm grow" (click)="fill('consultant')">🧑‍💻 Consultant</button>
+        </div>
+        <p class="caption text-subtle mt-2">admin&#64;porteo.dev · consultant&#64;porteo.dev — mot de passe : Porteo2026!</p>
+      </div>
+    </div>
+  </main>
+</div>

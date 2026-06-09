@@ -1,0 +1,40 @@
+<div class="page fade-in">
+  <header class="page-head"><p class="overline">Compte</p><h1 class="h2">Paramètres</h1></header>
+
+  <div class="tabs">
+    <button [class.active]="tab==='profil'" (click)="tab='profil'">Profil</button>
+    <button [class.active]="tab==='preferences'" (click)="tab='preferences'">Préférences</button>
+  </div>
+
+  <!-- Profil -->
+  <div class="card card-pad" *ngIf="tab==='profil'">
+    <div class="profile-head">
+      <span class="big-avatar">{{ (auth.fullName || 'P')[0] }}</span>
+      <div>
+        <h3 class="h4">{{ auth.fullName }}</h3>
+        <p class="text-muted">{{ roleLabel }}</p>
+      </div>
+    </div>
+    <dl class="info">
+      <div><dt>Email</dt><dd>{{ auth.currentUser?.email }}</dd></div>
+      <div><dt>Rôle</dt><dd>{{ roleLabel }}</dd></div>
+      <div *ngIf="auth.consultantId"><dt>Profil consultant</dt><dd class="mono">C-{{ auth.consultantId }}</dd></div>
+    </dl>
+  </div>
+
+  <!-- Préférences -->
+  <div class="card card-pad" *ngIf="tab==='preferences'">
+    <div class="h5 mb-4">Palette de couleurs</div>
+    <div class="palette-grid">
+      <button *ngFor="let p of palettes" class="palette-opt" [class.active]="theme.palette === p.value" (click)="setPalette(p.value)">
+        <span class="sw" [style.background]="p.swatch"></span>{{ p.label }}
+      </button>
+    </div>
+
+    <div class="h5 mt-6 mb-4">Apparence</div>
+    <div class="flex items-center gap-3">
+      <button class="btn btn-secondary" (click)="theme.setTheme('light')" [class.btn-primary]="(theme.theme$ | async)==='light'">☀ Clair</button>
+      <button class="btn btn-secondary" (click)="theme.setTheme('dark')" [class.btn-primary]="(theme.theme$ | async)==='dark'">☾ Sombre</button>
+    </div>
+  </div>
+</div>
