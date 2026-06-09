@@ -19,6 +19,7 @@ const STATUT_COLORS: Record<string, string> = {
 })
 export class DashboardIndexComponent implements OnInit {
   loading = true;
+  skeletons = [0, 1, 2, 3];
   kpis: Kpi[] = [];
   donut: DonutSegment[] = [];
   area: AreaPoint[] = [];
