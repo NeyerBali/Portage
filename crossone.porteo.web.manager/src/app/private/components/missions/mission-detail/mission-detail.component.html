@@ -1,0 +1,107 @@
+<div class="page fade-in" *ngIf="mission as m">
+  <nav class="crumbs">
+    <a (click)="back()">Portéo</a><span class="sep">›</span>
+    <a (click)="back()">{{ isAdmin ? 'Missions' : 'Mes missions' }}</a><span class="sep">›</span>
+    <b class="mono">MIS-{{ m.id | number:'4.0-0' }}</b>
+  </nav>
+
+  <header class="detail-head">
+    <div>
+      <div class="flex items-center gap-3" style="margin-bottom:4px">
+        <span class="mono caption text-subtle">MIS-{{ m.id | number:'4.0-0' }}</span>
+        <app-status-badge [status]="m.statut" kind="mission"></app-status-badge>
+      </div>
+      <h1 class="h2">{{ m.titre }}</h1>
+      <p class="text-muted">{{ m.clientNom }} · {{ m.consultantNom }}</p>
+    </div>
+    <div class="flex gap-2" *ngIf="isAdmin">
+      <button class="btn btn-secondary" (click)="edit()">✎ Modifier</button>
+      <button class="btn btn-secondary" style="color:var(--error-600)" (click)="remove()">🗑 Supprimer</button>
+    </div>
+  </header>
+
+  <div class="detail-grid">
+    <!-- Colonne principale : onglets -->
+    <div class="card">
+      <div class="card-header tabs-header">
+        <div class="tabs">
+          <button [class.active]="tab==='infos'" (click)="tab='infos'">Informations</button>
+          <button [class.active]="tab==='factures'" (click)="tab='factures'">Factures <span class="cnt">{{ m.factures.length }}</span></button>
+          <button [class.active]="tab==='timeline'" (click)="tab='timeline'">Historique</button>
+        </div>
+      </div>
+
+      <div class="card-pad" *ngIf="tab==='infos'">
+        <dl class="dl">
+          <dt>Intitulé</dt><dd>{{ m.titre }}</dd>
+          <dt>Statut</dt><dd><app-status-badge [status]="m.statut" kind="mission"></app-status-badge></dd>
+          <dt>Période</dt><dd>{{ m.dateDebut | date:'dd/MM/yyyy' }} → {{ m.dateFin | date:'dd/MM/yyyy' }}</dd>
+          <dt>TJM</dt><dd class="mono">{{ m.tjm | number:'1.0-0' }} €</dd>
+          <dt>Jours vendus</dt><dd class="mono">{{ m.jours }} jours</dd>
+          <dt>Montant total</dt><dd class="mono total">{{ m.montant | number:'1.0-0' }} €</dd>
+          <dt *ngIf="m.description">Description</dt><dd *ngIf="m.description">{{ m.description }}</dd>
+        </dl>
+      </div>
+
+      <div class="p-table-wrap" *ngIf="tab==='factures'">
+        <table class="p-table" *ngIf="m.factures.length">
+          <thead><tr><th>Facture</th><th>Émise le</th><th>Échéance</th><th>Statut</th><th class="num">Montant TTC</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let f of m.factures">
+              <td class="mono">{{ f.numero }}</td>
+              <td>{{ f.dateEmission | date:'dd/MM/yy' }}</td>
+              <td>{{ f.dateEcheance | date:'dd/MM/yy' }}</td>
+              <td><app-status-badge [status]="f.statut" kind="facture"></app-status-badge></td>
+              <td class="num">{{ f.montantTTC | number:'1.2-2' }} €</td>
+            </tr>
+          </tbody>
+        </table>
+        <app-empty-state *ngIf="!m.factures.length" icon="▤" title="Aucune facture" message="Aucune facture n'a encore été émise pour cette mission."></app-empty-state>
+      </div>
+
+      <div class="card-pad" *ngIf="tab==='timeline'">
+        <ul class="timeline">
+          <li *ngFor="let t of timeline">
+            <span class="t-dot">{{ t.ic }}</span>
+            <div><strong>{{ t.t }}</strong><p class="caption text-muted">{{ t.d }}</p><span class="caption text-subtle">{{ t.when ? (t.when | date:'dd MMM yyyy') : '—' }}</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Colonne latérale -->
+    <div class="side">
+      <div class="card card-pad">
+        <div class="h5 mb-4">Facturation</div>
+        <div class="flex justify-between" style="font-size:var(--t-sm); margin-bottom:8px">
+          <span class="text-muted">Facturé / Total</span><span class="mono" style="font-weight:600">{{ progress }}%</span>
+        </div>
+        <div class="track"><div class="fill" [style.width.%]="progress"></div></div>
+        <dl class="dl mt-4">
+          <dt>Facturé</dt><dd class="mono">{{ billed | number:'1.0-0' }} €</dd>
+          <dt>Restant</dt><dd class="mono">{{ (m.montant - billed) | number:'1.0-0' }} €</dd>
+        </dl>
+      </div>
+
+      <div class="card card-pad link-card" [class.clickable]="isAdmin" (click)="openClient()">
+        <div class="h5 mb-4">Client</div>
+        <div class="flex items-center gap-3">
+          <span class="ic-box">▢</span>
+          <div class="grow"><div style="font-weight:700">{{ m.clientNom }}</div><div class="caption text-subtle">{{ m.clientSecteur }}</div></div>
+          <span *ngIf="isAdmin" class="text-subtle">›</span>
+        </div>
+      </div>
+
+      <div class="card card-pad link-card" [class.clickable]="isAdmin" (click)="openConsultant()">
+        <div class="h5 mb-4">Consultant</div>
+        <div class="flex items-center gap-3">
+          <span class="avatar" style="background:var(--primary)">{{ (m.consultantNom||'?')[0] }}</span>
+          <div class="grow"><div style="font-weight:700">{{ m.consultantNom }}</div><div class="caption text-subtle">{{ m.consultantSpecialite }} · {{ m.consultantVille }}</div></div>
+          <span *ngIf="isAdmin" class="text-subtle">›</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>

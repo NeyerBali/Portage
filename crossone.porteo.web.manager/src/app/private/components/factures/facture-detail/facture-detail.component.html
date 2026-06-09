@@ -1,0 +1,74 @@
+<div class="page fade-in" *ngIf="facture as f">
+  <nav class="crumbs">
+    <a (click)="back()">Portéo</a><span class="sep">›</span>
+    <a (click)="back()">Factures</a><span class="sep">›</span>
+    <b class="mono">{{ f.numero }}</b>
+  </nav>
+
+  <header class="detail-head">
+    <div>
+      <div class="flex items-center gap-3" style="margin-bottom:4px">
+        <span class="mono caption text-subtle">{{ f.numero }}</span>
+        <app-status-badge *ngIf="!isOverdue" [status]="f.statut" kind="facture"></app-status-badge>
+        <span *ngIf="isOverdue" class="badge overdue"><span class="dot"></span>En retard</span>
+      </div>
+      <h1 class="h2 mono">{{ f.montantTTC | number:'1.2-2' }} €</h1>
+      <p class="text-muted">{{ f.clientNom }} · échéance {{ f.dateEcheance | date:'dd/MM/yyyy' }}</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-secondary" (click)="pdf()">⤓ PDF</button>
+      <button *ngIf="isAdmin && f.statut !== 'payee'" class="btn btn-primary" (click)="markPaid()">✓ Marquer payée</button>
+    </div>
+  </header>
+
+  <div class="detail-grid">
+    <div class="card">
+      <div class="card-header"><div class="h5">Détail de la prestation</div></div>
+      <div class="p-table-wrap">
+        <table class="p-table">
+          <thead><tr><th>Désignation</th><th class="num">Montant HT</th></tr></thead>
+          <tbody>
+            <tr><td>{{ f.missionTitre || 'Prestation de portage' }}</td><td class="num">{{ f.montantHT | number:'1.2-2' }} €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-pad recap">
+        <div class="recap-row"><span>Total HT</span><span class="mono">{{ f.montantHT | number:'1.2-2' }} €</span></div>
+        <div class="recap-row"><span>TVA (20 %)</span><span class="mono">{{ f.tva | number:'1.2-2' }} €</span></div>
+        <div class="recap-row total"><span>Total TTC</span><span class="mono">{{ f.montantTTC | number:'1.2-2' }} €</span></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card card-pad">
+        <div class="h5 mb-4">Informations</div>
+        <dl class="dl">
+          <dt>Numéro</dt><dd class="mono">{{ f.numero }}</dd>
+          <dt>Statut</dt><dd><app-status-badge [status]="f.statut" kind="facture"></app-status-badge></dd>
+          <dt>Émise le</dt><dd>{{ f.dateEmission | date:'dd/MM/yyyy' }}</dd>
+          <dt>Échéance</dt><dd [class.danger]="isOverdue">{{ f.dateEcheance | date:'dd/MM/yyyy' }}</dd>
+        </dl>
+      </div>
+
+      <div class="card card-pad link-card clickable" (click)="openMission()">
+        <div class="h5 mb-4">Mission liée</div>
+        <div class="flex items-center gap-3">
+          <span class="ic-box">◆</span>
+          <div class="grow"><div style="font-weight:700">{{ f.missionTitre }}</div><div class="caption text-subtle mono">MIS-{{ f.missionId | number:'4.0-0' }}</div></div>
+          <span class="text-subtle">›</span>
+        </div>
+      </div>
+
+      <div class="card card-pad link-card" [class.clickable]="isAdmin" (click)="openClient()">
+        <div class="h5 mb-4">Client</div>
+        <div class="flex items-center gap-3">
+          <span class="ic-box">▢</span>
+          <div class="grow"><div style="font-weight:700">{{ f.clientNom }}</div></div>
+          <span *ngIf="isAdmin" class="text-subtle">›</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>

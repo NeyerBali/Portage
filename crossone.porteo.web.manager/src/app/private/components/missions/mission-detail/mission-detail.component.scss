@@ -1,0 +1,33 @@
+.crumbs { display: flex; align-items: center; gap: 8px; font-size: var(--t-sm); margin-bottom: var(--sp-4); color: var(--text-muted); }
+.crumbs a { cursor: pointer; } .crumbs a:hover { color: var(--primary); }
+.crumbs .sep { color: var(--border-strong); }
+
+.detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-6); flex-wrap: wrap; }
+.detail-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--sp-5); align-items: start; }
+.side { display: flex; flex-direction: column; gap: var(--sp-5); }
+
+.tabs-header { padding-bottom: 0; border-bottom: none; }
+.tabs { display: flex; gap: var(--sp-5); }
+.tabs button { background: transparent; border: none; padding: var(--sp-3) 0; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; }
+.tabs button.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tabs .cnt { font-family: var(--font-mono); font-size: var(--t-caption); background: var(--bg-sunken); padding: 1px 7px; border-radius: 999px; margin-left: 4px; }
+
+.dl { display: grid; grid-template-columns: 160px 1fr; gap: var(--sp-3) var(--sp-4); margin: 0; }
+.dl dt { color: var(--text-subtle); font-size: var(--t-sm); }
+.dl dd { margin: 0; color: var(--text-default); }
+.dl dd.total { font-weight: 700; color: var(--emerald-700); }
+
+.track { height: 9px; background: var(--bg-sunken); border-radius: 999px; overflow: hidden; }
+.fill { height: 100%; background: linear-gradient(90deg, var(--emerald-700), var(--emerald-500)); border-radius: 999px; transition: width var(--dur-slow) var(--ease-out); }
+
+.link-card.clickable { cursor: pointer; transition: box-shadow var(--dur) var(--ease); }
+.link-card.clickable:hover { box-shadow: var(--shadow-md); }
+.ic-box { width: 42px; height: 42px; border-radius: var(--r-md); background: var(--bg-sunken); display: grid; place-items: center; color: var(--text-muted); }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-4); }
+.timeline li { display: flex; gap: var(--sp-3); }
+.timeline .t-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-brand-soft); color: var(--primary); display: grid; place-items: center; font-size: 13px; flex-shrink: 0; }
+
+.loading-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-9); color: var(--text-muted); justify-content: center; }
+
+@media (max-width: 1080px) { .detail-grid { grid-template-columns: 1fr; } .dl { grid-template-columns: 130px 1fr; } }

@@ -51,15 +51,47 @@ namespace Porteo.Services.Dashboard
         {
             var rows = await _uow.Missions.ReadAsync<KpiAggregateRow>(_queries.Kpis(consultantId));
             var agg = rows.FirstOrDefault() ?? new KpiAggregateRow();
+            var series = (await _uow.Missions.ReadAsync<MonthlySeriesRow>(_queries.MonthlySeries(consultantId))).ToList();
+
+            var ca = series.Select(s => s.CaHt).ToList();
+            var miss = series.Select(s => (decimal)s.MissionsCreees).ToList();
+            var fact = series.Select(s => (decimal)s.FacturesEmises).ToList();
+
+            var caDelta = PercentDelta(ca);
+            var missDelta = IntDelta(miss);
+            var factDelta = IntDelta(fact);
 
             return new List<KpiDto>
             {
-                new() { Cle = "ca", Libelle = consultantId.HasValue ? "Mon CA" : "CA total", Valeur = agg.CaTotal, Delta = 0, Format = "currency" },
-                new() { Cle = "missions", Libelle = consultantId.HasValue ? "Missions en cours" : "Missions actives", Valeur = agg.MissionsActives, Delta = 0, Format = "number" },
-                new() { Cle = "consultants", Libelle = "Consultants", Valeur = agg.Consultants, Delta = 0, Format = "number" },
-                new() { Cle = "impayees", Libelle = "Factures impayées", Valeur = agg.FacturesImpayees, Delta = 0, Format = "number" },
+                new() { Cle = "ca", Libelle = consultantId.HasValue ? "Mon CA cumulé" : "Chiffre d'affaires", Valeur = agg.CaTotal, Format = "currency", Tone = "brand", Sparkline = ca, DeltaLabel = caDelta.label, DeltaDir = caDelta.dir },
+                new() { Cle = "missions", Libelle = consultantId.HasValue ? "Missions en cours" : "Missions actives", Valeur = agg.MissionsActives, Format = "number", Tone = "info", Sparkline = miss, DeltaLabel = missDelta.label, DeltaDir = missDelta.dir },
+                new() { Cle = "consultants", Libelle = "Consultants", Valeur = agg.Consultants, Format = "number", Tone = "warn", Sparkline = Flat(agg.Consultants) },
+                // Pour les impayées, une hausse est défavorable → direction "down" (rouge).
+                new() { Cle = "impayees", Libelle = "Factures impayées", Valeur = agg.FacturesImpayees, Format = "number", Tone = "error", Sparkline = fact,
+                        DeltaLabel = factDelta.label == null ? null : factDelta.label + " retards", DeltaDir = factDelta.dir == "up" ? "down" : (factDelta.dir == "down" ? "up" : "none") },
             };
         }
+
+        private static (string label, string dir) PercentDelta(IReadOnlyList<decimal> s)
+        {
+            if (s.Count < 2) return (null, "none");
+            decimal prev = s[s.Count - 2], last = s[s.Count - 1];
+            if (prev == 0) return last > 0 ? ("+100 %", "up") : (null, "none");
+            var pct = Math.Round((last - prev) / prev * 100m, 1);
+            if (pct == 0) return (null, "none");
+            var label = (pct > 0 ? "+" : "") + pct.ToString("0.#", new CultureInfo("fr-FR")) + " %";
+            return (label, pct > 0 ? "up" : "down");
+        }
+
+        private static (string label, string dir) IntDelta(IReadOnlyList<decimal> s)
+        {
+            if (s.Count < 2) return (null, "none");
+            var diff = (int)(s[s.Count - 1] - s[s.Count - 2]);
+            if (diff == 0) return (null, "none");
+            return ((diff > 0 ? "+" : "") + diff, diff > 0 ? "up" : "down");
+        }
+
+        private static List<decimal> Flat(decimal v) => Enumerable.Repeat(v, 8).ToList();
 
         /// <summary>Construit une série de 12 mois (avec zéros) à partir des données Dapper.</summary>
         private async Task<List<CaMoisDto>> GetCaParMois(int? consultantId)

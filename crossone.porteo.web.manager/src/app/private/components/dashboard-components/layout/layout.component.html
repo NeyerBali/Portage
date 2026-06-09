@@ -19,6 +19,7 @@
          class="nav-item" [title]="item.label">
         <span class="ic">{{ item.icon }}</span>
         <span class="lbl" *ngIf="!collapsed">{{ item.label }}</span>
+        <span class="nav-badge" *ngIf="badgeFor(item.route) && !collapsed">{{ badgeFor(item.route) }}</span>
       </a>
     </nav>
 
@@ -30,12 +31,20 @@
   <!-- Zone principale -->
   <div class="main">
     <header class="topbar">
-      <div class="flex items-center gap-3">
-        <button class="btn btn-icon btn-ghost mobile-only" (click)="collapsed = !collapsed">☰</button>
-        <span class="brand-mini">Portéo</span>
+      <button class="btn btn-icon btn-ghost mobile-only" (click)="collapsed = !collapsed">☰</button>
+
+      <!-- Recherche -->
+      <div class="searchbar">
+        <span class="s-ic">⌕</span>
+        <input type="text" placeholder="Rechercher une mission, un client, un consultant…"
+               [(ngModel)]="searchTerm" (keyup.enter)="doSearch()" />
+        <kbd>⌘K</kbd>
       </div>
 
       <div class="flex items-center gap-2 ml-auto">
+        <!-- Rôle (affichage) -->
+        <span class="role-chip">{{ roleLabel }}</span>
+
         <!-- Palette -->
         <div class="dd">
           <button class="btn btn-icon btn-ghost" (click)="palettesOpen = !palettesOpen" title="Palette de couleurs">🎨</button>
@@ -46,10 +55,31 @@
             </button>
           </div>
         </div>
+
         <!-- Thème -->
         <button class="btn btn-icon btn-ghost" (click)="theme.toggleTheme()" title="Thème clair/sombre">
           {{ (theme.theme$ | async) === 'dark' ? '☀' : '☾' }}
         </button>
+
+        <!-- Notifications -->
+        <div class="dd">
+          <button class="btn btn-icon btn-ghost bell" (click)="notifOpen = !notifOpen" title="Notifications">
+            🔔<span class="dot" *ngIf="hasNotif"></span>
+          </button>
+          <div class="dd-menu right notif-panel" *ngIf="notifOpen">
+            <div class="notif-head">Notifications</div>
+            <div class="notif-item" *ngFor="let n of notifications">
+              <span class="n-ic" [ngClass]="'t-' + n.type">●</span>
+              <div class="n-body">
+                <strong>{{ n.title }}</strong>
+                <p class="caption text-muted">{{ n.detail }}</p>
+                <span class="caption text-subtle">{{ n.when | date:'dd MMM yyyy' }}</span>
+              </div>
+            </div>
+            <div class="notif-empty" *ngIf="!hasNotif">Aucune notification.</div>
+          </div>
+        </div>
+
         <!-- Menu utilisateur -->
         <div class="dd">
           <button class="user-btn" (click)="userMenuOpen = !userMenuOpen">
@@ -68,6 +98,15 @@
     </header>
 
     <main class="content">
+      <!-- Fil d'Ariane -->
+      <nav class="crumbs" *ngIf="crumbs.length > 1">
+        <ng-container *ngFor="let c of crumbs; let i = index">
+          <span class="sep" *ngIf="i > 0">›</span>
+          <a *ngIf="c.link" [routerLink]="c.link">{{ c.label }}</a>
+          <b *ngIf="!c.link">{{ c.label }}</b>
+        </ng-container>
+      </nav>
+
       <router-outlet></router-outlet>
     </main>
   </div>

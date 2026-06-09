@@ -21,4 +21,13 @@ namespace Porteo.ModelViews.Missions
 
         public int NombreFactures { get; set; }
     }
+
+    /// <summary>Fiche détaillée d'une mission (en-tête + factures + coordonnées liées).</summary>
+    public class MissionDetailDto : MissionDto
+    {
+        public string ClientSecteur { get; set; }
+        public string ConsultantSpecialite { get; set; }
+        public string ConsultantVille { get; set; }
+        public List<Porteo.ModelViews.Factures.FactureDto> Factures { get; set; } = new();
+    }
 }

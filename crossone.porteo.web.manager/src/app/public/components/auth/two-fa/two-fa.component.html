@@ -1,0 +1,25 @@
+<div class="auth-shell">
+  <app-auth-aside></app-auth-aside>
+  <main class="auth-main">
+    <div class="auth-card fade-in">
+      <span class="auth-icon">🛡</span>
+      <h1>Vérification en deux étapes</h1>
+      <p class="sub">Saisissez le code à 6 chiffres envoyé au <b style="color:var(--text-default)">06 •• •• •• 21</b>. <span class="text-subtle">(démo : n'importe quels 6 chiffres)</span></p>
+
+      <div class="otp">
+        <input *ngFor="let d of code; let i = index" #otpInput maxlength="1" inputmode="numeric"
+               [class.filled]="d" [value]="d"
+               (input)="set(i, $any($event.target).value)" (keydown)="onKey(i, $event)" [attr.aria-label]="'Chiffre ' + (i+1)" />
+      </div>
+      <p class="field-error" *ngIf="err" style="margin-bottom:14px">⚠ {{ err }}</p>
+
+      <button class="btn btn-primary btn-lg btn-block" (click)="verify()">Vérifier et continuer</button>
+
+      <div class="flex items-center justify-between" style="margin-top:var(--sp-6); font-size:var(--t-sm)">
+        <a class="link" routerLink="/auth/login">← Retour</a>
+        <span class="text-subtle" *ngIf="countdown > 0">Renvoyer le code dans <b class="mono" style="color:var(--text-default)">{{ countdownLabel }}</b></span>
+        <a class="link" *ngIf="countdown === 0" (click)="resend()">Renvoyer le code</a>
+      </div>
+    </div>
+  </main>
+</div>

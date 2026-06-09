@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/core/auth/auth.service';
@@ -40,7 +41,10 @@ export class MissionsListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private api: ApiService,
     public auth: AuthService,
+    private router: Router,
   ) {}
+
+  view(m: Mission): void { this.router.navigate(['/missions', m.id]); }
 
   get isAdmin(): boolean { return this.auth.isAdmin; }
   get activeFilterCount(): number {

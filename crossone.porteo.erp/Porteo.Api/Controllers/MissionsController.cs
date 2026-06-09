@@ -33,7 +33,7 @@ namespace Porteo.Api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var mission = await _services.Missions.GetDto(id, User.OwnerConsultantId());
+            var mission = await _services.Missions.GetDetail(id, User.OwnerConsultantId());
             return mission == null ? NotFound() : Ok(mission);
         }
 

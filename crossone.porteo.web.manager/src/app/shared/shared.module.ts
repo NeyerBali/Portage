@@ -10,6 +10,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { DonutChartComponent } from './components/charts/donut-chart.component';
 import { BarListComponent } from './components/charts/bar-list.component';
 import { AreaChartComponent } from './components/charts/area-chart.component';
+import { SparkComponent } from './components/charts/spark.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
 
 const SHARED_COMPONENTS = [
@@ -19,6 +20,7 @@ const SHARED_COMPONENTS = [
   DonutChartComponent,
   BarListComponent,
   AreaChartComponent,
+  SparkComponent,
   ToggleComponent,
 ];
 

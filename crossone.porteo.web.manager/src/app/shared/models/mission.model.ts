@@ -17,6 +17,13 @@ export interface Mission {
   nombreFactures?: number;
 }
 
+export interface MissionDetail extends Mission {
+  clientSecteur?: string;
+  consultantSpecialite?: string;
+  consultantVille?: string;
+  factures: import('./facture.model').Facture[];
+}
+
 export interface MissionUpsert {
   titre: string;
   description?: string;

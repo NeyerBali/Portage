@@ -12,6 +12,7 @@ namespace Porteo.Services.Missions
     {
         Task<PagedResult<MissionDto>> GetPaged(MissionQueryParams q, int? ownerConsultantId);
         Task<MissionDto> GetDto(int id, int? ownerConsultantId);
+        Task<MissionDetailDto> GetDetail(int id, int? ownerConsultantId);
         Task<MissionDto> CreateMission(MissionUpsertDto dto);
         Task<MissionDto> UpdateMission(int id, MissionUpsertDto dto, int? ownerConsultantId);
         Task<bool> DeleteMission(int id, int? ownerConsultantId);
@@ -90,6 +91,14 @@ namespace Porteo.Services.Missions
             if (mission == null) return null;
             if (ownerConsultantId.HasValue && mission.ConsultantId != ownerConsultantId.Value) return null;
             return _mapper.Map<MissionDto>(mission);
+        }
+
+        public async Task<MissionDetailDto> GetDetail(int id, int? ownerConsultantId)
+        {
+            var mission = await _uow.Missions.GetWithRelations(id);
+            if (mission == null) return null;
+            if (ownerConsultantId.HasValue && mission.ConsultantId != ownerConsultantId.Value) return null;
+            return _mapper.Map<MissionDetailDto>(mission);
         }
 
         public async Task<MissionDto> CreateMission(MissionUpsertDto dto)

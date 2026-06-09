@@ -1,13 +1,29 @@
 namespace Porteo.ModelViews.Dashboard
 {
-    /// <summary>Indicateur clé (KPI) avec sa variation.</summary>
+    /// <summary>Indicateur clé (KPI) avec sa variation et son mini-graphe.</summary>
     public class KpiDto
     {
         public string Cle { get; set; }
         public string Libelle { get; set; }
         public decimal Valeur { get; set; }
-        public decimal Delta { get; set; }
         public string Format { get; set; } = "number"; // number | currency
+        /// <summary>Libellé de variation (ex. "+12,4 %", "+3").</summary>
+        public string DeltaLabel { get; set; }
+        /// <summary>up | down | none</summary>
+        public string DeltaDir { get; set; } = "none";
+        /// <summary>brand | info | warn | error (couleur de l'icône).</summary>
+        public string Tone { get; set; } = "brand";
+        /// <summary>Série courte pour la sparkline.</summary>
+        public List<decimal> Sparkline { get; set; } = new();
+    }
+
+    /// <summary>Une ligne d'agrégat mensuel (lecture Dapper).</summary>
+    public class MonthlySeriesRow
+    {
+        public string Mois { get; set; }
+        public decimal CaHt { get; set; }
+        public int MissionsCreees { get; set; }
+        public int FacturesEmises { get; set; }
     }
 
     /// <summary>Point de la série « CA par mois ».</summary>

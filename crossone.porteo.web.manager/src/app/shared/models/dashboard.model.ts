@@ -2,8 +2,11 @@ export interface Kpi {
   cle: string;
   libelle: string;
   valeur: number;
-  delta: number;
   format: 'number' | 'currency';
+  deltaLabel?: string | null;
+  deltaDir?: 'up' | 'down' | 'none';
+  tone?: 'brand' | 'info' | 'warn' | 'error';
+  sparkline?: number[];
 }
 
 export interface CaMois {

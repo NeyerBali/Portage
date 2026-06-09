@@ -15,6 +15,8 @@ namespace Porteo.Dapper.Dashboard
         string TopClients();
         /// <summary>KPIs agrégés (CA, missions actives, consultants, factures impayées).</summary>
         string Kpis(int? consultantId = null);
+        /// <summary>Agrégats mensuels (CA HT, missions créées, factures émises) — pour les sparklines.</summary>
+        string MonthlySeries(int? consultantId = null);
     }
 
     public class DashboardQueries : IDashboardQueries
@@ -86,6 +88,28 @@ namespace Porteo.Dapper.Dashboard
                   (SELECT COUNT(*) FROM missions m {fMission}{(consultantId.HasValue ? " AND" : " WHERE")} m.""Statut"" = 'en_cours') AS ""MissionsActives"",
                   (SELECT COUNT(*) FROM consultants)                                          AS ""Consultants"",
                   (SELECT COUNT(*) FROM factures f {(consultantId.HasValue ? $@"JOIN missions m ON m.""Id"" = f.""MissionId"" WHERE m.""ConsultantId"" = {consultantId.Value} AND" : "WHERE")} f.""Statut"" = 'emise') AS ""FacturesImpayees"";";
+        }
+
+        public string MonthlySeries(int? consultantId = null)
+        {
+            var fMission = consultantId.HasValue ? $@"AND m.""ConsultantId"" = {consultantId.Value}" : string.Empty;
+            var jFacture = consultantId.HasValue
+                ? $@"JOIN missions m ON m.""Id"" = f.""MissionId"" AND m.""ConsultantId"" = {consultantId.Value}"
+                : string.Empty;
+
+            return $@"
+                WITH mois AS (
+                    SELECT to_char(d, 'YYYY-MM') AS m
+                    FROM generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '7 months',
+                                         date_trunc('month', CURRENT_DATE), INTERVAL '1 month') d
+                )
+                SELECT mois.m AS ""Mois"",
+                    COALESCE((SELECT SUM(f.""MontantHT"") FROM factures f {jFacture}
+                              WHERE f.""Statut"" IN ('emise','payee') AND to_char(f.""DateEmission"",'YYYY-MM') = mois.m),0) AS ""CaHt"",
+                    COALESCE((SELECT COUNT(*) FROM missions m WHERE to_char(m.""CreatedAt"",'YYYY-MM') = mois.m {fMission}),0) AS ""MissionsCreees"",
+                    COALESCE((SELECT COUNT(*) FROM factures f {jFacture}
+                              WHERE f.""Statut"" = 'emise' AND to_char(f.""DateEmission"",'YYYY-MM') = mois.m),0) AS ""FacturesEmises""
+                FROM mois ORDER BY mois.m;";
         }
     }
 

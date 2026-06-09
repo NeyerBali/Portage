@@ -47,6 +47,38 @@
 .dd-row .sw { width: 13px; height: 13px; border-radius: 4px; }
 .dd-row .check { margin-left: auto; color: var(--primary); }
 
+/* Recherche */
+.searchbar { display: flex; align-items: center; gap: 8px; flex: 0 1 380px; background: var(--bg-sunken); border: 1px solid var(--border-subtle); border-radius: var(--r-pill); padding: 7px 14px; }
+.searchbar .s-ic { color: var(--text-subtle); }
+.searchbar input { flex: 1; border: none; background: transparent; outline: none; font-family: inherit; font-size: var(--t-sm); color: var(--text-default); }
+.searchbar kbd { font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle); background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 5px; padding: 1px 6px; }
+
+/* Chip rôle */
+.role-chip { font-size: var(--t-caption); font-weight: 700; color: var(--primary); background: var(--bg-brand-soft); border: 1px solid var(--border-brand); padding: 4px 12px; border-radius: var(--r-pill); }
+
+/* Cloche + notifications */
+.bell { position: relative; }
+.bell .dot { position: absolute; top: 7px; right: 8px; width: 8px; height: 8px; border-radius: 999px; background: var(--error-500); border: 1.5px solid var(--bg-surface); }
+.notif-panel { width: 320px; max-height: 420px; overflow-y: auto; padding: 0; }
+.notif-head { padding: 12px 14px; font-weight: 700; border-bottom: 1px solid var(--border-subtle); }
+.notif-item { display: flex; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--border-subtle); }
+.notif-item .n-ic { font-size: 12px; margin-top: 3px; }
+.notif-item .n-ic.t-error { color: var(--error-500); }
+.notif-item .n-ic.t-warning { color: var(--warning-500); }
+.notif-item .n-ic.t-info { color: var(--info-500); }
+.notif-item .n-ic.t-success { color: var(--success-500); }
+.notif-item .n-body strong { font-size: var(--t-sm); }
+.notif-empty { padding: 20px 14px; text-align: center; color: var(--text-subtle); font-size: var(--t-sm); }
+
+/* Badge sidebar */
+.nav-badge { margin-left: auto; background: var(--error-500); color: #fff; font-size: 11px; font-weight: 700; min-width: 19px; height: 19px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; padding: 0 5px; }
+
+/* Fil d'Ariane */
+.crumbs { display: flex; align-items: center; gap: 8px; font-size: var(--t-sm); margin-bottom: var(--sp-5); color: var(--text-muted); }
+.crumbs a { cursor: pointer; } .crumbs a:hover { color: var(--primary); }
+.crumbs b { color: var(--text-strong); }
+.crumbs .sep { color: var(--border-strong); }
+
 /* Content */
 .content { padding: var(--sp-7); max-width: 1440px; width: 100%; margin: 0 auto; }
 
@@ -55,5 +87,6 @@
   .sidebar { display: none; }
   .mobile-only { display: inline-flex; }
   .brand-mini { display: block; }
+  .searchbar { display: none; }
   .content { padding: var(--sp-4); }
 }

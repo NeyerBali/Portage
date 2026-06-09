@@ -82,8 +82,9 @@
             <td class="num">{{ m.montant | number:'1.0-0' }} €</td>
             <td>
               <div class="row-actions">
-                <button class="btn btn-icon btn-ghost" title="Éditer" (click)="openEdit(m)">✎</button>
-                <button class="btn btn-icon btn-ghost" title="Supprimer" (click)="confirmDelete(m)">🗑</button>
+                <button class="btn btn-icon btn-ghost" title="Voir" (click)="view(m)">👁</button>
+                <button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Éditer" (click)="openEdit(m)">✎</button>
+                <button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Supprimer" (click)="confirmDelete(m)">🗑</button>
               </div>
             </td>
           </tr>

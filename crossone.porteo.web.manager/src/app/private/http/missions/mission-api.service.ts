@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Mission, MissionQueryParams, MissionUpsert, PagedResult } from 'src/app/shared/models';
+import { Mission, MissionDetail, MissionQueryParams, MissionUpsert, PagedResult } from 'src/app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class MissionApiService {
@@ -17,8 +17,8 @@ export class MissionApiService {
     return this.http.get<PagedResult<Mission>>(this.base, { params });
   }
 
-  get(id: number): Observable<Mission> {
-    return this.http.get<Mission>(`${this.base}/${id}`);
+  get(id: number): Observable<MissionDetail> {
+    return this.http.get<MissionDetail>(`${this.base}/${id}`);
   }
 
   create(dto: MissionUpsert): Observable<Mission> {

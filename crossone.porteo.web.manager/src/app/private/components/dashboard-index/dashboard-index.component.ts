@@ -54,4 +54,11 @@ export class DashboardIndexComponent implements OnInit {
   kpiIcon(cle: string): string {
     return { ca: '€', missions: '◆', consultants: '◉', impayees: '▤' }[cle] ?? '◧';
   }
+
+  sparkColor(tone?: string): string {
+    return {
+      brand: 'var(--emerald-700)', info: 'var(--info-600)',
+      warn: 'var(--warning-600)', error: 'var(--error-600)',
+    }[tone ?? 'brand'] ?? 'var(--primary)';
+  }
 }

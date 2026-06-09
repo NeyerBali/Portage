@@ -31,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let f of filtered">
+          <tr *ngFor="let f of filtered" class="clickable" (click)="open(f)">
             <td class="mono">{{ f.numero }}</td>
             <td>{{ f.missionTitre }}</td>
             <td *ngIf="isAdmin">{{ f.clientNom }}</td>
@@ -43,9 +43,10 @@
             </td>
             <td class="num">{{ f.montantTTC | number:'1.2-2' }} €</td>
             <td>
-              <div class="row-actions" *ngIf="isAdmin">
-                <button *ngIf="f.statut !== 'payee'" class="btn btn-icon btn-ghost" title="Marquer payée" (click)="markPaid(f)">✓</button>
-                <button class="btn btn-icon btn-ghost" title="Supprimer" (click)="remove(f)">🗑</button>
+              <div class="row-actions">
+                <button class="btn btn-icon btn-ghost" title="Voir" (click)="$event.stopPropagation(); open(f)">👁</button>
+                <button *ngIf="isAdmin && f.statut !== 'payee'" class="btn btn-icon btn-ghost" title="Marquer payée" (click)="$event.stopPropagation(); markPaid(f)">✓</button>
+                <button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Supprimer" (click)="$event.stopPropagation(); remove(f)">🗑</button>
               </div>
             </td>
           </tr>

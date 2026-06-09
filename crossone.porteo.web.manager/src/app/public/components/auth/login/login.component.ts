@@ -46,11 +46,11 @@ export class LoginComponent {
     this.loading = true;
     const { email, password } = this.form.value;
     this.auth.login({ email: email!, password: password! }).subscribe({
-      next: res => {
+      next: () => {
         this.loading = false;
-        this.toastr.success(`Bienvenue ${res.fullName} !`, 'Connexion réussie');
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        this.router.navigateByUrl(returnUrl);
+        // Étape de vérification en deux étapes (conforme au design)
+        this.router.navigate(['/auth/2fa'], { queryParams: { returnUrl } });
       },
       error: () => {
         this.loading = false;

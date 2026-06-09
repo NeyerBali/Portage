@@ -3,6 +3,14 @@
 .alert.warning { background: var(--warning-50); color: var(--warning-700); border: 1px solid color-mix(in srgb, var(--warning-500) 28%, transparent); }
 
 .kpis { grid-template-columns: repeat(4, 1fr); margin-bottom: var(--sp-6); }
+.kpi-icon.tone-brand { background: var(--bg-brand-soft); color: var(--emerald-700); }
+.kpi-icon.tone-info { background: var(--info-50); color: var(--info-600); }
+.kpi-icon.tone-warn { background: var(--warning-50); color: var(--warning-600); }
+.kpi-icon.tone-error { background: var(--error-50); color: var(--error-600); }
+.kpi-delta { display: flex; align-items: center; gap: 5px; font-size: var(--t-caption); font-weight: 700; margin-top: var(--sp-2); }
+.kpi-delta.up { color: var(--success-600); }
+.kpi-delta.down { color: var(--error-600); }
+.kpi-delta .vs { color: var(--text-subtle); font-weight: 500; }
 .charts { grid-template-columns: 1.6fr 1fr; margin-bottom: var(--sp-6); }
 
 .timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-4); }

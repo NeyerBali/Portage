@@ -15,13 +15,18 @@
   <section class="grid kpis">
     <div class="card card-pad kpi" *ngFor="let k of kpis">
       <div class="kpi-top">
-        <span class="kpi-icon">{{ kpiIcon(k.cle) }}</span>
+        <span class="kpi-icon" [ngClass]="'tone-' + (k.tone || 'brand')">{{ kpiIcon(k.cle) }}</span>
+        <app-spark *ngIf="k.sparkline && k.sparkline.length > 1" [data]="k.sparkline" [color]="sparkColor(k.tone)"></app-spark>
       </div>
+      <div class="kpi-label">{{ k.libelle }}</div>
       <div class="kpi-value">
         <span *ngIf="k.format === 'currency'">{{ k.valeur | number:'1.0-0' }} €</span>
         <span *ngIf="k.format !== 'currency'">{{ k.valeur | number:'1.0-0' }}</span>
       </div>
-      <div class="kpi-label">{{ k.libelle }}</div>
+      <div class="kpi-delta" *ngIf="k.deltaLabel" [class.up]="k.deltaDir==='up'" [class.down]="k.deltaDir==='down'">
+        <span>{{ k.deltaDir==='down' ? '↓' : '↑' }}</span> {{ k.deltaLabel }}
+        <span class="vs">vs mois préc.</span>
+      </div>
     </div>
     <ng-container *ngIf="loading && !kpis.length">
       <div class="card card-pad" *ngFor="let i of skeletons"><div class="skeleton" style="height:64px"></div></div>

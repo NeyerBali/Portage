@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ApiService } from '../../../http/api.service';
@@ -22,10 +23,12 @@ export class FacturesListComponent implements OnInit {
 
   constructor(
     private api: ApiService, public auth: AuthService,
-    private dialog: MatDialog, private toastr: ToastrService,
+    private dialog: MatDialog, private toastr: ToastrService, private router: Router,
   ) {}
 
   get isAdmin(): boolean { return this.auth.isAdmin; }
+
+  open(f: Facture): void { this.router.navigate(['/factures', f.id]); }
 
   ngOnInit(): void { this.load(); }
 
