@@ -6,3 +6,6 @@ export * from './facture.model';
 export * from './user.model';
 export * from './dashboard.model';
 export * from './paged-result.model';
+export * from './justificatif.model';
+export * from './alert.model';
+export * from './activity.model';

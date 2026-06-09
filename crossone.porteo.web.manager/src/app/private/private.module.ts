@@ -22,6 +22,10 @@ import { ConsultantPopupComponent } from './components/consultants/consultant-po
 import { FacturesListComponent } from './components/factures/factures-list/factures-list.component';
 import { FactureDetailComponent } from './components/factures/facture-detail/facture-detail.component';
 import { FacturePopupComponent } from './components/factures/facture-popup/facture-popup.component';
+import { JustificatifsListComponent } from './components/justificatifs/justificatifs-list/justificatifs-list.component';
+import { JustificatifPopupComponent } from './components/justificatifs/justificatif-popup/justificatif-popup.component';
+import { AlertesComponent } from './components/alertes/alertes.component';
+import { JournalComponent } from './components/journal/journal.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
@@ -40,6 +44,10 @@ import { SettingsComponent } from './components/settings/settings.component';
     FacturesListComponent,
     FactureDetailComponent,
     FacturePopupComponent,
+    JustificatifsListComponent,
+    JustificatifPopupComponent,
+    AlertesComponent,
+    JournalComponent,
     SettingsComponent,
   ],
   imports: [

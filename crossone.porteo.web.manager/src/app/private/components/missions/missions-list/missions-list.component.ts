@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, debounceTime, take, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ApiService } from '../../../http/api.service';
 import { MissionActions } from '../../../store/missions/mission.actions';
@@ -13,6 +14,7 @@ import {
 import { Client, Consultant, Mission, MISSION_STATUTS, MissionQueryParams } from 'src/app/shared/models';
 import { MissionPopupComponent } from '../mission-popup/mission-popup.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { downloadCsv } from 'src/app/shared/utils/csv';
 
 @Component({
   selector: 'app-missions-list',
@@ -42,9 +44,21 @@ export class MissionsListComponent implements OnInit, OnDestroy {
     private api: ApiService,
     public auth: AuthService,
     private router: Router,
+    private toastr: ToastrService,
   ) {}
 
   view(m: Mission): void { this.router.navigate(['/missions', m.id]); }
+
+  exportCsv(): void {
+    this.store.select(selectMissions).pipe(take(1)).subscribe(missions => {
+      downloadCsv('missions-porteo.csv', missions, [
+        { key: 'titre', label: 'Mission' }, { key: 'clientNom', label: 'Client' }, { key: 'consultantNom', label: 'Consultant' },
+        { key: 'dateDebut', label: 'Début' }, { key: 'dateFin', label: 'Fin' }, { key: 'statut', label: 'Statut' },
+        { key: 'tjm', label: 'TJM' }, { key: 'jours', label: 'Jours' }, { key: 'montant', label: 'Montant' },
+      ]);
+      this.toastr.success('Export CSV généré.');
+    });
+  }
 
   get isAdmin(): boolean { return this.auth.isAdmin; }
   get activeFilterCount(): number {

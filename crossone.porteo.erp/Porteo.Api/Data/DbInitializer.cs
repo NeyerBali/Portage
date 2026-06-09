@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Porteo.Models.Activities;
 using Porteo.Models.Clients;
 using Porteo.Models.Consultants;
 using Porteo.Models.Factures;
+using Porteo.Models.Justificatifs;
 using Porteo.Models.Missions;
 using Porteo.Models.Users;
 using Porteo.Repositories.Context;
@@ -92,6 +94,22 @@ namespace Porteo.Api.Data
                 new() { Numero = "FAC-2026-0005", MissionId = m[5].Id, MontantHT = 18000, Tva = Tva(18000), MontantTTC = Ttc(18000), Statut = FactureStatut.Emise, DateEmission = Utc(2026,1,10), DateEcheance = Utc(2026,2,10), CreatedAt = now.AddDays(-50) },
             };
             db.Factures.AddRange(factures);
+
+            // ---- Justificatifs (déposés par des consultants) ----
+            db.Justificatifs.AddRange(
+                new Justificatif { MissionId = m[0].Id, ConsultantId = m[0].ConsultantId, Type = JustificatifType.Frais, Libelle = "Frais de déplacement Lyon-Paris", Montant = 184.50m, DateJustificatif = Utc(2026, 2, 12), Notes = "Train A/R + taxi", Statut = JustificatifStatut.EnAttente, CreatedAt = now.AddDays(-8) },
+                new Justificatif { MissionId = m[0].Id, ConsultantId = m[0].ConsultantId, Type = JustificatifType.Cra, Libelle = "CRA Janvier 2026", Montant = null, DateJustificatif = Utc(2026, 2, 1), Notes = "18 jours travaillés", Statut = JustificatifStatut.Valide, DateTraitement = now.AddDays(-20), CreatedAt = now.AddDays(-25) },
+                new Justificatif { MissionId = m[2].Id, ConsultantId = m[2].ConsultantId, Type = JustificatifType.Document, Libelle = "Attestation de formation Spark", Montant = null, DateJustificatif = Utc(2025, 11, 15), Statut = JustificatifStatut.Valide, DateTraitement = now.AddDays(-60), CreatedAt = now.AddDays(-62) },
+                new Justificatif { MissionId = m[1].Id, ConsultantId = m[1].ConsultantId, Type = JustificatifType.Frais, Libelle = "Hôtel mission Doctolib", Montant = 320m, DateJustificatif = Utc(2026, 3, 5), Notes = "2 nuits", Statut = JustificatifStatut.EnAttente, CreatedAt = now.AddDays(-4) }
+            );
+
+            // ---- Journal d'activité (amorçage) ----
+            db.Activities.AddRange(
+                new ActivityEntry { Type = "mission_created", Titre = "Mission créée", Description = "Refonte portail client · Société Générale", UserName = "Portéo Admin", ConsultantId = c[0].Id, CreatedAt = now.AddDays(-40) },
+                new ActivityEntry { Type = "facture_paid", Titre = "Facture payée", Description = "FAC-2025-0001 · EDF", UserName = "Portéo Admin", CreatedAt = now.AddDays(-30) },
+                new ActivityEntry { Type = "justif_created", Titre = "Justificatif déposé", Description = "CRA Janvier 2026 · Camille Rousseau", UserName = "Camille Rousseau", ConsultantId = c[0].Id, CreatedAt = now.AddDays(-25) },
+                new ActivityEntry { Type = "justif_validated", Titre = "Justificatif validé", Description = "CRA Janvier 2026", UserName = "Portéo Admin", ConsultantId = c[0].Id, CreatedAt = now.AddDays(-20) }
+            );
 
             // ---- Utilisateurs ----
             PasswordHasher.Create("Porteo2026!", out var adminHash, out var adminSalt);

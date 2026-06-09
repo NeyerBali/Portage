@@ -45,6 +45,7 @@ namespace Porteo.Api.Controllers
             try
             {
                 var created = await _services.Missions.CreateMission(dto);
+                await _services.Activities.Log("mission_created", "Mission créée", $"{created.Titre} · {created.ClientNom}", User.GetUserId(), User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value);
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }
             catch (ArgumentException ex)

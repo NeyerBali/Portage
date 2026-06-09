@@ -11,16 +11,25 @@ using Porteo.Repositories;
 using Porteo.Repositories.Context;
 using Porteo.Scheduler;
 using Porteo.Services;
+using Porteo.Services.Activities;
+using Porteo.Services.Alerts;
 using Porteo.Services.Clients;
 using Porteo.Services.Consultants;
 using Porteo.Services.Dashboard;
 using Porteo.Services.Factures;
+using Porteo.Services.Justificatifs;
 using Porteo.Services.Missions;
+using Porteo.Services.Search;
 using Porteo.Services.Users;
 using Npgsql;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Culture invariante : binding fiable des décimaux (point décimal) quel que soit l'OS.
+var invariant = System.Globalization.CultureInfo.InvariantCulture;
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = invariant;
+System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = invariant;
 
 // ---- Port d'écoute (PaaS : Render/Railway/Heroku injectent la variable PORT) ----
 var listenPort = Environment.GetEnvironmentVariable("PORT");
@@ -85,6 +94,10 @@ builder.Services.AddScoped<IConsultantService, ConsultantService>();
 builder.Services.AddScoped<IFactureService, FactureService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IJustificatifService, JustificatifService>();
+builder.Services.AddScoped<IActivityService, ActivityService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IServices, Porteo.Services.Services>();
 
 // ---- AutoMapper ----

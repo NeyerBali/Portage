@@ -73,6 +73,9 @@ a { color: inherit; text-decoration: none; }
 .badge.active    { @include status(#15A66A); }
 .badge.paused    { @include status(#E29215); }
 .badge.overdue   { @include status(#D8483B); }
+.badge.en_attente{ @include status(#E29215); }
+.badge.valide    { @include status(#15A66A); }
+.badge.refuse    { @include status(#D8483B); }
 
 /* ===== Cartes ===== */
 .card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }

@@ -41,6 +41,11 @@ export class FactureDetailComponent implements OnInit {
     this.api.factures.markPaid(this.facture.id).subscribe(f => { this.facture = f; this.toastr.success('Facture marquée payée.'); });
   }
 
+  relance(): void {
+    if (!this.facture) return;
+    this.api.factures.relance(this.facture.id).subscribe(res => this.toastr.success(res.message, 'Relance envoyée'));
+  }
+
   pdf(): void { this.toastr.info('Génération PDF non disponible dans cette démonstration.', 'PDF'); }
   openMission(): void { if (this.facture) this.router.navigate(['/missions', this.facture.missionId]); }
   openClient(): void { if (this.isAdmin && this.facture?.clientId) this.router.navigate(['/clients', this.facture.clientId]); }

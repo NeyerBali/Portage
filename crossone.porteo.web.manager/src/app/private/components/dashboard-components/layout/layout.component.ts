@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { Subject, debounceTime, filter } from 'rxjs';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ThemeService, PALETTES, Palette } from 'src/app/core/services/theme.service';
 import { ApiService } from '../../../http/api.service';
+import { SearchResult } from 'src/app/shared/models';
 
 interface NavItem { label: string; icon: string; route: string; }
 interface Crumb { label: string; link?: string; }
@@ -11,23 +12,29 @@ interface Notif { type: 'error' | 'warning' | 'info' | 'success'; title: string;
 
 const NAV_ADMIN: NavItem[] = [
   { label: 'Tableau de bord', icon: '◧', route: '/dashboard' },
+  { label: "Centre d'alerte", icon: '⚠', route: '/alertes' },
   { label: 'Missions', icon: '◆', route: '/missions' },
   { label: 'Clients', icon: '◢', route: '/clients' },
   { label: 'Consultants', icon: '◉', route: '/consultants' },
   { label: 'Factures', icon: '▤', route: '/factures' },
+  { label: 'Justificatifs', icon: '📎', route: '/justificatifs' },
+  { label: 'Journal', icon: '◷', route: '/journal' },
   { label: 'Paramètres', icon: '⚙', route: '/parametres' },
 ];
 
 const NAV_CONSULTANT: NavItem[] = [
   { label: 'Mon tableau de bord', icon: '◧', route: '/dashboard' },
+  { label: 'Mes alertes', icon: '⚠', route: '/alertes' },
   { label: 'Mes missions', icon: '◆', route: '/missions' },
   { label: 'Mes factures', icon: '▤', route: '/factures' },
+  { label: 'Mes justificatifs', icon: '📎', route: '/justificatifs' },
   { label: 'Mon profil', icon: '⚙', route: '/parametres' },
 ];
 
 const LABELS: Record<string, string> = {
   dashboard: 'Tableau de bord', missions: 'Missions', clients: 'Clients',
   consultants: 'Consultants', factures: 'Factures', parametres: 'Paramètres',
+  alertes: "Centre d'alerte", justificatifs: 'Justificatifs', journal: 'Journal',
 };
 
 @Component({
@@ -51,6 +58,8 @@ export class LayoutComponent implements OnInit {
   factureBadge = 0;
   notifications: Notif[] = [];
   crumbs: Crumb[] = [];
+  searchResults: SearchResult[] = [];
+  private search$ = new Subject<string>();
 
   constructor(public auth: AuthService, public theme: ThemeService, private api: ApiService, private router: Router) {}
 
@@ -65,6 +74,22 @@ export class LayoutComponent implements OnInit {
       .subscribe(e => this.buildCrumbs((e as NavigationEnd).urlAfterRedirects));
 
     this.loadNotifications();
+
+    this.search$.pipe(debounceTime(250)).subscribe(q => {
+      if (!q || q.trim().length < 2) { this.searchResults = []; return; }
+      this.api.alerts.search(q).subscribe(r => (this.searchResults = r));
+    });
+  }
+
+  onSearchInput(value: string): void { this.searchTerm = value; this.search$.next(value); }
+
+  goResult(r: SearchResult): void {
+    this.searchResults = []; this.searchTerm = '';
+    this.router.navigateByUrl(r.route);
+  }
+
+  resultIcon(type: string): string {
+    return { mission: '◆', client: '◢', consultant: '◉', facture: '▤' }[type] ?? '•';
   }
 
   get hasNotif(): boolean { return this.notifications.length > 0; }
@@ -102,7 +127,7 @@ export class LayoutComponent implements OnInit {
   }
 
   doSearch(): void {
-    this.searchOpen = false;
+    if (this.searchResults.length) { this.goResult(this.searchResults[0]); return; }
     this.router.navigate(['/missions']);
   }
 

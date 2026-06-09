@@ -1,0 +1,22 @@
+<div class="page fade-in">
+  <header class="page-head">
+    <p class="overline">Traçabilité</p>
+    <h1 class="h2">Journal d'activité</h1>
+    <p class="text-muted">Historique des actions clés sur la plateforme.</p>
+  </header>
+
+  <div class="card card-pad">
+    <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+    <ul class="timeline" *ngIf="!loading">
+      <li *ngFor="let a of activities">
+        <span class="t-dot" [ngClass]="'tone-' + tone(a.type)">{{ icon(a.type) }}</span>
+        <div class="grow">
+          <strong>{{ a.titre }}</strong>
+          <p class="caption text-muted">{{ a.description }}</p>
+          <span class="caption text-subtle">{{ a.createdAt | date:'dd MMM yyyy, HH:mm' }}<span *ngIf="a.userName"> · {{ a.userName }}</span></span>
+        </div>
+      </li>
+    </ul>
+    <app-empty-state *ngIf="!loading && activities.length === 0" icon="◷" title="Journal vide" message="Les actions récentes apparaîtront ici."></app-empty-state>
+  </div>
+</div>

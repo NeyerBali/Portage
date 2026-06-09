@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Logging;
+using Porteo.Repositories.Activities;
 using Porteo.Repositories.Clients;
 using Porteo.Repositories.Consultants;
 using Porteo.Repositories.Context;
 using Porteo.Repositories.Factures;
+using Porteo.Repositories.Justificatifs;
 using Porteo.Repositories.Missions;
 using Porteo.Repositories.Users;
 
@@ -19,6 +21,8 @@ namespace Porteo.Repositories
         IMissionRepository Missions { get; }
         IFactureRepository Factures { get; }
         IUserRepository Users { get; }
+        IJustificatifRepository Justificatifs { get; }
+        IActivityRepository Activities { get; }
 
         Task<bool> CompleteAsync();
         bool Complete();
@@ -34,6 +38,8 @@ namespace Porteo.Repositories
         public IMissionRepository Missions { get; }
         public IFactureRepository Factures { get; }
         public IUserRepository Users { get; }
+        public IJustificatifRepository Justificatifs { get; }
+        public IActivityRepository Activities { get; }
 
         public UnitOfWork(PorteoDbContext context, ILoggerFactory loggerFactory)
         {
@@ -45,6 +51,8 @@ namespace Porteo.Repositories
             Missions = new MissionRepository(_context, _logger);
             Factures = new FactureRepository(_context, _logger);
             Users = new UserRepository(_context, _logger);
+            Justificatifs = new JustificatifRepository(_context, _logger);
+            Activities = new ActivityRepository(_context, _logger);
         }
 
         public async Task<bool> CompleteAsync()

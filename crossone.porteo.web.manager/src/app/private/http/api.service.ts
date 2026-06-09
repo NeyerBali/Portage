@@ -4,6 +4,8 @@ import { ClientApiService } from './clients/client-api.service';
 import { ConsultantApiService } from './consultants/consultant-api.service';
 import { FactureApiService } from './factures/facture-api.service';
 import { DashboardApiService } from './dashboard/dashboard-api.service';
+import { JustificatifApiService } from './justificatifs/justificatif-api.service';
+import { AlertApiService } from './alerts/alert-api.service';
 
 /**
  * Façade d'accès à l'API REST, agrégeant un service par domaine
@@ -17,5 +19,7 @@ export class ApiService {
     public consultants: ConsultantApiService,
     public factures: FactureApiService,
     public dashboard: DashboardApiService,
+    public justificatifs: JustificatifApiService,
+    public alerts: AlertApiService,
   ) {}
 }

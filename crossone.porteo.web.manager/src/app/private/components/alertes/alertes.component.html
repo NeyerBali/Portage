@@ -1,0 +1,42 @@
+<div class="page fade-in">
+  <header class="page-head">
+    <p class="overline">Supervision</p>
+    <h1 class="h2">Centre d'alerte</h1>
+    <p class="text-muted">{{ totalCount }} point(s) d'attention nécessitant une action.</p>
+  </header>
+
+  <div class="filters">
+    <button class="chip" [class.active]="toneFilter==='all'" (click)="toneFilter='all'">Toutes</button>
+    <button class="chip" [class.active]="toneFilter==='danger'" (click)="toneFilter='danger'">🔴 Urgentes</button>
+    <button class="chip" [class.active]="toneFilter==='warn'" (click)="toneFilter='warn'">🟠 À surveiller</button>
+    <button class="chip" [class.active]="toneFilter==='info'" (click)="toneFilter='info'">🔵 Informatives</button>
+  </div>
+
+  <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+
+  <div class="cats" *ngIf="!loading">
+    <div class="card cat" *ngFor="let c of visible" [ngClass]="'tone-' + c.tone">
+      <button class="cat-head" (click)="toggle(c.cle)">
+        <span class="cat-ic">{{ icon(c) }}</span>
+        <div class="grow">
+          <div class="cat-title">{{ c.titre }}</div>
+          <div class="caption text-subtle">{{ c.hint }}</div>
+        </div>
+        <span class="cat-count" [class.zero]="c.count === 0">{{ c.count }}</span>
+        <span class="chev">{{ expanded[c.cle] ? '▾' : '▸' }}</span>
+      </button>
+
+      <div class="cat-body" *ngIf="expanded[c.cle]">
+        <div class="alert-item" *ngFor="let it of c.items" (click)="go(it.route)" [class.clickable]="it.route">
+          <div class="grow">
+            <strong>{{ it.titre }}</strong>
+            <span class="text-muted" *ngIf="it.sousTitre"> · {{ it.sousTitre }}</span>
+            <div class="caption text-subtle">{{ it.meta }}</div>
+          </div>
+          <span class="text-subtle" *ngIf="it.route">›</span>
+        </div>
+        <div class="cat-empty" *ngIf="c.items.length === 0">✓ Rien à signaler ici.</div>
+      </div>
+    </div>
+  </div>
+</div>

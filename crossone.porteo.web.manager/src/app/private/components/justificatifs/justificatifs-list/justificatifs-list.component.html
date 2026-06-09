@@ -1,0 +1,61 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Suivi</p>
+      <h1 class="h2">Justificatifs</h1>
+      <p class="text-muted">{{ isAdmin ? 'Validez les pièces déposées par les consultants.' : 'Déposez et suivez vos notes de frais, CRA et documents.' }}</p>
+    </div>
+    <button class="btn btn-primary" (click)="add()">＋ Déposer un justificatif</button>
+  </header>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="segmented">
+        <button [class.active]="!statutFilter" (click)="statutFilter=null">Tous</button>
+        <button *ngFor="let s of statuts" [class.active]="statutFilter===s.value" (click)="statutFilter=s.value">{{ s.label }}</button>
+      </div>
+      <span class="pending" *ngIf="pendingCount">{{ pendingCount }} en attente</span>
+    </div>
+
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead>
+          <tr>
+            <th>Type</th><th>Libellé</th><th>Mission</th><th *ngIf="isAdmin">Consultant</th>
+            <th class="num">Montant</th><th>Date</th><th>Statut</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let j of filtered">
+            <td><span class="type-chip">{{ typeLabel(j.type) }}</span></td>
+            <td>
+              <strong>{{ j.libelle }}</strong>
+              <div class="caption text-subtle" *ngIf="j.fileName">📎 {{ j.fileName }}</div>
+              <div class="caption" style="color:var(--error-600)" *ngIf="j.statut==='refuse' && j.motifRefus">Motif : {{ j.motifRefus }}</div>
+            </td>
+            <td>{{ j.missionTitre }}</td>
+            <td *ngIf="isAdmin">{{ j.consultantNom }}</td>
+            <td class="num">{{ j.montant != null ? (j.montant | number:'1.2-2') + ' €' : '—' }}</td>
+            <td>{{ j.dateJustificatif | date:'dd/MM/yy' }}</td>
+            <td><app-status-badge [status]="j.statut" kind="justificatif"></app-status-badge></td>
+            <td>
+              <div class="row-actions">
+                <button *ngIf="j.hasFile" class="btn btn-icon btn-ghost" title="Télécharger" (click)="download(j)">⤓</button>
+                <ng-container *ngIf="isAdmin && j.statut==='en_attente'">
+                  <button class="btn btn-icon btn-ghost" title="Valider" (click)="validate(j)" style="color:var(--success-600)">✓</button>
+                  <button class="btn btn-icon btn-ghost" title="Refuser" (click)="reject(j)" style="color:var(--error-600)">✕</button>
+                </ng-container>
+                <button *ngIf="!isAdmin && j.statut==='en_attente'" class="btn btn-icon btn-ghost" title="Supprimer" (click)="remove(j)">🗑</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && filtered.length === 0" icon="📎" title="Aucun justificatif"
+        [message]="isAdmin ? 'Aucune pièce à traiter pour ce filtre.' : 'Déposez votre première pièce justificative.'">
+        <button class="btn btn-primary mt-4" (click)="add()">＋ Déposer un justificatif</button>
+      </app-empty-state>
+    </div>
+  </div>
+</div>

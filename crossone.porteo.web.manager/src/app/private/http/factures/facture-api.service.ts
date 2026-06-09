@@ -29,6 +29,10 @@ export class FactureApiService {
     return this.http.post<Facture>(`${this.base}/${id}/mark-paid`, {});
   }
 
+  relance(id: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.base}/${id}/relance`, {});
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
   }

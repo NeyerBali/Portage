@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Porteo.Api.Filters;
 using Porteo.Api.Helpers;
+using System.Security.Claims;
 using Porteo.Models.Users;
 using Porteo.ModelViews.Factures;
 using Porteo.Services;
@@ -40,6 +41,7 @@ namespace Porteo.Api.Controllers
             try
             {
                 var created = await _services.Factures.CreateFacture(dto);
+                await _services.Activities.Log("facture_created", "Facture créée", $"{created.Numero} · {created.ClientNom}", User.GetUserId(), User.FindFirst(ClaimTypes.Name)?.Value);
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }
             catch (ArgumentException ex)
@@ -68,7 +70,22 @@ namespace Porteo.Api.Controllers
         public async Task<IActionResult> MarkPaid(int id)
         {
             var updated = await _services.Factures.MarkPaid(id);
-            return updated == null ? NotFound() : Ok(updated);
+            if (updated == null) return NotFound();
+            await _services.Activities.Log("facture_paid", "Facture payée", $"{updated.Numero} · {updated.ClientNom}", User.GetUserId(), User.FindFirst(ClaimTypes.Name)?.Value);
+            return Ok(updated);
+        }
+
+        /// <summary>Relance manuelle d'une facture impayée (émise).</summary>
+        [HttpPost("{id:int}/relance")]
+        [Authorize(Roles = UserRole.Admin)]
+        public async Task<IActionResult> Relance(int id)
+        {
+            var facture = await _services.Factures.GetDto(id, null);
+            if (facture == null) return NotFound();
+            if (facture.Statut != "emise")
+                return BadRequest(new { message = "Seules les factures émises peuvent être relancées." });
+            await _services.Activities.Log("facture_relance", "Relance envoyée", $"{facture.Numero} · {facture.ClientNom}", User.GetUserId(), User.FindFirst(ClaimTypes.Name)?.Value);
+            return Ok(new { message = $"Relance envoyée pour la facture {facture.Numero}." });
         }
 
         [HttpDelete("{id:int}")]

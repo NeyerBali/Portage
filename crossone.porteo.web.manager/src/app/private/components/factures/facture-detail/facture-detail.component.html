@@ -17,6 +17,7 @@
     </div>
     <div class="flex gap-2">
       <button class="btn btn-secondary" (click)="pdf()">⤓ PDF</button>
+      <button *ngIf="isAdmin && f.statut === 'emise'" class="btn btn-secondary" (click)="relance()">✉ Relancer</button>
       <button *ngIf="isAdmin && f.statut !== 'payee'" class="btn btn-primary" (click)="markPaid()">✓ Marquer payée</button>
     </div>
   </header>

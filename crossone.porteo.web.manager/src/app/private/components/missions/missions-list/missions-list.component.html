@@ -4,7 +4,10 @@
       <p class="overline">{{ isAdmin ? 'Gestion' : 'Mes missions' }}</p>
       <h1 class="h2">Missions</h1>
     </div>
-    <button *ngIf="isAdmin" class="btn btn-primary" (click)="openCreate()">＋ Nouvelle mission</button>
+    <div class="flex gap-2">
+      <button class="btn btn-secondary" (click)="exportCsv()">⤓ Exporter CSV</button>
+      <button *ngIf="isAdmin" class="btn btn-primary" (click)="openCreate()">＋ Nouvelle mission</button>
+    </div>
   </header>
 
   <div class="card">

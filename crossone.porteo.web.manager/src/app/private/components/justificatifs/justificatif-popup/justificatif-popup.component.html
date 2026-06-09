@@ -1,0 +1,62 @@
+<div class="modal">
+  <header class="modal-head">
+    <span class="modal-icon">📎</span>
+    <div class="grow">
+      <h3 class="h4">Nouveau justificatif</h3>
+      <p class="caption text-subtle">Déposez une note de frais, un CRA ou un document lié à une mission.</p>
+    </div>
+    <button class="btn btn-icon btn-ghost" (click)="cancel()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="modal-body">
+    <div class="field" [class.invalid]="f.missionId.touched && f.missionId.invalid">
+      <label>Mission <span class="req">*</span></label>
+      <select formControlName="missionId">
+        <option [ngValue]="null" disabled>Sélectionner…</option>
+        <option *ngFor="let m of data.missions" [ngValue]="m.id">{{ m.titre }}<span *ngIf="m.clientNom"> — {{ m.clientNom }}</span></option>
+      </select>
+      <div class="field-error" *ngIf="f.missionId.touched && f.missionId.invalid">⚠ La mission est requise.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Type <span class="req">*</span></label>
+        <select formControlName="type">
+          <option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Montant (€)</label>
+        <input type="number" formControlName="montant" min="0" step="0.01" placeholder="(optionnel)" />
+      </div>
+    </div>
+
+    <div class="field" [class.invalid]="f.libelle.touched && f.libelle.invalid">
+      <label>Libellé <span class="req">*</span></label>
+      <input type="text" formControlName="libelle" placeholder="Ex. Frais de déplacement Lyon-Paris" />
+      <div class="field-error" *ngIf="f.libelle.touched && f.libelle.invalid">⚠ Le libellé est requis.</div>
+    </div>
+
+    <div class="field" [class.invalid]="f.dateJustificatif.touched && f.dateJustificatif.invalid">
+      <label>Date <span class="req">*</span></label>
+      <input type="date" formControlName="dateJustificatif" />
+    </div>
+
+    <div class="field">
+      <label>Notes</label>
+      <textarea formControlName="notes" placeholder="Détails (optionnel)"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Pièce jointe</label>
+      <input type="file" (change)="onFile($event)" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" />
+      <span class="field-hint" *ngIf="file">{{ file.name }} ({{ (file.size / 1024) | number:'1.0-0' }} Ko)</span>
+      <span class="field-hint" *ngIf="!file">PDF, image ou document (optionnel, max 15 Mo).</span>
+    </div>
+
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary">Déposer le justificatif</button>
+    </footer>
+  </form>
+</div>

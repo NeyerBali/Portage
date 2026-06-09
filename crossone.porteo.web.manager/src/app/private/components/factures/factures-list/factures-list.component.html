@@ -4,7 +4,10 @@
       <p class="overline">Facturation</p>
       <h1 class="h2">Factures</h1>
     </div>
-    <button *ngIf="isAdmin" class="btn btn-primary" (click)="create()">＋ Nouvelle facture</button>
+    <div class="flex gap-2">
+      <button class="btn btn-secondary" (click)="exportCsv()">⤓ Exporter CSV</button>
+      <button *ngIf="isAdmin" class="btn btn-primary" (click)="create()">＋ Nouvelle facture</button>
+    </div>
   </header>
 
   <!-- KPIs -->
@@ -45,6 +48,7 @@
             <td>
               <div class="row-actions">
                 <button class="btn btn-icon btn-ghost" title="Voir" (click)="$event.stopPropagation(); open(f)">👁</button>
+                <button *ngIf="isAdmin && f.statut === 'emise'" class="btn btn-icon btn-ghost" title="Relancer" (click)="$event.stopPropagation(); relance(f)">✉</button>
                 <button *ngIf="isAdmin && f.statut !== 'payee'" class="btn btn-icon btn-ghost" title="Marquer payée" (click)="$event.stopPropagation(); markPaid(f)">✓</button>
                 <button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Supprimer" (click)="$event.stopPropagation(); remove(f)">🗑</button>
               </div>

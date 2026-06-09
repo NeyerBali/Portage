@@ -34,11 +34,20 @@
       <button class="btn btn-icon btn-ghost mobile-only" (click)="collapsed = !collapsed">☰</button>
 
       <!-- Recherche -->
-      <div class="searchbar">
-        <span class="s-ic">⌕</span>
-        <input type="text" placeholder="Rechercher une mission, un client, un consultant…"
-               [(ngModel)]="searchTerm" (keyup.enter)="doSearch()" />
-        <kbd>⌘K</kbd>
+      <div class="searchbar-wrap">
+        <div class="searchbar">
+          <span class="s-ic">⌕</span>
+          <input type="text" placeholder="Rechercher une mission, un client, un consultant…"
+                 [ngModel]="searchTerm" (ngModelChange)="onSearchInput($event)" (keyup.enter)="doSearch()" />
+          <kbd>⌘K</kbd>
+        </div>
+        <div class="search-results" *ngIf="searchResults.length">
+          <button class="search-row" *ngFor="let r of searchResults" (click)="goResult(r)">
+            <span class="r-ic">{{ resultIcon(r.type) }}</span>
+            <div class="r-body"><strong>{{ r.titre }}</strong><span class="caption text-subtle">{{ r.sousTitre }}</span></div>
+            <span class="r-type">{{ r.type }}</span>
+          </button>
+        </div>
       </div>
 
       <div class="flex items-center gap-2 ml-auto">

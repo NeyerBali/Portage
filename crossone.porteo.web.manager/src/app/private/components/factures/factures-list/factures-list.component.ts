@@ -7,6 +7,7 @@ import { ApiService } from '../../../http/api.service';
 import { Facture, FACTURE_STATUTS } from 'src/app/shared/models';
 import { FacturePopupComponent } from '../facture-popup/facture-popup.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { downloadCsv } from 'src/app/shared/utils/csv';
 
 @Component({
   selector: 'app-factures-list',
@@ -68,6 +69,19 @@ export class FacturesListComponent implements OnInit {
 
   markPaid(f: Facture): void {
     this.api.factures.markPaid(f.id).subscribe(() => { this.toastr.success(`Facture ${f.numero} marquée payée.`); this.load(); });
+  }
+
+  relance(f: Facture): void {
+    this.api.factures.relance(f.id).subscribe(res => { this.toastr.success(res.message, 'Relance envoyée'); });
+  }
+
+  exportCsv(): void {
+    downloadCsv('factures-porteo.csv', this.filtered, [
+      { key: 'numero', label: 'Numéro' }, { key: 'missionTitre', label: 'Mission' }, { key: 'clientNom', label: 'Client' },
+      { key: 'dateEmission', label: 'Émise le' }, { key: 'dateEcheance', label: 'Échéance' },
+      { key: 'statut', label: 'Statut' }, { key: 'montantHT', label: 'Montant HT' }, { key: 'montantTTC', label: 'Montant TTC' },
+    ]);
+    this.toastr.success('Export CSV généré.');
   }
 
   remove(f: Facture): void {

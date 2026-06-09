@@ -11,6 +11,9 @@ import { ConsultantsListComponent } from './components/consultants/consultants-l
 import { ConsultantDetailComponent } from './components/consultants/consultant-detail/consultant-detail.component';
 import { FacturesListComponent } from './components/factures/factures-list/factures-list.component';
 import { FactureDetailComponent } from './components/factures/facture-detail/facture-detail.component';
+import { JustificatifsListComponent } from './components/justificatifs/justificatifs-list/justificatifs-list.component';
+import { AlertesComponent } from './components/alertes/alertes.component';
+import { JournalComponent } from './components/journal/journal.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 const admin = { canActivate: [roleGuard], data: { roles: ['Admin'] } };
@@ -29,6 +32,9 @@ const routes: Routes = [
       { path: 'consultants/:id', component: ConsultantDetailComponent, ...admin },
       { path: 'factures', component: FacturesListComponent },
       { path: 'factures/:id', component: FactureDetailComponent },
+      { path: 'justificatifs', component: JustificatifsListComponent },
+      { path: 'alertes', component: AlertesComponent },
+      { path: 'journal', component: JournalComponent, ...admin },
       { path: 'parametres', component: SettingsComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

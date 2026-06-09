@@ -1,8 +1,12 @@
+using Porteo.Services.Activities;
+using Porteo.Services.Alerts;
 using Porteo.Services.Clients;
 using Porteo.Services.Consultants;
 using Porteo.Services.Dashboard;
 using Porteo.Services.Factures;
+using Porteo.Services.Justificatifs;
 using Porteo.Services.Missions;
+using Porteo.Services.Search;
 using Porteo.Services.Users;
 
 namespace Porteo.Services
@@ -19,6 +23,10 @@ namespace Porteo.Services
         IFactureService Factures { get; }
         IUserService Users { get; }
         IDashboardService Dashboard { get; }
+        IJustificatifService Justificatifs { get; }
+        IActivityService Activities { get; }
+        IAlertService Alerts { get; }
+        ISearchService Search { get; }
     }
 
     public class Services : IServices
@@ -29,6 +37,10 @@ namespace Porteo.Services
         public IFactureService Factures { get; }
         public IUserService Users { get; }
         public IDashboardService Dashboard { get; }
+        public IJustificatifService Justificatifs { get; }
+        public IActivityService Activities { get; }
+        public IAlertService Alerts { get; }
+        public ISearchService Search { get; }
 
         public Services(
             IMissionService missions,
@@ -36,7 +48,11 @@ namespace Porteo.Services
             IConsultantService consultants,
             IFactureService factures,
             IUserService users,
-            IDashboardService dashboard)
+            IDashboardService dashboard,
+            IJustificatifService justificatifs,
+            IActivityService activities,
+            IAlertService alerts,
+            ISearchService search)
         {
             Missions = missions;
             Clients = clients;
@@ -44,6 +60,10 @@ namespace Porteo.Services
             Factures = factures;
             Users = users;
             Dashboard = dashboard;
+            Justificatifs = justificatifs;
+            Activities = activities;
+            Alerts = alerts;
+            Search = search;
         }
     }
 }

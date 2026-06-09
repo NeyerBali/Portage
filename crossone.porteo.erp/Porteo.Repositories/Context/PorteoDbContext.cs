@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Porteo.Models.Activities;
 using Porteo.Models.Clients;
 using Porteo.Models.Consultants;
 using Porteo.Models.Factures;
+using Porteo.Models.Justificatifs;
 using Porteo.Models.Missions;
 using Porteo.Models.Users;
 
@@ -20,6 +22,8 @@ namespace Porteo.Repositories.Context
         public DbSet<Mission> Missions { get; set; }
         public DbSet<Facture> Factures { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Justificatif> Justificatifs { get; set; }
+        public DbSet<ActivityEntry> Activities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -82,6 +86,31 @@ namespace Porteo.Repositories.Context
                 e.Property(x => x.Tva).HasColumnType("numeric(12,2)");
                 e.Property(x => x.MontantTTC).HasColumnType("numeric(12,2)");
                 e.HasIndex(x => x.Numero).IsUnique();
+            });
+
+            // ---- Justificatif ----
+            b.Entity<Justificatif>(e =>
+            {
+                e.ToTable("justificatifs");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Libelle).IsRequired().HasMaxLength(200);
+                e.Property(x => x.Type).IsRequired().HasMaxLength(20);
+                e.Property(x => x.Statut).IsRequired().HasMaxLength(20);
+                e.Property(x => x.Montant).HasColumnType("numeric(12,2)");
+                e.Property(x => x.Data).HasColumnType("bytea");
+                e.HasIndex(x => x.Statut);
+                e.HasOne(x => x.Mission).WithMany().HasForeignKey(x => x.MissionId).OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(x => x.Consultant).WithMany().HasForeignKey(x => x.ConsultantId).OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ---- ActivityEntry (journal) ----
+            b.Entity<ActivityEntry>(e =>
+            {
+                e.ToTable("activity_entries");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Type).IsRequired().HasMaxLength(40);
+                e.Property(x => x.Titre).HasMaxLength(200);
+                e.HasIndex(x => x.CreatedAt);
             });
 
             // ---- User ----
