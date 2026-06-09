@@ -14,6 +14,11 @@ import { FactureDetailComponent } from './components/factures/facture-detail/fac
 import { JustificatifsListComponent } from './components/justificatifs/justificatifs-list/justificatifs-list.component';
 import { AlertesComponent } from './components/alertes/alertes.component';
 import { JournalComponent } from './components/journal/journal.component';
+import { CraListComponent } from './components/cra/cra-list.component';
+import { AbsencesListComponent } from './components/absences/absences-list.component';
+import { DemandesListComponent } from './components/demandes/demandes-list.component';
+import { SimulateurComponent } from './components/simulateur/simulateur.component';
+import { PayslipsListComponent } from './components/payslips/payslips-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 const admin = { canActivate: [roleGuard], data: { roles: ['Admin'] } };
@@ -33,6 +38,11 @@ const routes: Routes = [
       { path: 'factures', component: FacturesListComponent },
       { path: 'factures/:id', component: FactureDetailComponent },
       { path: 'justificatifs', component: JustificatifsListComponent },
+      { path: 'cra', component: CraListComponent },
+      { path: 'absences', component: AbsencesListComponent },
+      { path: 'demandes', component: DemandesListComponent },
+      { path: 'bulletins', component: PayslipsListComponent },
+      { path: 'simulateur', component: SimulateurComponent },
       { path: 'alertes', component: AlertesComponent },
       { path: 'journal', component: JournalComponent, ...admin },
       { path: 'parametres', component: SettingsComponent },

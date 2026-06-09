@@ -14,11 +14,15 @@ using Porteo.Services;
 using Porteo.Services.Activities;
 using Porteo.Services.Alerts;
 using Porteo.Services.Clients;
+using Porteo.Services.Configurations;
 using Porteo.Services.Consultants;
 using Porteo.Services.Dashboard;
 using Porteo.Services.Factures;
 using Porteo.Services.Justificatifs;
 using Porteo.Services.Missions;
+using Porteo.Services.Monitorings;
+using Porteo.Services.Productions;
+using Porteo.Services.Rh;
 using Porteo.Services.Search;
 using Porteo.Services.Users;
 using Npgsql;
@@ -98,6 +102,11 @@ builder.Services.AddScoped<IJustificatifService, JustificatifService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<ICraService, CraService>();
+builder.Services.AddScoped<IAbsenceService, AbsenceService>();
+builder.Services.AddScoped<IDemandeService, DemandeService>();
+builder.Services.AddScoped<IConfigService, ConfigService>();
+builder.Services.AddScoped<IPayslipService, PayslipService>();
 builder.Services.AddScoped<IServices, Porteo.Services.Services>();
 
 // ---- AutoMapper ----

@@ -18,7 +18,12 @@ const NAV_ADMIN: NavItem[] = [
   { label: 'Consultants', icon: '◉', route: '/consultants' },
   { label: 'Factures', icon: '▤', route: '/factures' },
   { label: 'Justificatifs', icon: '📎', route: '/justificatifs' },
-  { label: 'Journal', icon: '◷', route: '/journal' },
+  { label: 'CRA', icon: '◷', route: '/cra' },
+  { label: 'Absences', icon: '🌴', route: '/absences' },
+  { label: 'Demandes', icon: '✉', route: '/demandes' },
+  { label: 'Bulletins', icon: '€', route: '/bulletins' },
+  { label: 'Simulateur', icon: '∿', route: '/simulateur' },
+  { label: 'Journal', icon: '≣', route: '/journal' },
   { label: 'Paramètres', icon: '⚙', route: '/parametres' },
 ];
 
@@ -28,6 +33,11 @@ const NAV_CONSULTANT: NavItem[] = [
   { label: 'Mes missions', icon: '◆', route: '/missions' },
   { label: 'Mes factures', icon: '▤', route: '/factures' },
   { label: 'Mes justificatifs', icon: '📎', route: '/justificatifs' },
+  { label: 'Mes CRA', icon: '◷', route: '/cra' },
+  { label: 'Mes absences', icon: '🌴', route: '/absences' },
+  { label: 'Mes demandes', icon: '✉', route: '/demandes' },
+  { label: 'Mes bulletins', icon: '€', route: '/bulletins' },
+  { label: 'Simulateur', icon: '∿', route: '/simulateur' },
   { label: 'Mon profil', icon: '⚙', route: '/parametres' },
 ];
 
@@ -35,6 +45,7 @@ const LABELS: Record<string, string> = {
   dashboard: 'Tableau de bord', missions: 'Missions', clients: 'Clients',
   consultants: 'Consultants', factures: 'Factures', parametres: 'Paramètres',
   alertes: "Centre d'alerte", justificatifs: 'Justificatifs', journal: 'Journal',
+  cra: 'CRA', absences: 'Absences', demandes: 'Demandes', bulletins: 'Bulletins', simulateur: 'Simulateur',
 };
 
 @Component({

@@ -26,6 +26,11 @@
 
 .danger-zone { border-color: color-mix(in srgb, var(--error-500) 30%, var(--border-default)); }
 
+.param-row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); padding: 14px 0; }
+.param-row + .param-row { border-top: 1px solid var(--border-subtle); }
+.param-edit { display: flex; align-items: center; gap: var(--sp-2); }
+.param-edit input { width: 110px; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: var(--r-sm); background: var(--bg-surface); color: var(--text-default); font-family: var(--font-mono); }
+
 @media (max-width: 720px) {
   .profil-grid { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }

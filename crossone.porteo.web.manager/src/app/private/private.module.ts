@@ -26,6 +26,11 @@ import { JustificatifsListComponent } from './components/justificatifs/justifica
 import { JustificatifPopupComponent } from './components/justificatifs/justificatif-popup/justificatif-popup.component';
 import { AlertesComponent } from './components/alertes/alertes.component';
 import { JournalComponent } from './components/journal/journal.component';
+import { CraListComponent } from './components/cra/cra-list.component';
+import { AbsencesListComponent } from './components/absences/absences-list.component';
+import { DemandesListComponent } from './components/demandes/demandes-list.component';
+import { SimulateurComponent } from './components/simulateur/simulateur.component';
+import { PayslipsListComponent } from './components/payslips/payslips-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
@@ -48,6 +53,11 @@ import { SettingsComponent } from './components/settings/settings.component';
     JustificatifPopupComponent,
     AlertesComponent,
     JournalComponent,
+    CraListComponent,
+    AbsencesListComponent,
+    DemandesListComponent,
+    SimulateurComponent,
+    PayslipsListComponent,
     SettingsComponent,
   ],
   imports: [

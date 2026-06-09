@@ -1,0 +1,47 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Paie</p>
+      <h1 class="h2">Bulletins de paie</h1>
+      <p class="text-muted">{{ isAdmin ? 'Générez les bulletins à partir des CRA validés.' : 'Consultez vos bulletins de paie.' }}</p>
+    </div>
+    <button *ngIf="isAdmin" class="btn btn-primary" (click)="showForm = !showForm">＋ Générer un bulletin</button>
+  </header>
+
+  <div class="card card-pad add-panel" *ngIf="showForm && isAdmin">
+    <form [formGroup]="form" (ngSubmit)="generate()" class="rh-form">
+      <div class="field grow"><label>Consultant *</label>
+        <select formControlName="consultantId">
+          <option [ngValue]="null" disabled>Sélectionner…</option>
+          <option *ngFor="let c of consultants" [ngValue]="c.id">{{ c.prenom }} {{ c.nom }}</option>
+        </select>
+      </div>
+      <div class="field"><label>Mois *</label><input type="month" formControlName="mois" /></div>
+      <button type="submit" class="btn btn-primary" [disabled]="generating">Générer</button>
+    </form>
+    <p class="caption text-subtle mt-2">Le bulletin agrège les CRA <strong>validés</strong> du consultant pour le mois choisi.</p>
+  </div>
+
+  <div class="card">
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead><tr><th>Mois</th><th *ngIf="isAdmin">Consultant</th><th class="num">Jours</th><th class="num">Facturé</th><th class="num">Brut</th><th class="num">Net</th><th>Statut</th><th></th></tr></thead>
+        <tbody>
+          <tr *ngFor="let p of payslips">
+            <td class="mono">{{ p.mois }}</td>
+            <td *ngIf="isAdmin">{{ p.consultantNom }}</td>
+            <td class="num">{{ p.joursTravailles }} j</td>
+            <td class="num">{{ p.facturable | number:'1.0-0' }} €</td>
+            <td class="num">{{ p.brut | number:'1.0-0' }} €</td>
+            <td class="num" style="font-weight:700;color:var(--primary)">{{ p.net | number:'1.0-0' }} €</td>
+            <td><span class="badge {{ p.statut }}"><span class="dot"></span>{{ p.statut === 'emis' ? 'Émis' : 'Brouillon' }}</span></td>
+            <td><div class="row-actions"><button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Supprimer" (click)="del(p)">🗑</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && payslips.length===0" icon="▤" title="Aucun bulletin"
+        [message]="isAdmin ? 'Générez un bulletin à partir d\'un CRA validé.' : 'Vos bulletins apparaîtront ici.'"></app-empty-state>
+    </div>
+  </div>
+</div>

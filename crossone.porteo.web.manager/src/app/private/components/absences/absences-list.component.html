@@ -1,0 +1,51 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Production</p>
+      <h1 class="h2">Absences & congés</h1>
+      <p class="text-muted">{{ isAdmin ? 'Approuvez les demandes d\'absence des consultants.' : 'Demandez vos congés et suivez leur statut.' }}</p>
+    </div>
+    <button *ngIf="isConsultant" class="btn btn-primary" (click)="showForm = !showForm">＋ Demander une absence</button>
+  </header>
+
+  <div class="card card-pad add-panel" *ngIf="showForm">
+    <form [formGroup]="form" (ngSubmit)="add()" class="rh-form">
+      <div class="field"><label>Type *</label>
+        <select formControlName="type"><option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option></select>
+      </div>
+      <div class="field"><label>Du *</label><input type="date" formControlName="dateDebut" /></div>
+      <div class="field"><label>Au *</label><input type="date" formControlName="dateFin" /></div>
+      <div class="field grow"><label>Motif</label><input type="text" formControlName="motif" placeholder="(optionnel)" /></div>
+      <button type="submit" class="btn btn-primary">Envoyer la demande</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead><tr><th>Type</th><th *ngIf="isAdmin">Consultant</th><th>Période</th><th class="num">Jours</th><th>Motif</th><th>Statut</th><th></th></tr></thead>
+        <tbody>
+          <tr *ngFor="let a of absences">
+            <td>{{ absTypeLabel(a.type) }}</td>
+            <td *ngIf="isAdmin">{{ a.consultantNom }}</td>
+            <td>{{ a.dateDebut | date:'dd/MM/yy' }} → {{ a.dateFin | date:'dd/MM/yy' }}</td>
+            <td class="num">{{ a.nbJours }} j</td>
+            <td>{{ a.motif || '—' }}</td>
+            <td><span class="badge {{ a.statut }}"><span class="dot"></span>{{ statutLabel(a.statut) }}</span></td>
+            <td>
+              <div class="row-actions">
+                <ng-container *ngIf="isAdmin && a.statut==='demande'">
+                  <button class="btn btn-icon btn-ghost" title="Approuver" (click)="approve(a)" style="color:var(--success-600)">✓</button>
+                  <button class="btn btn-icon btn-ghost" title="Refuser" (click)="refuse(a)" style="color:var(--error-600)">✕</button>
+                </ng-container>
+                <button *ngIf="!isAdmin && a.statut==='demande'" class="btn btn-icon btn-ghost" title="Annuler" (click)="del(a)">🗑</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && absences.length===0" icon="🌴" title="Aucune absence" message="Aucune demande de congé enregistrée."></app-empty-state>
+    </div>
+  </div>
+</div>

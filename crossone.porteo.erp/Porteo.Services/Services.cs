@@ -1,11 +1,15 @@
 using Porteo.Services.Activities;
 using Porteo.Services.Alerts;
 using Porteo.Services.Clients;
+using Porteo.Services.Configurations;
 using Porteo.Services.Consultants;
 using Porteo.Services.Dashboard;
 using Porteo.Services.Factures;
 using Porteo.Services.Justificatifs;
 using Porteo.Services.Missions;
+using Porteo.Services.Monitorings;
+using Porteo.Services.Productions;
+using Porteo.Services.Rh;
 using Porteo.Services.Search;
 using Porteo.Services.Users;
 
@@ -27,6 +31,11 @@ namespace Porteo.Services
         IActivityService Activities { get; }
         IAlertService Alerts { get; }
         ISearchService Search { get; }
+        ICraService Cras { get; }
+        IAbsenceService Absences { get; }
+        IDemandeService Demandes { get; }
+        IConfigService Config { get; }
+        IPayslipService Payslips { get; }
     }
 
     public class Services : IServices
@@ -41,6 +50,11 @@ namespace Porteo.Services
         public IActivityService Activities { get; }
         public IAlertService Alerts { get; }
         public ISearchService Search { get; }
+        public ICraService Cras { get; }
+        public IAbsenceService Absences { get; }
+        public IDemandeService Demandes { get; }
+        public IConfigService Config { get; }
+        public IPayslipService Payslips { get; }
 
         public Services(
             IMissionService missions,
@@ -52,7 +66,12 @@ namespace Porteo.Services
             IJustificatifService justificatifs,
             IActivityService activities,
             IAlertService alerts,
-            ISearchService search)
+            ISearchService search,
+            ICraService cras,
+            IAbsenceService absences,
+            IDemandeService demandes,
+            IConfigService config,
+            IPayslipService payslips)
         {
             Missions = missions;
             Clients = clients;
@@ -64,6 +83,11 @@ namespace Porteo.Services
             Activities = activities;
             Alerts = alerts;
             Search = search;
+            Cras = cras;
+            Absences = absences;
+            Demandes = demandes;
+            Config = config;
+            Payslips = payslips;
         }
     }
 }

@@ -9,3 +9,5 @@ export * from './paged-result.model';
 export * from './justificatif.model';
 export * from './alert.model';
 export * from './activity.model';
+export * from './rh.model';
+export * from './config.model';

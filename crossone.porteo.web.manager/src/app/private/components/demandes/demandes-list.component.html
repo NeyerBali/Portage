@@ -1,0 +1,51 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Ressources humaines</p>
+      <h1 class="h2">Demandes RH</h1>
+      <p class="text-muted">{{ isAdmin ? 'Traitez les demandes des consultants (acompte, attestation…).' : 'Adressez vos demandes à l\'agence.' }}</p>
+    </div>
+    <button *ngIf="isConsultant" class="btn btn-primary" (click)="showForm = !showForm">＋ Nouvelle demande</button>
+  </header>
+
+  <div class="card card-pad add-panel" *ngIf="showForm">
+    <form [formGroup]="form" (ngSubmit)="add()" class="rh-form">
+      <div class="field"><label>Type *</label>
+        <select formControlName="type"><option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option></select>
+      </div>
+      <div class="field grow"><label>Objet *</label><input type="text" formControlName="objet" placeholder="Ex. Acompte sur salaire" /></div>
+      <div class="field"><label>Montant (€)</label><input type="number" formControlName="montant" min="0" placeholder="(optionnel)" /></div>
+      <div class="field grow"><label>Description</label><input type="text" formControlName="description" placeholder="(optionnel)" /></div>
+      <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead><tr><th>Type</th><th>Objet</th><th *ngIf="isAdmin">Consultant</th><th class="num">Montant</th><th>Statut</th><th>Réponse</th><th></th></tr></thead>
+        <tbody>
+          <tr *ngFor="let d of demandes">
+            <td>{{ demTypeLabel(d.type) }}</td>
+            <td><strong>{{ d.objet }}</strong><div class="caption text-subtle" *ngIf="d.description">{{ d.description }}</div></td>
+            <td *ngIf="isAdmin">{{ d.consultantNom }}</td>
+            <td class="num">{{ d.montant != null ? (d.montant | number:'1.0-0') + ' €' : '—' }}</td>
+            <td><span class="badge {{ d.statut }}"><span class="dot"></span>{{ statutLabel(d.statut) }}</span></td>
+            <td class="caption text-muted">{{ d.reponse || '—' }}</td>
+            <td>
+              <div class="row-actions">
+                <ng-container *ngIf="isAdmin && d.statut==='ouverte'">
+                  <button class="btn btn-icon btn-ghost" title="Traiter" (click)="repondre(d,'traitee')" style="color:var(--success-600)">✓</button>
+                  <button class="btn btn-icon btn-ghost" title="Refuser" (click)="repondre(d,'refusee')" style="color:var(--error-600)">✕</button>
+                </ng-container>
+                <button *ngIf="!isAdmin && d.statut==='ouverte'" class="btn btn-icon btn-ghost" title="Annuler" (click)="del(d)">🗑</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && demandes.length===0" icon="✉" title="Aucune demande" message="Aucune demande RH enregistrée."></app-empty-state>
+    </div>
+  </div>
+</div>

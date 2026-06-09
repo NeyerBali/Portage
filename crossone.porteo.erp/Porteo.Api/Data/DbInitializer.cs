@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Porteo.Models.Activities;
 using Porteo.Models.Clients;
+using Porteo.Models.Configurations;
 using Porteo.Models.Consultants;
 using Porteo.Models.Factures;
 using Porteo.Models.Justificatifs;
 using Porteo.Models.Missions;
+using Porteo.Models.Productions;
+using Porteo.Models.Rh;
 using Porteo.Models.Users;
 using Porteo.Repositories.Context;
 using Porteo.Services.Auth;
@@ -26,7 +29,8 @@ namespace Porteo.Api.Data
 
             if (await db.Users.AnyAsync())
             {
-                logger.LogInformation("Base déjà initialisée — seed ignoré.");
+                // Base déjà initialisée : on complète les nouvelles tables si vides.
+                await TopUpAsync(db, logger);
                 return;
             }
 
@@ -121,8 +125,56 @@ namespace Porteo.Api.Data
             );
 
             await db.SaveChangesAsync();
+            await TopUpAsync(db, logger);
             logger.LogInformation("Seed terminé : {Consultants} consultants, {Clients} clients, {Missions} missions, {Factures} factures.",
                 consultants.Count, clients.Count, missions.Count, factures.Count);
+        }
+
+        /// <summary>Complète les tables RH/config si elles sont vides (idempotent).</summary>
+        private static async Task TopUpAsync(PorteoDbContext db, ILogger logger)
+        {
+            var now = DateTime.UtcNow;
+            var changed = false;
+
+            if (!await db.GlobalParameters.AnyAsync())
+            {
+                db.GlobalParameters.AddRange(
+                    new GlobalParameter { Cle = ParamKeys.TauxTva, Libelle = "Taux de TVA (%)", Valeur = "20", Groupe = "Facturation", CreatedAt = now },
+                    new GlobalParameter { Cle = ParamKeys.FraisGestion, Libelle = "Frais de gestion (%)", Valeur = "8", Groupe = "Portage", CreatedAt = now },
+                    new GlobalParameter { Cle = ParamKeys.ChargesSalariales, Libelle = "Charges salariales (%)", Valeur = "22", Groupe = "Paie", CreatedAt = now },
+                    new GlobalParameter { Cle = ParamKeys.ChargesPatronales, Libelle = "Charges patronales (%)", Valeur = "42", Groupe = "Paie", CreatedAt = now });
+                changed = true;
+            }
+
+            if (!await db.AgencyProfiles.AnyAsync())
+            {
+                db.AgencyProfiles.Add(new AgencyProfile
+                {
+                    RaisonSociale = "Portéo SAS", Siret = "90112233400015", TvaIntra = "FR90901122334",
+                    Adresse = "12 rue de la République", Ville = "Lyon", Email = "contact@porteo.dev",
+                    Telephone = "04 78 00 00 00", SiteWeb = "https://porteo.dev", Iban = "FR76 3000 4000 0100 0001 2345 678", CreatedAt = now,
+                });
+                changed = true;
+            }
+
+            // Démo RH (CRA / absence / demande) pour le premier consultant ayant une mission.
+            if (!await db.Cras.AnyAsync())
+            {
+                var mission = await db.Missions.OrderBy(m => m.Id).FirstOrDefaultAsync();
+                if (mission != null)
+                {
+                    db.Cras.AddRange(
+                        new Cra { MissionId = mission.Id, ConsultantId = mission.ConsultantId, Mois = "2026-01", JoursTravailles = 18, JoursAbsence = 2, Commentaire = "Mois complet", Statut = CraStatut.Valide, CreatedAt = now.AddDays(-30) },
+                        new Cra { MissionId = mission.Id, ConsultantId = mission.ConsultantId, Mois = "2026-02", JoursTravailles = 20, JoursAbsence = 0, Statut = CraStatut.Soumis, CreatedAt = now.AddDays(-5) });
+                    if (!await db.Absences.AnyAsync())
+                        db.Absences.Add(new Absence { ConsultantId = mission.ConsultantId, Type = AbsenceType.CongePaye, DateDebut = new DateTime(2026, 4, 14, 0, 0, 0, DateTimeKind.Utc), DateFin = new DateTime(2026, 4, 18, 0, 0, 0, DateTimeKind.Utc), NbJours = 5, Motif = "Congés de printemps", Statut = AbsenceStatut.Demande, CreatedAt = now.AddDays(-3) });
+                    if (!await db.Demandes.AnyAsync())
+                        db.Demandes.Add(new Demande { ConsultantId = mission.ConsultantId, Type = DemandeType.Attestation, Objet = "Attestation employeur", Description = "Pour dossier logement", Statut = DemandeStatut.Ouverte, CreatedAt = now.AddDays(-2) });
+                    changed = true;
+                }
+            }
+
+            if (changed) { await db.SaveChangesAsync(); logger.LogInformation("Top-up RH/config appliqué."); }
         }
     }
 }

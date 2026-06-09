@@ -1,0 +1,55 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Production</p>
+      <h1 class="h2">Comptes-rendus d'activité</h1>
+      <p class="text-muted">{{ isAdmin ? 'Validez les CRA soumis par les consultants.' : 'Déclarez vos jours travaillés par mission et par mois.' }}</p>
+    </div>
+    <button class="btn btn-primary" (click)="showForm = !showForm">＋ Saisir un CRA</button>
+  </header>
+
+  <div class="card card-pad add-panel" *ngIf="showForm">
+    <form [formGroup]="form" (ngSubmit)="add()" class="rh-form">
+      <div class="field"><label>Mission *</label>
+        <select formControlName="missionId">
+          <option [ngValue]="null" disabled>Sélectionner…</option>
+          <option *ngFor="let m of missions" [ngValue]="m.id">{{ m.titre }}<span *ngIf="m.clientNom"> — {{ m.clientNom }}</span></option>
+        </select>
+      </div>
+      <div class="field"><label>Mois *</label><input type="month" formControlName="mois" /></div>
+      <div class="field"><label>Jours travaillés *</label><input type="number" formControlName="joursTravailles" min="0" max="31" /></div>
+      <div class="field"><label>Jours d'absence</label><input type="number" formControlName="joursAbsence" min="0" max="31" /></div>
+      <div class="field grow"><label>Commentaire</label><input type="text" formControlName="commentaire" placeholder="(optionnel)" /></div>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead><tr><th>Mois</th><th>Mission</th><th *ngIf="isAdmin">Consultant</th><th class="num">Jours</th><th>Statut</th><th></th></tr></thead>
+        <tbody>
+          <tr *ngFor="let c of cras">
+            <td class="mono">{{ c.mois }}</td>
+            <td><strong>{{ c.missionTitre }}</strong><div class="caption text-subtle" *ngIf="c.commentaire">{{ c.commentaire }}</div></td>
+            <td *ngIf="isAdmin">{{ c.consultantNom }}</td>
+            <td class="num">{{ c.joursTravailles }} <span class="text-subtle">trav.</span> · {{ c.joursAbsence }} abs.</td>
+            <td><span class="badge {{ c.statut }}"><span class="dot"></span>{{ statutLabel(c.statut) }}</span></td>
+            <td>
+              <div class="row-actions">
+                <button *ngIf="!isAdmin && c.statut==='brouillon'" class="btn btn-icon btn-ghost" title="Soumettre" (click)="submit(c)">➤</button>
+                <button *ngIf="!isAdmin && c.statut==='brouillon'" class="btn btn-icon btn-ghost" title="Supprimer" (click)="del(c)">🗑</button>
+                <ng-container *ngIf="isAdmin && c.statut==='soumis'">
+                  <button class="btn btn-icon btn-ghost" title="Valider" (click)="validate(c)" style="color:var(--success-600)">✓</button>
+                  <button class="btn btn-icon btn-ghost" title="Refuser" (click)="refuse(c)" style="color:var(--error-600)">✕</button>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+      <app-empty-state *ngIf="!loading && cras.length===0" icon="◷" title="Aucun CRA" message="Saisissez votre premier compte-rendu d'activité."></app-empty-state>
+    </div>
+  </div>
+</div>

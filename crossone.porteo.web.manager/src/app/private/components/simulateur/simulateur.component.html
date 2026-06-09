@@ -1,0 +1,45 @@
+<div class="page fade-in">
+  <header class="page-head">
+    <p class="overline">Outils</p>
+    <h1 class="h2">Simulateur de rémunération</h1>
+    <p class="text-muted">Estimez le salaire net d'un consultant à partir de son TJM (frais & charges issus des paramètres).</p>
+  </header>
+
+  <div class="sim-grid">
+    <div class="card card-pad">
+      <div class="h5 mb-4">Paramètres de simulation</div>
+      <form [formGroup]="form" (ngSubmit)="simulate()">
+        <div class="field"><label>TJM (€)</label><input type="number" formControlName="tjm" min="0" (change)="simulate()" /></div>
+        <div class="field"><label>Jours facturés / mois</label><input type="number" formControlName="joursParMois" min="1" max="31" (change)="simulate()" /></div>
+        <button type="submit" class="btn btn-primary btn-block">Recalculer</button>
+      </form>
+      <p class="caption text-subtle mt-4" *ngIf="result">
+        Frais de gestion {{ result.fraisGestionPct }}% · charges patronales {{ result.chargesPatronalesPct }}% · charges salariales {{ result.chargesSalarialesPct }}%
+      </p>
+    </div>
+
+    <div class="card card-pad result" *ngIf="result as r">
+      <div class="net-box">
+        <span class="caption text-subtle">Salaire net estimé / mois</span>
+        <div class="net">{{ r.net | number:'1.0-0' }} €</div>
+      </div>
+
+      <ul class="breakdown">
+        <li><span>Facturé au client</span><strong class="mono">{{ r.facturable | number:'1.0-0' }} €</strong></li>
+        <li class="sub"><span>− Frais de gestion ({{ r.fraisGestionPct }}%)</span><span class="mono">−{{ r.fraisGestion | number:'1.0-0' }} €</span></li>
+        <li class="line"><span>= Coût employeur</span><strong class="mono">{{ r.coutEmployeur | number:'1.0-0' }} €</strong></li>
+        <li class="sub"><span>− Charges patronales</span><span class="mono">−{{ r.chargesPatronales | number:'1.0-0' }} €</span></li>
+        <li class="line"><span>= Salaire brut</span><strong class="mono">{{ r.brut | number:'1.0-0' }} €</strong></li>
+        <li class="sub"><span>− Charges salariales</span><span class="mono">−{{ r.chargesSalariales | number:'1.0-0' }} €</span></li>
+        <li class="line total"><span>= Salaire net</span><strong class="mono">{{ r.net | number:'1.0-0' }} €</strong></li>
+      </ul>
+
+      <div class="bars">
+        <div class="bar"><span class="seg net-seg" [style.width.%]="pct(r.net)"></span><span class="seg cs-seg" [style.width.%]="pct(r.chargesSalariales)"></span><span class="seg cp-seg" [style.width.%]="pct(r.chargesPatronales)"></span><span class="seg fg-seg" [style.width.%]="pct(r.fraisGestion)"></span></div>
+        <div class="legend">
+          <span><i class="net-seg"></i> Net</span><span><i class="cs-seg"></i> Ch. sal.</span><span><i class="cp-seg"></i> Ch. pat.</span><span><i class="fg-seg"></i> Gestion</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

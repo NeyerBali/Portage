@@ -9,6 +9,54 @@
     <button [class.active]="tab==='profil'" (click)="tab='profil'">Profil</button>
     <button [class.active]="tab==='prefs'" (click)="tab='prefs'">Préférences</button>
     <button [class.active]="tab==='securite'" (click)="tab='securite'">Sécurité</button>
+    <button *ngIf="auth.isAdmin" [class.active]="tab==='config'" (click)="tab='config'">Paramètres globaux</button>
+    <button *ngIf="auth.isAdmin" [class.active]="tab==='agence'" (click)="tab='agence'">Profil agence</button>
+  </div>
+
+  <!-- ============ PARAMÈTRES GLOBAUX (admin) ============ -->
+  <div class="stack" *ngIf="tab==='config' && auth.isAdmin">
+    <div class="card">
+      <div class="card-header"><div><div class="h5">Paramètres globaux</div><span class="caption text-subtle">Taux et pourcentages utilisés par le simulateur, les factures et les bulletins de paie.</span></div></div>
+      <div class="card-pad">
+        <div class="param-row" *ngFor="let p of parameters">
+          <div><div class="lbl">{{ p.libelle }}</div><div class="caption text-subtle">{{ p.groupe }} · {{ p.cle }}</div></div>
+          <div class="param-edit">
+            <input type="number" [(ngModel)]="p.valeur" />
+            <button class="btn btn-secondary btn-sm" (click)="saveParam(p)">Enregistrer</button>
+          </div>
+        </div>
+        <div *ngIf="!parameters.length" class="text-muted">Aucun paramètre.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PROFIL AGENCE (admin) ============ -->
+  <div class="stack" *ngIf="tab==='agence' && auth.isAdmin">
+    <div class="card">
+      <div class="card-header">
+        <div class="h5">Profil de l'agence</div>
+        <button class="btn btn-primary btn-sm" (click)="saveAgency()">✓ Enregistrer</button>
+      </div>
+      <div class="card-pad">
+        <div class="grid-2">
+          <div class="field"><label>Raison sociale</label><input type="text" [(ngModel)]="agency.raisonSociale" /></div>
+          <div class="field"><label>SIRET</label><input type="text" [(ngModel)]="agency.siret" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>N° TVA intracom.</label><input type="text" [(ngModel)]="agency.tvaIntra" /></div>
+          <div class="field"><label>Ville</label><input type="text" [(ngModel)]="agency.ville" /></div>
+        </div>
+        <div class="field"><label>Adresse</label><input type="text" [(ngModel)]="agency.adresse" /></div>
+        <div class="grid-2">
+          <div class="field"><label>Email</label><input type="email" [(ngModel)]="agency.email" /></div>
+          <div class="field"><label>Téléphone</label><input type="text" [(ngModel)]="agency.telephone" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Site web</label><input type="text" [(ngModel)]="agency.siteWeb" /></div>
+          <div class="field"><label>IBAN</label><input type="text" [(ngModel)]="agency.iban" /></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ============ PROFIL ============ -->

@@ -4,8 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ThemeService, PALETTES, Palette } from 'src/app/core/services/theme.service';
-import { Me } from 'src/app/shared/models';
+import { AgencyProfile, GlobalParameter, Me } from 'src/app/shared/models';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { ApiService } from '../../http/api.service';
 
 const VITRINE_KEY = 'porteo-vitrine-palette';
 const NOTIF_KEY = 'porteo-notifs';
@@ -19,13 +20,17 @@ interface NotifPrefs { missions: boolean; factures: boolean; retards: boolean; h
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
-  tab: 'profil' | 'prefs' | 'securite' = 'profil';
+  tab: 'profil' | 'prefs' | 'securite' | 'config' | 'agence' = 'profil';
   palettes = PALETTES;
   vitrinePalette: Palette = 'emerald';
   me?: Me;
   twoFactor = false;
   savingProfile = false;
   changingPwd = false;
+
+  // Admin : paramètres globaux + profil agence
+  parameters: GlobalParameter[] = [];
+  agency: AgencyProfile = {} as AgencyProfile;
 
   notif: NotifPrefs = { missions: true, factures: true, retards: true, hebdo: false };
 
@@ -49,6 +54,7 @@ export class SettingsComponent implements OnInit {
     public theme: ThemeService,
     private toastr: ToastrService,
     private dialog: MatDialog,
+    private api: ApiService,
   ) {}
 
   get roleLabel(): string { return this.auth.isAdmin ? 'Administrateur' : 'Consultant'; }
@@ -71,6 +77,21 @@ export class SettingsComponent implements OnInit {
         telephone: me.telephone ?? '', fonction: me.fonction ?? '',
       });
     });
+
+    if (this.auth.isAdmin) {
+      this.api.config.parameters().subscribe(p => (this.parameters = p));
+      this.api.config.agency().subscribe(a => (this.agency = a ?? ({} as AgencyProfile)));
+    }
+  }
+
+  // ----- Paramètres globaux (admin) -----
+  saveParam(p: GlobalParameter): void {
+    this.api.config.updateParameter(p.cle, p.valeur).subscribe(() => this.toastr.success(`${p.libelle} mis à jour.`, 'Paramètre'));
+  }
+
+  // ----- Profil agence (admin) -----
+  saveAgency(): void {
+    this.api.config.updateAgency(this.agency).subscribe(() => this.toastr.success("Profil de l'agence enregistré.", 'Agence'));
   }
 
   // ----- Profil -----

@@ -1,6 +1,11 @@
 using Microsoft.Extensions.Logging;
+using Porteo.Models.Configurations;
+using Porteo.Models.Monitorings;
+using Porteo.Models.Productions;
+using Porteo.Models.Rh;
 using Porteo.Repositories.Activities;
 using Porteo.Repositories.Clients;
+using Porteo.Repositories.Common;
 using Porteo.Repositories.Consultants;
 using Porteo.Repositories.Context;
 using Porteo.Repositories.Factures;
@@ -23,6 +28,12 @@ namespace Porteo.Repositories
         IUserRepository Users { get; }
         IJustificatifRepository Justificatifs { get; }
         IActivityRepository Activities { get; }
+        IGenericRepository<Cra> Cras { get; }
+        IGenericRepository<Absence> Absences { get; }
+        IGenericRepository<Demande> Demandes { get; }
+        IGenericRepository<GlobalParameter> Parameters { get; }
+        IGenericRepository<AgencyProfile> AgencyProfiles { get; }
+        IGenericRepository<Payslip> Payslips { get; }
 
         Task<bool> CompleteAsync();
         bool Complete();
@@ -40,6 +51,12 @@ namespace Porteo.Repositories
         public IUserRepository Users { get; }
         public IJustificatifRepository Justificatifs { get; }
         public IActivityRepository Activities { get; }
+        public IGenericRepository<Cra> Cras { get; }
+        public IGenericRepository<Absence> Absences { get; }
+        public IGenericRepository<Demande> Demandes { get; }
+        public IGenericRepository<GlobalParameter> Parameters { get; }
+        public IGenericRepository<AgencyProfile> AgencyProfiles { get; }
+        public IGenericRepository<Payslip> Payslips { get; }
 
         public UnitOfWork(PorteoDbContext context, ILoggerFactory loggerFactory)
         {
@@ -53,6 +70,12 @@ namespace Porteo.Repositories
             Users = new UserRepository(_context, _logger);
             Justificatifs = new JustificatifRepository(_context, _logger);
             Activities = new ActivityRepository(_context, _logger);
+            Cras = new GenericRepository<Cra>(_context, _logger);
+            Absences = new GenericRepository<Absence>(_context, _logger);
+            Demandes = new GenericRepository<Demande>(_context, _logger);
+            Parameters = new GenericRepository<GlobalParameter>(_context, _logger);
+            AgencyProfiles = new GenericRepository<AgencyProfile>(_context, _logger);
+            Payslips = new GenericRepository<Payslip>(_context, _logger);
         }
 
         public async Task<bool> CompleteAsync()
