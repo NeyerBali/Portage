@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { AuthResult, LoginRequest, Me, Role } from 'src/app/shared/models';
+import { AuthResult, ChangePasswordRequest, LoginRequest, Me, Role, UpdateProfileRequest } from 'src/app/shared/models';
 import { TokenService } from '../services/token.service';
 
 const USER_KEY = 'porteo-user';
@@ -39,6 +39,29 @@ export class AuthService {
 
   me(): Observable<Me> {
     return this.http.get<Me>(`${environment.apiUrl}auth/me`);
+  }
+
+  updateProfile(dto: UpdateProfileRequest): Observable<Me> {
+    return this.http.post<Me>(`${environment.apiUrl}auth/profile`, dto).pipe(
+      tap(me => this.patchStoredUser(me))
+    );
+  }
+
+  changePassword(dto: ChangePasswordRequest): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${environment.apiUrl}auth/change-password`, dto);
+  }
+
+  setTwoFactor(enabled: boolean): Observable<Me> {
+    return this.http.post<Me>(`${environment.apiUrl}auth/two-factor`, { enabled });
+  }
+
+  /** Met à jour le nom/email affichés (sidebar, topbar) après édition du profil. */
+  private patchStoredUser(me: Me): void {
+    const current = this._user$.value;
+    if (!current) return;
+    const updated: AuthResult = { ...current, fullName: me.fullName, email: me.email };
+    localStorage.setItem(USER_KEY, JSON.stringify(updated));
+    this._user$.next(updated);
   }
 
   logout(redirect = true): void {

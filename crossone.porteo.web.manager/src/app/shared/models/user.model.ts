@@ -22,4 +22,20 @@ export interface Me {
   fullName: string;
   role: Role;
   consultantId?: number | null;
+  telephone?: string;
+  fonction?: string;
+  twoFactorEnabled: boolean;
+}
+
+export interface UpdateProfileRequest {
+  prenom: string;
+  nom: string;
+  email: string;
+  telephone?: string;
+  fonction?: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
 }

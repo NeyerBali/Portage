@@ -54,5 +54,46 @@ namespace Porteo.Api.Controllers
             var me = await _services.Users.GetMe(User.GetUserId());
             return me == null ? NotFound() : Ok(me);
         }
+
+        /// <summary>Met à jour les informations de profil de l'utilisateur connecté.</summary>
+        [Authorize]
+        [HttpPost("profile")]
+        public async Task<ActionResult<MeDto>> UpdateProfile([FromBody] UpdateProfileDto dto)
+        {
+            try
+            {
+                var me = await _services.Users.UpdateProfile(User.GetUserId(), dto);
+                return me == null ? NotFound() : Ok(me);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>Change le mot de passe de l'utilisateur connecté.</summary>
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            try
+            {
+                var ok = await _services.Users.ChangePassword(User.GetUserId(), dto.CurrentPassword, dto.NewPassword);
+                return ok ? Ok(new { message = "Mot de passe mis à jour." }) : NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>Active ou désactive la double authentification.</summary>
+        [Authorize]
+        [HttpPost("two-factor")]
+        public async Task<ActionResult<MeDto>> TwoFactor([FromBody] TwoFactorDto dto)
+        {
+            var me = await _services.Users.SetTwoFactor(User.GetUserId(), dto.Enabled);
+            return me == null ? NotFound() : Ok(me);
+        }
     }
 }

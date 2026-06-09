@@ -10,7 +10,8 @@ namespace Porteo.Mappers.Users
         {
             CreateMap<User, UserDto>();
             CreateMap<User, MeDto>()
-                .ForMember(d => d.FullName, o => o.MapFrom(s => s.Prenom + " " + s.Nom));
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.Prenom + " " + s.Nom))
+                .ForMember(d => d.TwoFactorEnabled, o => o.MapFrom(s => s.IsTwoFactorEnabled));
         }
     }
 }

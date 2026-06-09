@@ -16,6 +16,10 @@ namespace Porteo.Models.Users
         public string Role { get; set; } = UserRole.User;
         public string Nom { get; set; }
         public string Prenom { get; set; }
+        public string Telephone { get; set; }
+        public string Fonction { get; set; }
+        /// <summary>Vérification en deux étapes (2FA) activée.</summary>
+        public bool IsTwoFactorEnabled { get; set; }
 
         /// <summary>Renseigné si l'utilisateur est un consultant (filtre d'appartenance).</summary>
         public int? ConsultantId { get; set; }

@@ -1,40 +1,151 @@
 <div class="page fade-in">
-  <header class="page-head"><p class="overline">Compte</p><h1 class="h2">Paramètres</h1></header>
+  <header class="page-head">
+    <p class="overline">Compte</p>
+    <h1 class="h2">{{ auth.isAdmin ? 'Paramètres' : 'Mon profil' }}</h1>
+    <p class="text-muted">Gérez vos informations et préférences.</p>
+  </header>
 
   <div class="tabs">
     <button [class.active]="tab==='profil'" (click)="tab='profil'">Profil</button>
-    <button [class.active]="tab==='preferences'" (click)="tab='preferences'">Préférences</button>
+    <button [class.active]="tab==='prefs'" (click)="tab='prefs'">Préférences</button>
+    <button [class.active]="tab==='securite'" (click)="tab='securite'">Sécurité</button>
   </div>
 
-  <!-- Profil -->
-  <div class="card card-pad" *ngIf="tab==='profil'">
-    <div class="profile-head">
-      <span class="big-avatar">{{ (auth.fullName || 'P')[0] }}</span>
-      <div>
-        <h3 class="h4">{{ auth.fullName }}</h3>
-        <p class="text-muted">{{ roleLabel }}</p>
+  <!-- ============ PROFIL ============ -->
+  <div class="profil-grid" *ngIf="tab==='profil'">
+    <div class="card">
+      <div class="card-header"><div class="h5">Photo</div></div>
+      <div class="card-pad photo-card">
+        <span class="big-avatar">{{ initials }}</span>
+        <button class="btn btn-secondary btn-sm">⤓ Changer</button>
       </div>
     </div>
-    <dl class="info">
-      <div><dt>Email</dt><dd>{{ auth.currentUser?.email }}</dd></div>
-      <div><dt>Rôle</dt><dd>{{ roleLabel }}</dd></div>
-      <div *ngIf="auth.consultantId"><dt>Profil consultant</dt><dd class="mono">C-{{ auth.consultantId }}</dd></div>
-    </dl>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="h5">Informations personnelles</div>
+        <button class="btn btn-primary btn-sm" (click)="saveProfile()" [disabled]="savingProfile">✓ Enregistrer</button>
+      </div>
+      <form class="card-pad" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="grid-2">
+          <div class="field" [class.invalid]="pf.prenom.touched && pf.prenom.invalid">
+            <label>Prénom</label><input type="text" formControlName="prenom" />
+          </div>
+          <div class="field" [class.invalid]="pf.nom.touched && pf.nom.invalid">
+            <label>Nom</label><input type="text" formControlName="nom" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field" [class.invalid]="pf.email.touched && pf.email.invalid">
+            <label>Adresse e-mail</label><input type="email" formControlName="email" />
+            <div class="field-error" *ngIf="pf.email.touched && pf.email.errors?.['email']">⚠ Format d'email invalide.</div>
+          </div>
+          <div class="field"><label>Téléphone</label><input type="text" formControlName="telephone" placeholder="06 12 44 88 21" /></div>
+        </div>
+        <div class="field"><label>Fonction</label><input type="text" formControlName="fonction" /></div>
+      </form>
+    </div>
   </div>
 
-  <!-- Préférences -->
-  <div class="card card-pad" *ngIf="tab==='preferences'">
-    <div class="h5 mb-4">Palette de couleurs</div>
-    <div class="palette-grid">
-      <button *ngFor="let p of palettes" class="palette-opt" [class.active]="theme.palette === p.value" (click)="setPalette(p.value)">
-        <span class="sw" [style.background]="p.swatch"></span>{{ p.label }}
-      </button>
+  <!-- ============ PRÉFÉRENCES ============ -->
+  <div class="stack" *ngIf="tab==='prefs'">
+    <div class="card">
+      <div class="card-header"><div><div class="h5">Palette de couleurs</div><span class="caption text-subtle">S'applique à toute l'application, en clair comme en sombre</span></div></div>
+      <div class="card-pad">
+        <div class="palette-grid">
+          <button *ngFor="let p of palettes" class="palette-opt" [class.active]="theme.palette === p.value" (click)="setPalette(p.value, p.label)">
+            <span class="swatches"><span class="bar" [style.background]="p.swatch"></span></span>
+            <span class="row"><span>{{ p.label }}</span><span *ngIf="theme.palette === p.value" class="chk">✓</span></span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="h5 mt-6 mb-4">Apparence</div>
-    <div class="flex items-center gap-3">
-      <button class="btn btn-secondary" (click)="theme.setTheme('light')" [class.btn-primary]="(theme.theme$ | async)==='light'">☀ Clair</button>
-      <button class="btn btn-secondary" (click)="theme.setTheme('dark')" [class.btn-primary]="(theme.theme$ | async)==='dark'">☾ Sombre</button>
+    <div class="card" *ngIf="auth.isAdmin">
+      <div class="card-header">
+        <div><div class="h5">Palette du site vitrine</div><span class="caption text-subtle">Couleurs de la page marketing publique — indépendante de l'application</span></div>
+      </div>
+      <div class="card-pad">
+        <div class="palette-grid">
+          <button *ngFor="let p of palettes" class="palette-opt" [class.active]="vitrinePalette === p.value" (click)="setVitrine(p.value, p.label)">
+            <span class="swatches"><span class="bar" [style.background]="p.swatch"></span></span>
+            <span class="row"><span>{{ p.label }}</span><span *ngIf="vitrinePalette === p.value" class="chk">✓</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="h5">Apparence</div></div>
+      <div class="card-pad row-between">
+        <div><div class="lbl">Thème de l'interface</div><div class="caption text-muted">Choisissez entre le mode clair et sombre.</div></div>
+        <div class="segmented">
+          <button [class.active]="(theme.theme$ | async)==='light'" (click)="setTheme('light')">Clair</button>
+          <button [class.active]="(theme.theme$ | async)==='dark'" (click)="setTheme('dark')">Sombre</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="h5">Notifications</div></div>
+      <div class="card-pad">
+        <div class="toggle-row">
+          <div><div class="lbl">Nouvelles missions</div><div class="caption text-muted">Être alerté à la création d'une mission</div></div>
+          <app-toggle [checked]="notif.missions" (checkedChange)="notif.missions=$event; saveNotif()"></app-toggle>
+        </div>
+        <div class="toggle-row">
+          <div><div class="lbl">Factures</div><div class="caption text-muted">Émission et paiement de factures</div></div>
+          <app-toggle [checked]="notif.factures" (checkedChange)="notif.factures=$event; saveNotif()"></app-toggle>
+        </div>
+        <div class="toggle-row">
+          <div><div class="lbl">Factures en retard</div><div class="caption text-muted">Alertes sur les échéances dépassées</div></div>
+          <app-toggle [checked]="notif.retards" (checkedChange)="notif.retards=$event; saveNotif()"></app-toggle>
+        </div>
+        <div class="toggle-row">
+          <div><div class="lbl">Récapitulatif hebdomadaire</div><div class="caption text-muted">Un résumé chaque lundi matin</div></div>
+          <app-toggle [checked]="notif.hebdo" (checkedChange)="notif.hebdo=$event; saveNotif()"></app-toggle>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SÉCURITÉ ============ -->
+  <div class="stack" *ngIf="tab==='securite'">
+    <div class="card">
+      <div class="card-header">
+        <div class="h5">Mot de passe</div>
+        <button class="btn btn-secondary btn-sm" (click)="changePwd()" [disabled]="changingPwd">Mettre à jour</button>
+      </div>
+      <form class="card-pad" [formGroup]="pwdForm" (ngSubmit)="changePwd()">
+        <div class="field" [class.invalid]="pwf.currentPassword.touched && pwf.currentPassword.invalid">
+          <label>Mot de passe actuel</label><input type="password" formControlName="currentPassword" placeholder="••••••••" />
+        </div>
+        <div class="grid-2">
+          <div class="field" [class.invalid]="pwf.newPassword.touched && pwf.newPassword.invalid">
+            <label>Nouveau mot de passe</label><input type="password" formControlName="newPassword" placeholder="••••••••" />
+            <div class="field-error" *ngIf="pwf.newPassword.touched && pwf.newPassword.errors?.['minlength']">⚠ Au moins 6 caractères.</div>
+          </div>
+          <div class="field" [class.invalid]="pwf.confirm.touched && pwf.confirm.invalid">
+            <label>Confirmer</label><input type="password" formControlName="confirm" placeholder="••••••••" />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="h5">Double authentification</div></div>
+      <div class="card-pad row-between">
+        <div class="grow"><div class="lbl">Vérification en deux étapes (2FA)</div><div class="caption text-muted">Un code à usage unique est demandé à chaque connexion.</div></div>
+        <app-toggle [checked]="twoFactor" (checkedChange)="toggle2fa($event)"></app-toggle>
+      </div>
+    </div>
+
+    <div class="card danger-zone" *ngIf="auth.isAdmin">
+      <div class="card-header"><div class="h5">Zone sensible</div></div>
+      <div class="card-pad row-between">
+        <div class="grow"><div class="lbl danger">Désactiver le compte</div><div class="caption text-muted">L'accès sera suspendu. Cette action peut être annulée par un administrateur.</div></div>
+        <button class="btn btn-destructive btn-sm" (click)="deactivate()">🗑 Désactiver</button>
+      </div>
     </div>
   </div>
 </div>

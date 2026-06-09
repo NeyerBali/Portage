@@ -17,6 +17,9 @@ namespace Porteo.Services.Users
         Task<User> FindByEmail(string email);
         TokenResult CreateToken(User user, string secret, int expiryMinutes = 480);
         Task<MeDto> GetMe(int userId);
+        Task<bool> ChangePassword(int userId, string currentPassword, string newPassword);
+        Task<MeDto> UpdateProfile(int userId, UpdateProfileDto dto);
+        Task<MeDto> SetTwoFactor(int userId, bool enabled);
     }
 
     public class TokenResult
@@ -74,6 +77,53 @@ namespace Porteo.Services.Users
         {
             var user = await _uow.Users.GetById(userId);
             return user == null ? null : _mapper.Map<MeDto>(user);
+        }
+
+        public async Task<bool> ChangePassword(int userId, string currentPassword, string newPassword)
+        {
+            var user = await _uow.Users.GetById(userId);
+            if (user == null) return false;
+            if (!PasswordHasher.Verify(currentPassword, user.PasswordHash, user.PasswordSalt))
+                throw new ArgumentException("Mot de passe actuel incorrect.");
+
+            PasswordHasher.Create(newPassword, out var hash, out var salt);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+            user.UpdatedAt = DateTime.UtcNow;
+            _uow.Users.Update(user);
+            return await _uow.CompleteAsync();
+        }
+
+        public async Task<MeDto> UpdateProfile(int userId, UpdateProfileDto dto)
+        {
+            var user = await _uow.Users.GetById(userId);
+            if (user == null) return null;
+
+            // Empêche d'usurper l'email d'un autre compte
+            var existing = await _uow.Users.FindByEmail(dto.Email);
+            if (existing != null && existing.Id != userId)
+                throw new ArgumentException("Cet email est déjà utilisé.");
+
+            user.Prenom = dto.Prenom;
+            user.Nom = dto.Nom;
+            user.Email = dto.Email;
+            user.Telephone = dto.Telephone;
+            user.Fonction = dto.Fonction;
+            user.UpdatedAt = DateTime.UtcNow;
+            _uow.Users.Update(user);
+            await _uow.CompleteAsync();
+            return _mapper.Map<MeDto>(user);
+        }
+
+        public async Task<MeDto> SetTwoFactor(int userId, bool enabled)
+        {
+            var user = await _uow.Users.GetById(userId);
+            if (user == null) return null;
+            user.IsTwoFactorEnabled = enabled;
+            user.UpdatedAt = DateTime.UtcNow;
+            _uow.Users.Update(user);
+            await _uow.CompleteAsync();
+            return _mapper.Map<MeDto>(user);
         }
     }
 }

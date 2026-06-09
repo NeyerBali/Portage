@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portéo — Déploiement (Render + Firebase)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600&family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --emerald-50:#EEFBF4;--emerald-100:#D4F5E3;--emerald-200:#A8ECC9;--emerald-400:#3DDC97;
+    --emerald-500:#23B584;--emerald-600:#169070;--emerald-700:#0E5C4A;--emerald-900:#093528;--emerald-950:#06241C;
+    --ink-0:#FCFDFC;--ink-50:#F6F8F7;--ink-100:#EDF1EF;--ink-200:#DEE4E1;--ink-300:#C6CFCA;
+    --ink-500:#76847C;--ink-600:#586860;--ink-700:#3C4843;--ink-900:#16201C;--ink-950:#0D1512;
+    --info:#2D7FF9;--warn:#E29215;--ok:#15A66A;
+    --font-display:'Newsreader',Georgia,serif;--font-sans:'Hanken Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
+    --r:14px;--r-sm:8px;
+    --shadow:0 4px 12px rgba(13,21,18,.08),0 2px 4px rgba(13,21,18,.04);
+    --shadow-lg:0 12px 28px rgba(13,21,18,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--ink-900);background:var(--ink-50);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+
+  /* Hero */
+  header.hero{background:linear-gradient(135deg,#0D1512,#093528 60%,#0E5C4A);color:#fff;padding:64px 0 72px;position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:var(--emerald-500);filter:blur(80px);opacity:.35;top:-120px;right:-100px}
+  .hero .wrap{position:relative;z-index:1}
+  .logo{display:inline-flex;align-items:center;gap:12px;margin-bottom:28px}
+  .logo .mark{width:42px;height:42px;border-radius:11px;background:var(--emerald-400);color:var(--emerald-950);display:grid;place-items:center;font-family:var(--font-display);font-weight:600;font-size:24px}
+  .logo span{font-family:var(--font-display);font-size:24px;font-weight:600}
+  .hero h1{font-family:var(--font-display);font-weight:500;font-size:46px;line-height:1.08;margin-bottom:16px}
+  .hero p{color:rgba(255,255,255,.75);font-size:18px;max-width:640px}
+  .hero .pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:7px 14px;border-radius:999px;font-size:13.5px;font-weight:600}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--emerald-400)}
+
+  /* Sections */
+  main{padding:56px 0 80px}
+  .lead{display:flex;gap:16px;align-items:flex-start;background:var(--ink-0);border:1px solid var(--ink-200);border-left:4px solid var(--emerald-600);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:40px}
+  .lead .ic{font-size:22px}
+  h2{font-family:var(--font-display);font-weight:500;font-size:30px;color:var(--ink-900);margin:48px 0 8px;display:flex;align-items:center;gap:14px}
+  h2 .num{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:var(--emerald-700);color:#fff;display:grid;place-items:center;font-size:18px;font-weight:700;font-family:var(--font-sans)}
+  h2.alt .num{background:var(--info)}
+  .sub{color:var(--ink-600);margin:0 0 22px 54px;font-size:15.5px}
+  h3{font-size:17px;font-weight:700;margin:26px 0 10px;color:var(--ink-900)}
+
+  .card{background:var(--ink-0);border:1px solid var(--ink-200);border-radius:var(--r);padding:24px;box-shadow:var(--shadow);margin-bottom:20px}
+  ol.steps{list-style:none;counter-reset:s}
+  ol.steps>li{counter-increment:s;position:relative;padding:0 0 26px 44px;border-left:2px solid var(--ink-200);margin-left:14px}
+  ol.steps>li:last-child{border-left-color:transparent;padding-bottom:0}
+  ol.steps>li::before{content:counter(s);position:absolute;left:-15px;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--emerald-600);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+  ol.steps>li b{font-size:15.5px}
+
+  pre{background:var(--ink-950);color:#E6EDEA;border-radius:var(--r-sm);padding:16px 18px;overflow:auto;font-family:var(--font-mono);font-size:13px;line-height:1.7;margin:12px 0;border:1px solid #1c2a23}
+  pre .c{color:#6f8478}            /* commentaire */
+  pre .k{color:var(--emerald-400)} /* commande clé */
+  code{font-family:var(--font-mono);background:var(--emerald-50);color:var(--emerald-700);padding:2px 6px;border-radius:5px;font-size:.9em;border:1px solid var(--emerald-100)}
+
+  .note{display:flex;gap:12px;background:var(--emerald-50);border:1px solid var(--emerald-100);border-radius:var(--r-sm);padding:14px 16px;font-size:14px;margin:14px 0;color:var(--ink-700)}
+  .note.warn{background:#FCF3E2;border-color:#F4DDB0;color:#7A5306}
+  .note.info{background:#E8F0FE;border-color:#C9DBFB;color:#1A4FA3}
+  .note .ic{font-size:18px;flex-shrink:0}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;background:var(--ink-0);border:1px solid var(--ink-200);border-radius:var(--r);overflow:hidden}
+  th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--ink-100)}
+  th{background:var(--ink-50);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
+  td a{color:var(--emerald-700);font-weight:600;word-break:break-all}
+  tr:last-child td{border-bottom:none}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .arch{display:flex;align-items:stretch;gap:14px;flex-wrap:wrap;margin:8px 0 4px}
+  .box{flex:1;min-width:150px;background:var(--ink-0);border:1px solid var(--ink-200);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--shadow)}
+  .box .t{font-weight:700;font-size:14px}.box .d{font-size:12.5px;color:var(--ink-600);margin-top:4px}
+  .box .e{font-size:24px;display:block;margin-bottom:6px}
+  .arrow{display:grid;place-items:center;color:var(--ink-300);font-size:22px;font-weight:700}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--emerald-100);color:var(--emerald-700);margin-left:6px}
+
+  footer{border-top:1px solid var(--ink-200);padding:26px 0;color:var(--ink-500);font-size:13px;text-align:center}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}.hero h1{font-size:34px}h2{font-size:24px}.sub{margin-left:0}}
+  @media print{header.hero::after{display:none}body{background:#fff}.card,.box,table{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="logo"><span class="mark">P</span><span>Portéo</span></div>
+    <h1>Déploiement de l'application<br>en production — gratuitement</h1>
+    <p>Plateforme de gestion de portage salarial : front <b>Angular</b>, API <b>.NET 8</b> et base <b>PostgreSQL</b>. Déploiement réparti sur <b>Render</b> (API + base) et <b>Firebase Hosting</b> (front), via <b>GitHub</b>.</p>
+    <div class="pills">
+      <span class="pill"><span class="dot"></span>Front : Firebase Hosting</span>
+      <span class="pill"><span class="dot"></span>API : Render (Docker)</span>
+      <span class="pill"><span class="dot"></span>Base : PostgreSQL managé</span>
+      <span class="pill"><span class="dot"></span>CI : GitHub</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="lead">
+    <span class="ic">🎯</span>
+    <div>
+      <b>Pourquoi deux hébergeurs ?</b> Firebase Hosting ne sert que des fichiers <b>statiques</b> (le front Angular compilé). L'API .NET et la base PostgreSQL ont besoin d'un serveur : on les met sur <b>Render</b> (offre gratuite, Docker + base managée). Le front Firebase appelle ensuite l'API Render par son URL publique.
+    </div>
+  </div>
+
+  <h3>Architecture du déploiement</h3>
+  <div class="arch">
+    <div class="box"><span class="e">💻</span><div class="t">Code</div><div class="d">Repo GitHub<br><code>NeyerBali/Portage</code></div></div>
+    <div class="arrow">→</div>
+    <div class="box"><span class="e">⚙️</span><div class="t">Render</div><div class="d">API .NET (Docker)<br>+ PostgreSQL</div></div>
+    <div class="arrow">↘</div>
+    <div class="box"><span class="e">🔥</span><div class="t">Firebase</div><div class="d">Front Angular<br>(Nginx/CDN)</div></div>
+    <div class="arrow">→</div>
+    <div class="box"><span class="e">🌐</span><div class="t">Utilisateur</div><div class="d">porteo-9cc53<br>.web.app</div></div>
+  </div>
+
+  <!-- ÉTAPE 0 -->
+  <h2><span class="num">0</span>Préparer le code (« cloud-ready »)</h2>
+  <p class="sub">Quelques ajustements pour que l'app fonctionne sur un hébergeur, sans rien casser en local.</p>
+  <div class="card">
+    <ol class="steps">
+      <li><b>API : écouter le port imposé par l'hébergeur.</b> Render fournit une variable <code>PORT</code>. Dans <code>Program.cs</code> :
+        <pre><span class="c">// Render/Railway injectent PORT ; on l'écoute si présent</span>
+var listenPort = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(listenPort))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{listenPort}");</pre></li>
+      <li><b>API : accepter une URL PostgreSQL.</b> Render donne une chaîne <code>postgres://user:pass@host/db</code> ; on la convertit au format Npgsql automatiquement (fonction <code>NormalizeConnectionString</code> dans <code>Program.cs</code>).</li>
+      <li><b>Fichier <code>render.yaml</code></b> (racine du repo) : décrit la base + le service web Docker à créer.</li>
+      <li><b>Front : <code>firebase.json</code></b> (dossier public = <code>dist/porteo-web/browser</code>, réécriture SPA) et <code>baseHref="/"</code> dans <code>angular.json</code>.</li>
+      <li><b>Front : URL de l'API</b> dans <code>src/environments/environment.prod.ts</code> (renseignée une fois l'API Render en ligne).</li>
+    </ol>
+  </div>
+
+  <!-- PARTIE A -->
+  <h2><span class="num">A</span>Backend → Render</h2>
+  <p class="sub">API .NET 8 (Docker) + base PostgreSQL managée, sur le plan gratuit.</p>
+
+  <div class="card">
+    <h3>A.1 — Pousser le projet sur GitHub</h3>
+    <pre><span class="k">cd</span> C:\source\Portage
+<span class="k">git init</span>
+<span class="k">git add</span> .
+<span class="k">git commit</span> -m "Porteo - app de portage salarial"
+<span class="k">git branch</span> -M main
+<span class="k">git remote add</span> origin https://github.com/NeyerBali/Portage.git
+<span class="k">git push</span> -u origin main</pre>
+    <div class="note info"><span class="ic">ℹ️</span><div>Le <code>.gitignore</code> exclut déjà <code>bin/</code>, <code>obj/</code>, <code>node_modules/</code>, <code>dist/</code> : on ne pousse que le code source.</div></div>
+
+    <h3>A.2 — Créer les services via le Blueprint</h3>
+    <ol class="steps">
+      <li>Aller sur <b>render.com</b> → <b>Get Started</b> → <b>Sign up with GitHub</b> (autoriser l'accès au dépôt <code>Portage</code>).</li>
+      <li>Dashboard Render → <b>New +</b> → <b>Blueprint</b> → connecter le bouton <b>GitHub</b> → choisir <code>NeyerBali/Portage</code>.</li>
+      <li>Render lit <code>render.yaml</code> et propose : <b>base <code>porteo-db</code></b> + <b>service web <code>porteo-api</code></b> (plan <span class="tag">Free</span>).</li>
+      <li>Donner un nom (ex. <code>porteo</code>), branche <code>main</code>, puis <b>Deploy Blueprint</b>.</li>
+      <li>Render construit l'image Docker (~5–10 min), branche la base, applique les <b>migrations + le seed</b> au 1er démarrage.</li>
+    </ol>
+
+    <h3>A.3 — Récupérer l'URL & tester</h3>
+    <p>Quand <code>porteo-api</code> passe à <b>Live</b>, son URL publique est affichée en haut du service :</p>
+    <table>
+      <tr><th>Ressource</th><th>URL</th></tr>
+      <tr><td>API</td><td><a href="https://porteo-api.onrender.com">https://porteo-api.onrender.com</a></td></tr>
+      <tr><td>Swagger</td><td><a href="https://porteo-api.onrender.com/swagger">https://porteo-api.onrender.com/swagger</a></td></tr>
+    </table>
+    <div class="note warn"><span class="ic">⏱️</span><div><b>Cold start</b> : sur le plan gratuit, le service s'endort après ~15 min d'inactivité ; la 1ʳᵉ requête suivante prend ~30–50 s. C'est normal.</div></div>
+    <div class="note warn"><span class="ic">🧭</span><div>L'adresse <code>http://0.0.0.0:10000</code> vue dans les logs est <b>interne</b> au conteneur (« Now listening on… ») : elle n'est pas accessible depuis le navigateur. On utilise l'URL <code>…onrender.com</code>.</div></div>
+  </div>
+
+  <!-- PARTIE B -->
+  <h2 class="alt"><span class="num">B</span>Frontend → Firebase Hosting</h2>
+  <p class="sub">Front Angular compilé en statique, distribué par le CDN Firebase.</p>
+
+  <div class="card">
+    <h3>B.1 — Installer le CLI Firebase</h3>
+    <pre><span class="k">npm install</span> -g firebase-tools</pre>
+
+    <h3>B.2 — Brancher le front sur l'API Render</h3>
+    <p>Dans <code>crossone.porteo.web.manager/src/environments/environment.prod.ts</code> :</p>
+    <pre>export const environment = {
+  production: true,
+  apiUrl: <span class="k">'https://porteo-api.onrender.com/api/'</span>
+};</pre>
+
+    <h3>B.3 — Connexion, projet, déploiement</h3>
+    <pre><span class="k">cd</span> C:\source\Portage\crossone.porteo.web.manager
+
+<span class="c"># 1) connexion à ton compte Google</span>
+<span class="k">firebase login</span>
+
+<span class="c"># 2) associer TON projet Firebase (le choisir dans la liste, alias "default")</span>
+<span class="k">firebase use</span> --add        <span class="c"># → porteo-9cc53</span>
+
+<span class="c"># 3) compiler en production puis déployer</span>
+<span class="k">ng build</span> --configuration production
+<span class="k">firebase deploy</span></pre>
+    <p>Résultat :</p>
+    <pre>✔  Deploy complete!
+Hosting URL: <span class="k">https://porteo-9cc53.web.app</span></pre>
+    <div class="note warn"><span class="ic">⚠️</span><div><b>Réécriture SPA = Oui</b> (différent de l'exemple « No ») : l'app utilise le routeur Angular (<code>/missions</code>, <code>/clients/:id</code>…). Sans réécriture vers <code>index.html</code>, ces liens directs renverraient une 404.</div></div>
+    <div class="note info"><span class="ic">📁</span><div>Dossier public = <code>dist/porteo-web/browser</code> (Angular 17+ ajoute le sous-dossier <code>browser</code>).</div></div>
+  </div>
+
+  <!-- MISE A JOUR -->
+  <h2><span class="num">↻</span>Livrer une nouvelle version</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>🅰️ Modif du FRONT</h3>
+      <pre><span class="k">cd</span> ...\crossone.porteo.web.manager
+<span class="k">ng build</span> --configuration production
+<span class="k">firebase deploy</span></pre>
+      <div class="note"><span class="ic">↩️</span><div>Rollback possible : Console Firebase → <b>Hosting</b> → <i>Release history</i>.</div></div>
+    </div>
+    <div class="card">
+      <h3>🅱️ Modif du BACKEND</h3>
+      <pre><span class="k">cd</span> C:\source\Portage
+<span class="k">git add</span> . && <span class="k">git commit</span> -m "modif"
+<span class="k">git push</span></pre>
+      <div class="note"><span class="ic">🤖</span><div>Render est en <b>auto-deploy</b> : le push sur <code>main</code> reconstruit l'API automatiquement.</div></div>
+    </div>
+  </div>
+
+  <!-- INCIDENT -->
+  <h2 class="alt"><span class="num">🐞</span>Incident rencontré (et corrigé)</h2>
+  <div class="card">
+    <p><b>Symptôme :</b> après connexion, la page « <i>ne répond pas</i> » au moment d'afficher le tableau de bord (le login, lui, renvoyait bien <code>200 OK</code>).</p>
+    <p><b>Cause :</b> le menu latéral était généré par un <i>getter</i> renvoyant un <b>nouveau tableau à chaque cycle</b> de détection de changements ; combiné aux <code>routerLink</code>, cela créait une <b>boucle infinie</b> qui figeait le thread principal.</p>
+    <p><b>Correctif :</b> menu calculé <b>une seule fois</b> (référence stable), puis nouveau <code>ng build</code> + <code>firebase deploy</code>. Problème résolu. ✅</p>
+    <div class="note info"><span class="ic">🔎</span><div>Diagnostic clé : le bug se reproduisait aussi dans Edge ⇒ ce n'était pas une extension du navigateur mais bien le code de l'app.</div></div>
+  </div>
+
+  <!-- RESULTAT -->
+  <h2><span class="num">✓</span>Résultat final</h2>
+  <div class="card">
+    <table>
+      <tr><th>Élément</th><th>URL</th></tr>
+      <tr><td>🔥 Front (Firebase)</td><td><a href="https://porteo-9cc53.web.app">https://porteo-9cc53.web.app</a></td></tr>
+      <tr><td>⚙️ API (Render)</td><td><a href="https://porteo-api.onrender.com/api">https://porteo-api.onrender.com/api</a></td></tr>
+      <tr><td>📘 Swagger</td><td><a href="https://porteo-api.onrender.com/swagger">https://porteo-api.onrender.com/swagger</a></td></tr>
+      <tr><td>💻 Code source</td><td><a href="https://github.com/NeyerBali/Portage">github.com/NeyerBali/Portage</a></td></tr>
+    </table>
+    <h3>Comptes de démonstration</h3>
+    <table>
+      <tr><th>Rôle</th><th>Email</th><th>Mot de passe</th></tr>
+      <tr><td>Administrateur</td><td><code>admin@porteo.dev</code></td><td><code>Porteo2026!</code></td></tr>
+      <tr><td>Consultant</td><td><code>consultant@porteo.dev</code></td><td><code>Porteo2026!</code></td></tr>
+    </table>
+    <div class="note"><span class="ic">💸</span><div>Coût total : <b>0 €</b> — Render (plan Free) + Firebase (plan Spark) + GitHub.</div></div>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  © 2026 Portéo · Crossone — Document de déploiement (Render + Firebase) · généré pour la présentation du projet.
+</footer>
+
+</body>
+</html>
