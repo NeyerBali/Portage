@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/core/auth/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -10,12 +11,14 @@ import { Component } from '@angular/core';
         <div class="auth-card fade-in" *ngIf="!sent">
           <h1>Mot de passe oublié</h1>
           <p class="sub">Indiquez votre e-mail, nous vous enverrons un lien de réinitialisation.</p>
-          <form (ngSubmit)="sent = true" novalidate>
+          <form (ngSubmit)="submit()" novalidate>
             <div class="field">
               <label>Adresse e-mail <span class="req">*</span></label>
               <input type="email" [(ngModel)]="email" name="email" placeholder="vous@entreprise.fr" required />
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block mt-2">Envoyer le lien</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block mt-2" [disabled]="loading">
+              <span *ngIf="!loading">Envoyer le lien</span><span *ngIf="loading" class="spin"></span>
+            </button>
           </form>
           <p class="auth-foot-link"><a class="link" routerLink="/auth/login">← Retour à la connexion</a></p>
         </div>
@@ -23,8 +26,7 @@ import { Component } from '@angular/core';
         <div class="auth-card fade-in" *ngIf="sent">
           <span class="auth-icon">✉</span>
           <h1>Vérifiez votre boîte mail</h1>
-          <p class="sub">Un lien de réinitialisation a été envoyé à <b style="color:var(--text-default)">{{ email || 'votre adresse' }}</b>. Il expire dans 30 minutes.</p>
-          <button class="btn btn-secondary btn-lg btn-block" routerLink="/auth/reset">Simuler le clic sur le lien →</button>
+          <p class="sub">Si un compte existe pour <b style="color:var(--text-default)">{{ email }}</b>, un lien de réinitialisation vient d'être envoyé. Il expire dans 24 heures.</p>
           <p class="auth-foot-link"><a class="link" routerLink="/auth/login">← Retour à la connexion</a></p>
         </div>
       </main>
@@ -33,5 +35,15 @@ import { Component } from '@angular/core';
 })
 export class ForgotPasswordComponent {
   sent = false;
+  loading = false;
   email = '';
+  constructor(private auth: AuthService) {}
+  submit(): void {
+    if (!this.email) return;
+    this.loading = true;
+    this.auth.forgotPassword(this.email).subscribe({
+      next: () => { this.loading = false; this.sent = true; },
+      error: () => { this.loading = false; this.sent = true; },
+    });
+  }
 }

@@ -24,6 +24,22 @@ namespace Porteo.ModelViews.Users
         public DateTime ExpiresAt { get; set; }
     }
 
+    /// <summary>Réponse du login quand une 2ᵉ étape est requise (pas encore de token).</summary>
+    public class TwoFactorChallengeDto
+    {
+        public bool NeedsTwoFactor { get; set; } = true;
+        public bool HasTotp { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+    }
+
+    public class EmailDto { public string Email { get; set; } }
+    public class VerifyCodeDto { public string Email { get; set; } public string Code { get; set; } }
+    public class TotpSetupResultDto { public string QrImage { get; set; } public string Secret { get; set; } public string QrUri { get; set; } }
+    public class CodeDto { public string Code { get; set; } }
+    public class ForgotPasswordDto { public string Email { get; set; } }
+    public class ResetPasswordDto { public string Token { get; set; } public string NewPassword { get; set; } }
+
     /// <summary>Profil de l'utilisateur connecté (GET /api/auth/me).</summary>
     public class MeDto
     {
@@ -37,6 +53,7 @@ namespace Porteo.ModelViews.Users
         public string Telephone { get; set; }
         public string Fonction { get; set; }
         public bool TwoFactorEnabled { get; set; }
+        public bool TotpEnabled { get; set; }
     }
 
     /// <summary>Mise à jour du profil (onglet Profil des paramètres).</summary>

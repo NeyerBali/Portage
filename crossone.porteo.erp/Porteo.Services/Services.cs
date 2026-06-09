@@ -6,6 +6,7 @@ using Porteo.Services.Consultants;
 using Porteo.Services.Dashboard;
 using Porteo.Services.Factures;
 using Porteo.Services.Justificatifs;
+using Porteo.Services.Mail;
 using Porteo.Services.Missions;
 using Porteo.Services.Monitorings;
 using Porteo.Services.Productions;
@@ -36,6 +37,7 @@ namespace Porteo.Services
         IDemandeService Demandes { get; }
         IConfigService Config { get; }
         IPayslipService Payslips { get; }
+        IEmailService Mail { get; }
     }
 
     public class Services : IServices
@@ -55,6 +57,7 @@ namespace Porteo.Services
         public IDemandeService Demandes { get; }
         public IConfigService Config { get; }
         public IPayslipService Payslips { get; }
+        public IEmailService Mail { get; }
 
         public Services(
             IMissionService missions,
@@ -71,7 +74,8 @@ namespace Porteo.Services
             IAbsenceService absences,
             IDemandeService demandes,
             IConfigService config,
-            IPayslipService payslips)
+            IPayslipService payslips,
+            IEmailService mail)
         {
             Missions = missions;
             Clients = clients;
@@ -88,6 +92,7 @@ namespace Porteo.Services
             Demandes = demandes;
             Config = config;
             Payslips = payslips;
+            Mail = mail;
         }
     }
 }

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ThemeService, PALETTES, Palette } from 'src/app/core/services/theme.service';
-import { AgencyProfile, GlobalParameter, Me } from 'src/app/shared/models';
+import { AgencyProfile, GlobalParameter, Me, TotpSetupResult } from 'src/app/shared/models';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ApiService } from '../../http/api.service';
 
@@ -27,6 +27,12 @@ export class SettingsComponent implements OnInit {
   twoFactor = false;
   savingProfile = false;
   changingPwd = false;
+
+  // Authentificateur (TOTP)
+  totpEnabled = false;
+  totpSetup?: TotpSetupResult;
+  totpCode = '';
+  totpBusy = false;
 
   // Admin : paramètres globaux + profil agence
   parameters: GlobalParameter[] = [];
@@ -72,6 +78,7 @@ export class SettingsComponent implements OnInit {
     this.auth.me().subscribe(me => {
       this.me = me;
       this.twoFactor = me.twoFactorEnabled;
+      this.totpEnabled = me.totpEnabled;
       this.profileForm.patchValue({
         prenom: me.prenom, nom: me.nom, email: me.email,
         telephone: me.telephone ?? '', fonction: me.fonction ?? '',
@@ -127,11 +134,28 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  toggle2fa(enabled: boolean): void {
-    this.auth.setTwoFactor(enabled).subscribe({
-      next: me => { this.twoFactor = me.twoFactorEnabled; this.toastr.success(enabled ? 'Double authentification activée.' : 'Double authentification désactivée.', 'Sécurité'); },
-      error: () => (this.twoFactor = !enabled),
+  // ----- Authentificateur (TOTP) -----
+  startTotpSetup(): void {
+    this.totpBusy = true;
+    this.auth.setupTotp().subscribe({
+      next: s => { this.totpBusy = false; this.totpSetup = s; this.totpCode = ''; },
+      error: () => (this.totpBusy = false),
     });
+  }
+
+  confirmTotp(): void {
+    if (!this.totpCode || this.totpCode.length < 6) { this.toastr.warning('Saisissez le code à 6 chiffres.', 'Authentificateur'); return; }
+    this.totpBusy = true;
+    this.auth.confirmTotp(this.totpCode).subscribe({
+      next: () => { this.totpBusy = false; this.totpEnabled = true; this.totpSetup = undefined; this.toastr.success('Authentificateur activé.', 'Sécurité'); },
+      error: () => { this.totpBusy = false; this.toastr.error('Code invalide, réessayez.', 'Authentificateur'); },
+    });
+  }
+
+  cancelTotpSetup(): void { this.totpSetup = undefined; this.totpCode = ''; }
+
+  disableTotp(): void {
+    this.auth.disableTotp().subscribe(() => { this.totpEnabled = false; this.toastr.success('Authentificateur désactivé.', 'Sécurité'); });
   }
 
   deactivate(): void {

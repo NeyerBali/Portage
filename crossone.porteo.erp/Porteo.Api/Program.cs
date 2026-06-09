@@ -19,6 +19,7 @@ using Porteo.Services.Consultants;
 using Porteo.Services.Dashboard;
 using Porteo.Services.Factures;
 using Porteo.Services.Justificatifs;
+using Porteo.Services.Mail;
 using Porteo.Services.Missions;
 using Porteo.Services.Monitorings;
 using Porteo.Services.Productions;
@@ -107,6 +108,7 @@ builder.Services.AddScoped<IAbsenceService, AbsenceService>();
 builder.Services.AddScoped<IDemandeService, DemandeService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IPayslipService, PayslipService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IServices, Porteo.Services.Services>();
 
 // ---- AutoMapper ----

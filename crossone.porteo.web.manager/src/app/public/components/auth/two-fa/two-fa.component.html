@@ -4,7 +4,19 @@
     <div class="auth-card fade-in">
       <span class="auth-icon">🛡</span>
       <h1>Vérification en deux étapes</h1>
-      <p class="sub">Saisissez le code à 6 chiffres envoyé au <b style="color:var(--text-default)">06 •• •• •• 21</b>. <span class="text-subtle">(démo : n'importe quels 6 chiffres)</span></p>
+
+      <!-- Choix de la méthode -->
+      <div class="segmented" style="margin:14px 0 20px" *ngIf="hasTotp">
+        <button [class.active]="method==='totp'" (click)="switch('totp')">Authentificateur</button>
+        <button [class.active]="method==='email'" (click)="switch('email')">Par email</button>
+      </div>
+
+      <p class="sub" *ngIf="method==='email'">
+        Saisissez le code à 6 chiffres envoyé à <b style="color:var(--text-default)">{{ email }}</b>.
+      </p>
+      <p class="sub" *ngIf="method==='totp'">
+        Saisissez le code affiché par votre application d'authentification (Google/Microsoft Authenticator).
+      </p>
 
       <div class="otp">
         <input *ngFor="let d of code; let i = index" #otpInput maxlength="1" inputmode="numeric"
@@ -13,12 +25,17 @@
       </div>
       <p class="field-error" *ngIf="err" style="margin-bottom:14px">⚠ {{ err }}</p>
 
-      <button class="btn btn-primary btn-lg btn-block" (click)="verify()">Vérifier et continuer</button>
+      <button class="btn btn-primary btn-lg btn-block" (click)="verify()" [disabled]="loading">
+        <span *ngIf="!loading">Vérifier et continuer</span><span *ngIf="loading" class="spin"></span>
+      </button>
 
       <div class="flex items-center justify-between" style="margin-top:var(--sp-6); font-size:var(--t-sm)">
         <a class="link" routerLink="/auth/login">← Retour</a>
-        <span class="text-subtle" *ngIf="countdown > 0">Renvoyer le code dans <b class="mono" style="color:var(--text-default)">{{ countdownLabel }}</b></span>
-        <a class="link" *ngIf="countdown === 0" (click)="resend()">Renvoyer le code</a>
+        <ng-container *ngIf="method==='email'">
+          <span class="text-subtle" *ngIf="countdown > 0">Renvoyer dans <b class="mono" style="color:var(--text-default)">{{ countdownLabel }}</b></span>
+          <a class="link" *ngIf="countdown === 0 && !sending" (click)="sendEmail()">Renvoyer le code</a>
+          <span class="text-subtle" *ngIf="sending">Envoi…</span>
+        </ng-container>
       </div>
     </div>
   </main>

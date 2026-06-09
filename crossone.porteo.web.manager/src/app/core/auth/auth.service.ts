@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { AuthResult, ChangePasswordRequest, LoginRequest, Me, Role, UpdateProfileRequest } from 'src/app/shared/models';
+import { AuthResult, ChangePasswordRequest, LoginRequest, Me, Role, TotpSetupResult, TwoFactorChallenge, UpdateProfileRequest } from 'src/app/shared/models';
 import { TokenService } from '../services/token.service';
 
 const USER_KEY = 'porteo-user';
@@ -25,16 +25,41 @@ export class AuthService {
     return this.token.isValid() && !!this._user$.value;
   }
 
-  login(payload: LoginRequest): Observable<AuthResult> {
-    return this.http.post<AuthResult>(`${environment.apiUrl}auth/login`, payload).pipe(
-      tap(res => {
-        this.token.setToken(res.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(res));
-        localStorage.setItem('porteo-authed', 'true');
-        localStorage.setItem('porteo-role', res.role);
-        this._user$.next(res);
-      })
-    );
+  /** Étape 1 : identifiants → renvoie un défi 2FA (pas encore de jeton). */
+  login(payload: LoginRequest): Observable<TwoFactorChallenge> {
+    return this.http.post<TwoFactorChallenge>(`${environment.apiUrl}auth/login`, payload);
+  }
+
+  /** Méthode email : envoie le code de vérification. */
+  sendVerification(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${environment.apiUrl}auth/send-verification`, { email });
+  }
+
+  /** Étape 2 (email) : vérifie le code et ouvre la session. */
+  verifyCode(email: string, code: string): Observable<AuthResult> {
+    return this.http.post<AuthResult>(`${environment.apiUrl}auth/verify`, { email, code }).pipe(tap(r => this.store(r)));
+  }
+
+  /** Étape 2 (authentificateur) : vérifie le code TOTP et ouvre la session. */
+  verifyTotp(email: string, code: string): Observable<AuthResult> {
+    return this.http.post<AuthResult>(`${environment.apiUrl}auth/verify-totp`, { email, code }).pipe(tap(r => this.store(r)));
+  }
+
+  // ---- Authentificateur (réglages) ----
+  setupTotp(): Observable<TotpSetupResult> { return this.http.get<TotpSetupResult>(`${environment.apiUrl}auth/setup-totp`); }
+  confirmTotp(code: string): Observable<{ message: string }> { return this.http.post<{ message: string }>(`${environment.apiUrl}auth/confirm-totp`, { code }); }
+  disableTotp(): Observable<{ message: string }> { return this.http.post<{ message: string }>(`${environment.apiUrl}auth/disable-totp`, {}); }
+
+  // ---- Mot de passe oublié / reset ----
+  forgotPassword(email: string): Observable<{ message: string }> { return this.http.post<{ message: string }>(`${environment.apiUrl}auth/forgot-password`, { email }); }
+  resetPassword(token: string, newPassword: string): Observable<{ message: string }> { return this.http.post<{ message: string }>(`${environment.apiUrl}auth/reset-password`, { token, newPassword }); }
+
+  private store(res: AuthResult): void {
+    this.token.setToken(res.token);
+    localStorage.setItem(USER_KEY, JSON.stringify(res));
+    localStorage.setItem('porteo-authed', 'true');
+    localStorage.setItem('porteo-role', res.role);
+    this._user$.next(res);
   }
 
   me(): Observable<Me> {

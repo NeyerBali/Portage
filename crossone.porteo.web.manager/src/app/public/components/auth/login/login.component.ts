@@ -32,7 +32,7 @@ export class LoginComponent {
 
   fill(role: 'admin' | 'consultant'): void {
     this.form.patchValue({
-      email: role === 'admin' ? 'admin@porteo.dev' : 'consultant@porteo.dev',
+      email: role === 'admin' ? 'neyerbali6@gmail.com' : 'neyerbali6+consultant@gmail.com',
       password: 'Porteo2026!',
     });
   }
@@ -46,11 +46,13 @@ export class LoginComponent {
     this.loading = true;
     const { email, password } = this.form.value;
     this.auth.login({ email: email!, password: password! }).subscribe({
-      next: () => {
+      next: challenge => {
         this.loading = false;
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        // Étape de vérification en deux étapes (conforme au design)
-        this.router.navigate(['/auth/2fa'], { queryParams: { returnUrl } });
+        // Étape 2 : double authentification (email ou application).
+        this.router.navigate(['/auth/2fa'], {
+          state: { email: challenge.email, fullName: challenge.fullName, hasTotp: challenge.hasTotp, returnUrl },
+        });
       },
       error: () => {
         this.loading = false;

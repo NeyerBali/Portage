@@ -32,3 +32,20 @@ services:
       # Relance des factures impayées toutes les 30 min (démo).
       - key: Scheduler__RelanceCron
         value: "0 0/30 * * * ?"
+      # URL du front (liens reset / bienvenue dans les emails).
+      - key: App__FrontUrl
+        value: https://porteo-9cc53.web.app
+      # Brevo (SMTP) — emails 2FA / bienvenue / reset.
+      - key: Smtp__Host
+        value: smtp-relay.brevo.com
+      - key: Smtp__Port
+        value: "587"
+      - key: Smtp__Login
+        value: a8425c001@smtp-brevo.com
+      - key: Smtp__SenderEmail
+        value: neyerbali6@gmail.com
+      - key: Email__SenderName
+        value: "Porteo"
+      # Clé SMTP : NON versionnée — à saisir dans le dashboard Render (Environment).
+      - key: Smtp__Password
+        sync: false

@@ -182,9 +182,35 @@
 
     <div class="card">
       <div class="card-header"><div class="h5">Double authentification</div></div>
-      <div class="card-pad row-between">
-        <div class="grow"><div class="lbl">Vérification en deux étapes (2FA)</div><div class="caption text-muted">Un code à usage unique est demandé à chaque connexion.</div></div>
-        <app-toggle [checked]="twoFactor" (checkedChange)="toggle2fa($event)"></app-toggle>
+      <div class="card-pad">
+        <div class="row-between" style="padding-bottom:var(--sp-4);border-bottom:1px solid var(--border-subtle)">
+          <div class="grow"><div class="lbl">Par email</div><div class="caption text-muted">Un code à usage unique est envoyé par email à chaque connexion.</div></div>
+          <span class="badge valide"><span class="dot"></span>Toujours active</span>
+        </div>
+
+        <!-- Authentificateur (TOTP) -->
+        <div class="row-between" style="padding-top:var(--sp-4)">
+          <div class="grow">
+            <div class="lbl">Application d'authentification</div>
+            <div class="caption text-muted">Google / Microsoft Authenticator — code hors-ligne à 6 chiffres.</div>
+          </div>
+          <span *ngIf="totpEnabled" class="badge valide"><span class="dot"></span>Activée</span>
+          <button *ngIf="!totpEnabled && !totpSetup" class="btn btn-secondary btn-sm" (click)="startTotpSetup()" [disabled]="totpBusy">Configurer</button>
+          <button *ngIf="totpEnabled" class="btn btn-ghost btn-sm" (click)="disableTotp()" style="color:var(--error-600)">Désactiver</button>
+        </div>
+
+        <!-- Étape de configuration : QR + code -->
+        <div class="totp-setup" *ngIf="totpSetup">
+          <p class="caption text-muted">1. Scannez ce QR code avec votre application d'authentification :</p>
+          <img [src]="totpSetup.qrImage" alt="QR code" class="qr" />
+          <p class="caption text-subtle">Ou saisissez la clé manuellement : <span class="mono">{{ totpSetup.secret }}</span></p>
+          <p class="caption text-muted">2. Entrez le code à 6 chiffres affiché :</p>
+          <div class="flex gap-2 items-center">
+            <input class="totp-input" type="text" inputmode="numeric" maxlength="6" [(ngModel)]="totpCode" placeholder="000000" />
+            <button class="btn btn-primary btn-sm" (click)="confirmTotp()" [disabled]="totpBusy">Activer</button>
+            <button class="btn btn-ghost btn-sm" (click)="cancelTotpSetup()">Annuler</button>
+          </div>
+        </div>
       </div>
     </div>
 

@@ -4,6 +4,10 @@
 **/logs/
 *.user
 
+# Secrets locaux (clé SMTP Brevo, etc.) — non versionnés
+**/appsettings.Development.json
+**/appsettings.*.Local.json
+
 # ---- Angular / Node ----
 crossone.porteo.web.manager/node_modules/
 crossone.porteo.web.manager/dist/

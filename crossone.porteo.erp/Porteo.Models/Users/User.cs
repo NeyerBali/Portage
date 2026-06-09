@@ -21,6 +21,18 @@ namespace Porteo.Models.Users
         /// <summary>Vérification en deux étapes (2FA) activée.</summary>
         public bool IsTwoFactorEnabled { get; set; }
 
+        // ---- 2FA par email ----
+        public string VerificationCode { get; set; }
+        public DateTime? VerificationCodeExpires { get; set; }
+
+        // ---- 2FA par application d'authentification (TOTP) ----
+        public string TotpSecret { get; set; }
+        public bool TotpEnabled { get; set; }
+
+        // ---- Réinitialisation / activation du mot de passe ----
+        public string ResetToken { get; set; }
+        public DateTime? ResetTokenExpires { get; set; }
+
         /// <summary>Renseigné si l'utilisateur est un consultant (filtre d'appartenance).</summary>
         public int? ConsultantId { get; set; }
         public Consultant Consultant { get; set; }

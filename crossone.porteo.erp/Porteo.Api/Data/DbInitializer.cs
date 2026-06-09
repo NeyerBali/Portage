@@ -120,8 +120,8 @@ namespace Porteo.Api.Data
             PasswordHasher.Create("Porteo2026!", out var consHash, out var consSalt);
 
             db.Users.AddRange(
-                new User { Email = "admin@porteo.dev", Nom = "Admin", Prenom = "Portéo", Role = UserRole.Admin, PasswordHash = adminHash, PasswordSalt = adminSalt, CreatedAt = now },
-                new User { Email = "consultant@porteo.dev", Nom = "Rousseau", Prenom = "Camille", Role = UserRole.User, ConsultantId = c[0].Id, PasswordHash = consHash, PasswordSalt = consSalt, CreatedAt = now }
+                new User { Email = "neyerbali6@gmail.com", Nom = "Admin", Prenom = "Portéo", Role = UserRole.Admin, PasswordHash = adminHash, PasswordSalt = adminSalt, CreatedAt = now },
+                new User { Email = "neyerbali6+consultant@gmail.com", Nom = "Rousseau", Prenom = "Camille", Role = UserRole.User, ConsultantId = c[0].Id, PasswordHash = consHash, PasswordSalt = consSalt, CreatedAt = now }
             );
 
             await db.SaveChangesAsync();
@@ -135,6 +135,12 @@ namespace Porteo.Api.Data
         {
             var now = DateTime.UtcNow;
             var changed = false;
+
+            // Bascule les emails de démo vers une vraie boîte (réception du code 2FA).
+            var oldAdmin = await db.Users.FirstOrDefaultAsync(u => u.Email == "admin@porteo.dev");
+            if (oldAdmin != null) { oldAdmin.Email = "neyerbali6@gmail.com"; changed = true; }
+            var oldCons = await db.Users.FirstOrDefaultAsync(u => u.Email == "consultant@porteo.dev");
+            if (oldCons != null) { oldCons.Email = "neyerbali6+consultant@gmail.com"; changed = true; }
 
             if (!await db.GlobalParameters.AnyAsync())
             {

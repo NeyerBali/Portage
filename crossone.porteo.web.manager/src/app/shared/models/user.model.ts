@@ -25,6 +25,20 @@ export interface Me {
   telephone?: string;
   fonction?: string;
   twoFactorEnabled: boolean;
+  totpEnabled: boolean;
+}
+
+export interface TwoFactorChallenge {
+  needsTwoFactor: boolean;
+  hasTotp: boolean;
+  email: string;
+  fullName: string;
+}
+
+export interface TotpSetupResult {
+  qrImage: string;
+  secret: string;
+  qrUri: string;
 }
 
 export interface UpdateProfileRequest {
