@@ -71,7 +71,7 @@ namespace Porteo.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Envoi du code 2FA échoué pour {Email}", dto.Email);
-                return StatusCode(500, new { message = "Impossible d'envoyer l'email. Réessayez." });
+                return StatusCode(500, new { message = "Impossible d'envoyer l'email. Réessayez.", detail = ex.Message });
             }
         }
 

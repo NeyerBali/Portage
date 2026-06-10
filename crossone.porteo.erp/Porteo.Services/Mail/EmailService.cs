@@ -1,3 +1,6 @@
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
@@ -87,14 +90,53 @@ namespace Porteo.Services.Mail
             Send(toEmail, "Réinitialisation de votre mot de passe Portéo", html);
         }
 
+        // HttpClient partagé (évite l'épuisement de sockets). Réutilisé pour l'API Brevo.
+        private static readonly HttpClient _http = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+
         private void Send(string toEmail, string subject, string html)
+        {
+            var apiKey = _config["Brevo:ApiKey"] ?? "";
+            var senderEmail = _config["Smtp:SenderEmail"] ?? _config["Smtp:Login"] ?? "";
+            var senderName = _config["Email:SenderName"] ?? "Portéo";
+
+            // En prod (Render) le port SMTP sortant est souvent bloqué → on privilégie
+            // l'API HTTP de Brevo (HTTPS/443). Repli SMTP si aucune clé d'API n'est fournie (local).
+            if (!string.IsNullOrWhiteSpace(apiKey))
+                SendViaApi(apiKey, senderName, senderEmail, toEmail, subject, html);
+            else
+                SendViaSmtp(senderName, senderEmail, toEmail, subject, html);
+
+            _logger.LogInformation("Email envoyé à {Email} — {Subject}", toEmail, subject);
+        }
+
+        /// <summary>Envoi via l'API transactionnelle Brevo (nécessite une clé d'API « xkeysib- »).</summary>
+        private void SendViaApi(string apiKey, string senderName, string senderEmail, string toEmail, string subject, string html)
+        {
+            var payload = new
+            {
+                sender = new { name = senderName, email = senderEmail },
+                to = new[] { new { email = toEmail } },
+                subject,
+                htmlContent = html,
+            };
+            using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.brevo.com/v3/smtp/email");
+            req.Headers.TryAddWithoutValidation("api-key", apiKey);
+            req.Headers.TryAddWithoutValidation("accept", "application/json");
+            req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+            using var resp = _http.Send(req);
+            var body = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            if (!resp.IsSuccessStatusCode)
+                throw new InvalidOperationException($"Brevo API {(int)resp.StatusCode} : {body}");
+        }
+
+        /// <summary>Envoi via SMTP (MailKit) — utilisé en local où le port 587 n'est pas bloqué.</summary>
+        private void SendViaSmtp(string senderName, string senderEmail, string toEmail, string subject, string html)
         {
             var login = _config["Smtp:Login"] ?? "";
             var password = _config["Smtp:Password"] ?? "";
             var host = _config["Smtp:Host"] ?? "smtp-relay.brevo.com";
             var port = int.TryParse(_config["Smtp:Port"], out var p) ? p : 587;
-            var senderEmail = _config["Smtp:SenderEmail"] ?? login;
-            var senderName = _config["Email:SenderName"] ?? "Portéo";
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(senderName, senderEmail));
@@ -107,7 +149,6 @@ namespace Porteo.Services.Mail
             client.Authenticate(login, password);
             client.Send(message);
             client.Disconnect(true);
-            _logger.LogInformation("Email envoyé à {Email} — {Subject}", toEmail, subject);
         }
     }
 }

@@ -49,3 +49,7 @@ services:
       # Clé SMTP : NON versionnée — à saisir dans le dashboard Render (Environment).
       - key: Smtp__Password
         sync: false
+      # Clé d'API Brevo (« xkeysib- ») : envoi via HTTP (port 443, non bloqué par Render).
+      # NON versionnée — à saisir dans le dashboard Render (Environment).
+      - key: Brevo__ApiKey
+        sync: false
