@@ -1,62 +1,140 @@
-<div class="modal">
-  <header class="modal-head">
-    <span class="modal-icon">📎</span>
+<div class="jmodal">
+  <!-- En-tête -->
+  <header class="jm-head">
+    <span class="jm-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M9 13h6M9 17h4"/></svg>
+    </span>
     <div class="grow">
-      <h3 class="h4">Nouveau justificatif</h3>
-      <p class="caption text-subtle">Déposez une note de frais, un CRA ou un document lié à une mission.</p>
+      <h3>Créer un nouveau <b>justificatif</b></h3>
+      <p class="jm-sub">Note de frais, CRA ou document lié à une mission.</p>
     </div>
-    <button class="btn btn-icon btn-ghost" (click)="cancel()">✕</button>
+    <button class="jm-x" (click)="cancel()" aria-label="Fermer">✕</button>
   </header>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="modal-body">
-    <div class="field" [class.invalid]="f.missionId.touched && f.missionId.invalid">
-      <label>Mission <span class="req">*</span></label>
-      <select formControlName="missionId">
-        <option [ngValue]="null" disabled>Sélectionner…</option>
-        <option *ngFor="let m of data.missions" [ngValue]="m.id">{{ m.titre }}<span *ngIf="m.clientNom"> — {{ m.clientNom }}</span></option>
-      </select>
-      <div class="field-error" *ngIf="f.missionId.touched && f.missionId.invalid">⚠ La mission est requise.</div>
+  <div class="jm-body">
+    <!-- Bandeau brouillon -->
+    <div class="jm-draft" *ngIf="hasDraft">
+      <span class="jm-draft-ic">↺</span>
+      <div class="grow"><strong>Un brouillon est disponible</strong><span class="jm-draft-sub">Reprenez votre saisie précédente.</span></div>
+      <button class="btn btn-sm btn-primary" (click)="resumeDraft()">Reprendre</button>
+      <button class="btn btn-sm btn-ghost" (click)="discardDraft()">Ignorer</button>
     </div>
 
-    <div class="grid-2">
-      <div class="field">
-        <label>Type <span class="req">*</span></label>
-        <select formControlName="type">
-          <option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option>
+    <!-- Mission sélectionnée -->
+    <div class="jm-resource">
+      <div class="jm-res-head"><span class="jm-res-ic">◆</span> MISSION CONCERNÉE <span class="req">*</span></div>
+      <div class="jm-res-row">
+        <span class="jm-avatar" [class.empty]="!selectedMission">{{ selectedMission ? missionInitials(selectedMission) : '—' }}</span>
+        <select class="jm-res-select" [formControl]="$any(f.missionId)">
+          <option [ngValue]="null" disabled>Sélectionner une mission…</option>
+          <option *ngFor="let m of data.missions" [ngValue]="m.id">{{ m.titre }}<span *ngIf="m.clientNom"> — {{ m.clientNom }}</span></option>
         </select>
       </div>
-      <div class="field">
-        <label>Montant (€)</label>
-        <input type="number" formControlName="montant" min="0" step="0.01" placeholder="(optionnel)" />
+      <div class="jm-res-meta" *ngIf="selectedMission">
+        <span *ngIf="selectedMission.clientNom">🏢 {{ selectedMission.clientNom }}</span>
+        <span *ngIf="selectedMission.consultantNom">🧑‍💻 {{ selectedMission.consultantNom }}</span>
       </div>
     </div>
 
-    <div class="field" [class.invalid]="f.libelle.touched && f.libelle.invalid">
-      <label>Libellé <span class="req">*</span></label>
-      <input type="text" formControlName="libelle" placeholder="Ex. Frais de déplacement Lyon-Paris" />
-      <div class="field-error" *ngIf="f.libelle.touched && f.libelle.invalid">⚠ Le libellé est requis.</div>
+    <!-- Deux colonnes : formulaire + progression -->
+    <div class="jm-grid">
+      <form class="jm-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="jm-row2">
+          <div class="field">
+            <label>Type <span class="req">*</span></label>
+            <select formControlName="type">
+              <option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Montant</label>
+            <div class="jm-money"><span>€</span><input type="number" formControlName="montant" min="0" step="0.01" placeholder="0.00" /></div>
+          </div>
+        </div>
+
+        <div class="field" [class.invalid]="f.libelle.touched && f.libelle.invalid">
+          <label>Libellé du justificatif <span class="req">*</span></label>
+          <input type="text" formControlName="libelle" placeholder="Ex. Frais de déplacement Lyon–Paris" />
+          <div class="field-error" *ngIf="f.libelle.touched && f.libelle.invalid">⚠ Le libellé est requis.</div>
+        </div>
+
+        <div class="field" [class.invalid]="f.dateJustificatif.touched && f.dateJustificatif.invalid">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" formControlName="dateJustificatif" />
+        </div>
+
+        <div class="field">
+          <label>Notes</label>
+          <textarea formControlName="notes" rows="2" placeholder="Détails (optionnel)"></textarea>
+        </div>
+
+        <!-- Réutiliser un justificatif existant -->
+        <div class="jm-reuse" *ngIf="reusable.length">
+          <button type="button" class="jm-reuse-toggle" (click)="reuseOpen = !reuseOpen">
+            <span>⧉ Réutiliser un justificatif existant</span>
+            <span class="chev" [class.open]="reuseOpen">▾</span>
+          </button>
+          <div class="jm-reuse-list" *ngIf="reuseOpen">
+            <button type="button" class="jm-reuse-item" *ngFor="let j of reusable" (click)="reuse(j)">
+              <strong>{{ j.libelle }}</strong>
+              <span class="caption text-subtle">{{ typeLabel(j.type) }}<span *ngIf="j.clientNom"> · {{ j.clientNom }}</span></span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Progression -->
+      <aside class="jm-progress">
+        <div class="jm-prog-title">PROGRESSION</div>
+        <div class="jm-ring">
+          <svg viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" class="ring-bg"></circle>
+            <circle cx="40" cy="40" r="34" class="ring-fg"
+                    [attr.stroke-dasharray]="ringCirc"
+                    [attr.stroke-dashoffset]="ringOffset"
+                    transform="rotate(-90 40 40)"></circle>
+            <text x="40" y="45" text-anchor="middle" class="ring-pct">{{ progress }}%</text>
+          </svg>
+        </div>
+        <p class="jm-prog-note">{{ remaining === 0 ? 'Tout est complété 🎉' : 'Il reste ' + remaining + ' champ' + (remaining > 1 ? 's' : '') }}</p>
+        <ul class="jm-checklist">
+          <li *ngFor="let c of checklist" [class.done]="c.done">
+            <span class="ck">{{ c.done ? '✓' : '' }}</span>{{ c.label }}
+          </li>
+        </ul>
+      </aside>
     </div>
 
-    <div class="field" [class.invalid]="f.dateJustificatif.touched && f.dateJustificatif.invalid">
-      <label>Date <span class="req">*</span></label>
-      <input type="date" formControlName="dateJustificatif" />
-    </div>
+    <!-- Dépôt de fichier -->
+    <div class="jm-drop" [class.over]="dragOver" [class.has]="file"
+         (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+      <ng-container *ngIf="!file">
+        <span class="jm-drop-ic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+        </span>
+        <div>Glissez votre fichier ici<br><label class="jm-drop-link">ou cliquez pour importer<input type="file" hidden (change)="onFileInput($event)" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" /></label></div>
+        <span class="caption text-subtle">PDF, image ou document · 15 Mo max</span>
+      </ng-container>
 
-    <div class="field">
-      <label>Notes</label>
-      <textarea formControlName="notes" placeholder="Détails (optionnel)"></textarea>
+      <!-- Aperçu du fichier -->
+      <div class="jm-file" *ngIf="file">
+        <img *ngIf="fileIsImage" [src]="filePreviewUrl" class="jm-file-thumb" alt="aperçu" />
+        <span *ngIf="!fileIsImage" class="jm-file-thumb doc">📄</span>
+        <div class="grow">
+          <strong>{{ file.name }}</strong>
+          <span class="caption text-subtle">{{ (file.size / 1024) | number:'1.0-0' }} Ko</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="viewFile()">Visualiser</button>
+        <button type="button" class="btn btn-sm btn-ghost danger" (click)="removeFile()">Retirer</button>
+      </div>
     </div>
+  </div>
 
-    <div class="field">
-      <label>Pièce jointe</label>
-      <input type="file" (change)="onFile($event)" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" />
-      <span class="field-hint" *ngIf="file">{{ file.name }} ({{ (file.size / 1024) | number:'1.0-0' }} Ko)</span>
-      <span class="field-hint" *ngIf="!file">PDF, image ou document (optionnel, max 15 Mo).</span>
-    </div>
-
-    <footer class="modal-foot">
-      <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
-      <button type="submit" class="btn btn-primary">Déposer le justificatif</button>
-    </footer>
-  </form>
+  <!-- Pied -->
+  <footer class="jm-foot">
+    <button type="button" class="btn btn-ghost" (click)="cancel()">Annuler</button>
+    <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="submit()">
+      ✓ Ajouter le justificatif
+    </button>
+  </footer>
 </div>

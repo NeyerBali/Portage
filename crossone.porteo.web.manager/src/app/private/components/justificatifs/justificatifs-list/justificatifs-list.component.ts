@@ -46,7 +46,8 @@ export class JustificatifsListComponent implements OnInit {
   add(): void {
     this.api.missions.list({ pageSize: 200 }).subscribe(res => {
       const ref = this.dialog.open(JustificatifPopupComponent, {
-        panelClass: 'porteo-dialog', width: '640px', maxWidth: '95vw', data: { missions: res.items },
+        panelClass: 'porteo-dialog', width: '880px', maxWidth: '96vw',
+        data: { missions: res.items, justificatifs: this.justificatifs },
       });
       ref.afterClosed().subscribe(r => {
         if (r?.form) {

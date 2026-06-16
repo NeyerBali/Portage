@@ -1,8 +1,84 @@
-.modal { display: flex; flex-direction: column; max-height: 90vh; }
-.modal-head { display: flex; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-5) var(--sp-6); border-bottom: 1px solid var(--border-subtle); }
-.modal-icon { width: 44px; height: 44px; border-radius: var(--r-md); background: var(--bg-brand-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.modal-body { padding: var(--sp-6); overflow-y: auto; }
-.modal-foot { display: flex; justify-content: flex-end; gap: var(--sp-3); padding-top: var(--sp-4); margin-top: var(--sp-2); border-top: 1px solid var(--border-subtle); }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
-.field input[type=file] { padding: 8px; }
-@media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+.jmodal { display: flex; flex-direction: column; max-height: 92vh; background: var(--bg-app); }
+
+/* En-tête */
+.jm-head { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-5) var(--sp-6); background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); }
+.jm-icon { width: 44px; height: 44px; border-radius: var(--r-md); background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.jm-head h3 { font-family: var(--font-display); font-weight: 500; font-size: var(--t-h4); color: var(--text-strong); }
+.jm-head h3 b { font-weight: 600; }
+.jm-sub { font-size: var(--t-caption); color: var(--text-subtle); margin-top: 2px; }
+.jm-x { width: 34px; height: 34px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-subtle); cursor: pointer; font-size: 15px; flex-shrink: 0; }
+.jm-x:hover { background: var(--bg-sunken); color: var(--text-default); }
+.grow { flex: 1; min-width: 0; }
+.req { color: var(--error-500); }
+
+/* Corps */
+.jm-body { padding: var(--sp-5) var(--sp-6); overflow-y: auto; display: flex; flex-direction: column; gap: var(--sp-5); }
+
+/* Brouillon */
+.jm-draft { display: flex; align-items: center; gap: var(--sp-3); padding: 12px 14px; border-radius: var(--r-md); background: var(--bg-brand-soft); border: 1px solid var(--border-brand); }
+.jm-draft-ic { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.jm-draft strong { display: block; font-size: var(--t-sm); color: var(--text-strong); }
+.jm-draft-sub { font-size: var(--t-caption); color: var(--text-muted); }
+
+/* Mission concernée */
+.jm-resource { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-5); }
+.jm-res-head { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; color: var(--text-subtle); font-weight: 600; display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.jm-res-ic { color: var(--primary); }
+.jm-res-row { display: flex; align-items: center; gap: 12px; }
+.jm-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+.jm-avatar.empty { background: var(--bg-sunken); color: var(--text-subtle); }
+.jm-res-select { flex: 1; height: 44px; border: 1px solid var(--border-default); border-radius: var(--r-md); background: var(--bg-surface); padding: 0 12px; font-family: inherit; font-size: var(--t-body); color: var(--text-default); }
+.jm-res-select:focus { outline: none; border-color: var(--border-brand); box-shadow: var(--ring); }
+.jm-res-meta { display: flex; gap: var(--sp-5); margin-top: 10px; font-size: var(--t-sm); color: var(--text-muted); }
+
+/* Grille principale */
+.jm-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: var(--sp-5); align-items: start; }
+.jm-form { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--r-lg); padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-4); }
+.jm-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.jm-money { display: flex; align-items: center; border: 1px solid var(--border-default); border-radius: var(--r-sm); overflow: hidden; background: var(--bg-surface); }
+.jm-money span { padding: 0 4px 0 12px; color: var(--text-subtle); }
+.jm-money input { border: none !important; box-shadow: none !important; flex: 1; }
+
+/* Réutiliser */
+.jm-reuse { border-top: 1px solid var(--border-subtle); padding-top: var(--sp-3); }
+.jm-reuse-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; background: transparent; border: none; cursor: pointer; color: var(--primary); font-weight: 600; font-size: var(--t-sm); padding: 4px 2px; }
+.jm-reuse-toggle .chev { transition: transform .18s; } .jm-reuse-toggle .chev.open { transform: rotate(180deg); }
+.jm-reuse-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; max-height: 180px; overflow-y: auto; }
+.jm-reuse-item { text-align: left; background: var(--bg-sunken); border: 1px solid transparent; border-radius: var(--r-sm); padding: 8px 11px; cursor: pointer; display: flex; flex-direction: column; gap: 1px; }
+.jm-reuse-item:hover { border-color: var(--border-brand); background: var(--bg-brand-soft); }
+.jm-reuse-item strong { font-size: var(--t-sm); color: var(--text-strong); }
+
+/* Progression */
+.jm-progress { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--r-lg); padding: var(--sp-5); display: flex; flex-direction: column; align-items: center; }
+.jm-prog-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; color: var(--text-subtle); font-weight: 600; align-self: flex-start; }
+.jm-ring { width: 130px; height: 130px; margin: var(--sp-3) 0 var(--sp-2); }
+.jm-ring svg { width: 100%; height: 100%; }
+.ring-bg { fill: none; stroke: var(--bg-sunken); stroke-width: 7; }
+.ring-fg { fill: none; stroke: var(--primary); stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset .4s var(--ease-out); }
+.ring-pct { font-family: var(--font-display); font-size: 17px; font-weight: 600; fill: var(--text-strong); }
+.jm-prog-note { font-size: var(--t-sm); color: var(--text-muted); margin-bottom: var(--sp-4); }
+.jm-checklist { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 9px; }
+.jm-checklist li { display: flex; align-items: center; gap: 10px; font-size: var(--t-sm); color: var(--text-subtle); }
+.jm-checklist li .ck { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: grid; place-items: center; font-size: 11px; color: #fff; flex-shrink: 0; transition: background .15s, border-color .15s; }
+.jm-checklist li.done { color: var(--text-default); font-weight: 500; }
+.jm-checklist li.done .ck { background: var(--success-500); border-color: var(--success-500); }
+
+/* Dropzone */
+.jm-drop { border: 1.5px dashed var(--border-strong); border-radius: var(--r-lg); padding: var(--sp-6); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-muted); background: var(--bg-surface); transition: border-color .15s, background .15s; }
+.jm-drop.over { border-color: var(--primary); background: var(--bg-brand-soft); }
+.jm-drop.has { display: block; padding: var(--sp-4); text-align: left; }
+.jm-drop-ic { width: 46px; height: 46px; border-radius: 50%; background: var(--bg-brand-soft); color: var(--primary); display: grid; place-items: center; }
+.jm-drop-link { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: underline; }
+.jm-file { display: flex; align-items: center; gap: 12px; }
+.jm-file-thumb { width: 46px; height: 46px; border-radius: var(--r-sm); object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-default); }
+.jm-file-thumb.doc { display: grid; place-items: center; font-size: 22px; background: var(--bg-sunken); }
+.jm-file strong { display: block; font-size: var(--t-sm); color: var(--text-strong); word-break: break-all; }
+.jm-file .danger { color: var(--error-600); }
+
+/* Pied */
+.jm-foot { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-4) var(--sp-6); background: var(--bg-surface); border-top: 1px solid var(--border-subtle); }
+
+@media (max-width: 760px) {
+  .jm-grid { grid-template-columns: 1fr; }
+  .jm-row2 { grid-template-columns: 1fr; }
+}
