@@ -59,6 +59,9 @@ namespace Porteo.Services.Configurations
             a.RaisonSociale = dto.RaisonSociale; a.Siret = dto.Siret; a.TvaIntra = dto.TvaIntra;
             a.Adresse = dto.Adresse; a.Ville = dto.Ville; a.Email = dto.Email; a.Telephone = dto.Telephone;
             a.SiteWeb = dto.SiteWeb; a.Iban = dto.Iban; a.UpdatedAt = DateTime.UtcNow;
+            // Logo/Signature : ne pas écraser si le client renvoie null (ex. sauvegarde des champs texte seuls).
+            if (dto.Logo != null) a.Logo = dto.Logo;
+            if (dto.Signature != null) a.Signature = dto.Signature;
             await _uow.CompleteAsync();
             return Map(a);
         }
@@ -89,6 +92,7 @@ namespace Porteo.Services.Configurations
         {
             Id = a.Id, RaisonSociale = a.RaisonSociale, Siret = a.Siret, TvaIntra = a.TvaIntra,
             Adresse = a.Adresse, Ville = a.Ville, Email = a.Email, Telephone = a.Telephone, SiteWeb = a.SiteWeb, Iban = a.Iban,
+            Logo = a.Logo, Signature = a.Signature,
         };
     }
 }

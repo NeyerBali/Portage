@@ -57,6 +57,47 @@
         </div>
       </div>
     </div>
+
+    <!-- Logo & signature -->
+    <div class="card">
+      <div class="card-header">
+        <div class="h5">Logo &amp; signature</div>
+        <span class="caption text-subtle">Affichés sur toutes les factures PDF</span>
+      </div>
+      <div class="card-pad">
+        <div class="grid-2">
+          <div class="upload-block">
+            <label class="upload-label">Logo de l'agence</label>
+            <div class="upload-preview">
+              <img *ngIf="agency.logo" [src]="agency.logo" alt="logo" />
+              <span *ngIf="!agency.logo" class="upload-placeholder">Aucun logo</span>
+            </div>
+            <div class="upload-actions">
+              <label class="btn btn-secondary btn-sm">
+                {{ agency.logo ? 'Changer' : 'Importer' }}
+                <input type="file" accept="image/*" hidden (change)="onAgencyImage($event, 'logo')" />
+              </label>
+              <button *ngIf="agency.logo" class="btn btn-ghost btn-sm danger" (click)="removeAgencyImage('logo')">Retirer</button>
+            </div>
+          </div>
+          <div class="upload-block">
+            <label class="upload-label">Signature / cachet</label>
+            <div class="upload-preview">
+              <img *ngIf="agency.signature" [src]="agency.signature" alt="signature" />
+              <span *ngIf="!agency.signature" class="upload-placeholder">Aucune signature</span>
+            </div>
+            <div class="upload-actions">
+              <label class="btn btn-secondary btn-sm">
+                {{ agency.signature ? 'Changer' : 'Importer' }}
+                <input type="file" accept="image/*" hidden (change)="onAgencyImage($event, 'signature')" />
+              </label>
+              <button *ngIf="agency.signature" class="btn btn-ghost btn-sm danger" (click)="removeAgencyImage('signature')">Retirer</button>
+            </div>
+          </div>
+        </div>
+        <p class="caption text-subtle mt-2">PNG, JPG ou SVG · 1,5 Mo max. L'enregistrement est automatique après l'import.</p>
+      </div>
+    </div>
   </div>
 
   <!-- ============ PROFIL ============ -->

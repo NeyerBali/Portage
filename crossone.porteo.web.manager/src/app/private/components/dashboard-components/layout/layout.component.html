@@ -1,37 +1,79 @@
-<div class="shell" [class.collapsed]="collapsed">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="brand">
-      <span class="logo">P</span>
-      <span class="word" *ngIf="!collapsed">Portéo</span>
-    </div>
-
-    <div class="role-card" *ngIf="!collapsed">
-      <span class="avatar" style="background: var(--primary)">{{ initials }}</span>
-      <div class="meta">
-        <strong>{{ auth.fullName }}</strong>
-        <small>{{ roleLabel }}</small>
-      </div>
-    </div>
-
-    <nav class="nav">
-      <a *ngFor="let item of nav" [routerLink]="item.route" routerLinkActive="active"
-         class="nav-item" [title]="item.label">
-        <span class="ic">{{ item.icon }}</span>
-        <span class="lbl" *ngIf="!collapsed">{{ item.label }}</span>
-        <span class="nav-badge" *ngIf="badgeFor(item.route) && !collapsed">{{ badgeFor(item.route) }}</span>
+<div class="shell">
+  <!-- Sidebar : menu accordéon -->
+  <aside class="cx-sidebar" [class.collapsed]="collapsed" [class.open]="mobileOpen">
+    <!-- Brand -->
+    <div class="cx-brand">
+      <a class="cx-logo" routerLink="/dashboard" title="Portéo">
+        <span class="cx-mark">P</span>
+        <span class="cx-brand-name" *ngIf="!collapsed">Portéo</span>
       </a>
+      <button type="button" class="cx-close" (click)="mobileOpen = false" aria-label="Fermer">✕</button>
+    </div>
+
+    <!-- Nav (étendu) -->
+    <nav class="cx-nav cx-scroll" *ngIf="!collapsed">
+      <div class="cx-group" *ngFor="let group of groups">
+        <button type="button" class="cx-group-header" [class.has-active]="isGroupActive(group)"
+                [attr.aria-expanded]="isGroupOpen(group)" (click)="toggleGroup(group)">
+          <span class="cx-grp-ico icon {{group.icon}}" [class.active]="isGroupActive(group)"></span>
+          <span class="cx-grp-label">{{ group.name }}</span>
+          <span class="cx-chevron" [class.open]="isGroupOpen(group)"></span>
+        </button>
+        <div class="cx-collapser" [class.open]="isGroupOpen(group)">
+          <div class="cx-collapser-inner">
+            <div class="cx-items">
+              <a class="cx-item" *ngFor="let child of group.children" [routerLink]="child.route"
+                 [class.active]="isItemActive(child.route)" (click)="mobileOpen = false">
+                <span class="cx-chip" [class.active]="isItemActive(child.route)">
+                  <span class="icon {{child.icon}}" [class.active]="isItemActive(child.route)"></span>
+                </span>
+                <span class="cx-item-label">{{ child.label }}</span>
+                <span class="cx-badge" *ngIf="badgeFor(child.route) > 0">{{ badgeFor(child.route) }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
 
-    <button class="collapse-btn" (click)="collapsed = !collapsed">
-      {{ collapsed ? '»' : '« Replier le menu' }}
-    </button>
+    <!-- Rail (replié) -->
+    <nav class="cx-rail cx-scroll" *ngIf="collapsed">
+      <button type="button" class="cx-rail-btn" *ngFor="let group of groups"
+              [class.active]="isGroupActive(group)" [title]="group.name" (click)="goToGroup(group)">
+        <span class="icon {{group.icon}}" [class.active]="isGroupActive(group)"></span>
+      </button>
+    </nav>
+
+    <!-- Footer profil -->
+    <div class="cx-footer">
+      <ng-container *ngIf="!collapsed; else railFooter">
+        <div class="cx-profile">
+          <span class="cx-avatar" [style.background]="getAvatarColor()" (click)="goToProfile()">{{ initials }}</span>
+          <div class="cx-profile-meta" (click)="goToProfile()">
+            <div class="cx-profile-name">{{ auth.fullName }}</div>
+            <div class="cx-profile-sub">{{ roleLabel }}</div>
+          </div>
+          <button type="button" class="cx-iconbtn" title="Réduire le menu" (click)="toggleCollapse()"><span class="cx-panel-left"></span></button>
+        </div>
+        <div class="cx-footer-menu">
+          <a class="cx-foot-action icon icon-setting" title="Paramètres" routerLink="/parametres" (click)="mobileOpen = false"></a>
+          <a class="cx-foot-action icon icon-chart-2" title="Centre d'alerte" routerLink="/alertes" (click)="mobileOpen = false"></a>
+          <button type="button" class="cx-foot-action danger-action" title="Déconnexion" (click)="logout()">⎋</button>
+        </div>
+      </ng-container>
+      <ng-template #railFooter>
+        <button type="button" class="cx-rail-btn" title="Étendre le menu" (click)="toggleCollapse()">
+          <span class="cx-panel-left cx-panel-left--right"></span>
+        </button>
+      </ng-template>
+    </div>
   </aside>
+  <div class="cx-backdrop" [class.show]="mobileOpen" (click)="mobileOpen = false"></div>
 
   <!-- Zone principale -->
   <div class="main">
     <header class="topbar">
-      <button class="btn btn-icon btn-ghost mobile-only" (click)="collapsed = !collapsed">☰</button>
+      <button class="btn btn-icon btn-ghost mobile-only" (click)="mobileOpen = true">☰</button>
 
       <!-- Recherche -->
       <div class="searchbar-wrap">

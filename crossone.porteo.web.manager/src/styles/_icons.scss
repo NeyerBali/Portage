@@ -1,0 +1,50 @@
+/* ============================================================
+   PORTÉO — Jeu d'icônes SVG (repris du design de référence)
+   Base .icon + .icon-<nom> (inactif) + .icon.active.icon-<nom> (actif).
+   Les SVG vivent dans src/assets/inc/img/.
+   ============================================================ */
+.icon { background-repeat: no-repeat; background-position: center; background-size: contain; }
+
+.icon.icon-dashboard       { background-image: url(/assets/inc/img/dashboard.svg); }
+.icon.icon-chart-2         { background-image: url(/assets/inc/img/chart-2.svg); }
+.icon.icon-chart-square    { background-image: url(/assets/inc/img/chart-square.svg); }
+.icon.icon-briefcase       { background-image: url(/assets/inc/img/briefcase.svg); }
+.icon.icon-buildings       { background-image: url(/assets/inc/img/buildings.svg); }
+.icon.icon-profile-2user   { background-image: url(/assets/inc/img/profile-2user.svg); }
+.icon.icon-user-search     { background-image: url(/assets/inc/img/user-search.svg); }
+.icon.icon-tag             { background-image: url(/assets/inc/img/tag.svg); }
+.icon.icon-document-copy   { background-image: url(/assets/inc/img/document-copy.svg); }
+.icon.icon-timer           { background-image: url(/assets/inc/img/timer.svg); }
+.icon.icon-airplane        { background-image: url(/assets/inc/img/airplane.svg); }
+.icon.icon-message-question{ background-image: url(/assets/inc/img/message-question.svg); }
+.icon.icon-receipt-2       { background-image: url(/assets/inc/img/receipt-2.svg); }
+.icon.icon-receipt-item    { background-image: url(/assets/inc/img/receipt-item.svg); }
+.icon.icon-archive-book    { background-image: url(/assets/inc/img/archive-book.svg); }
+.icon.icon-setting         { background-image: url(/assets/inc/img/setting.svg); }
+.icon.icon-wallet-money    { background-image: url(/assets/inc/img/wallet-money.svg); }
+.icon.icon-production      { background-image: url(/assets/inc/img/production.svg); }
+.icon.icon-clipboard-text  { background-image: url(/assets/inc/img/clipboard-text.svg); }
+.icon.icon-coin            { background-image: url(/assets/inc/img/coin.svg); }
+.icon.icon-cards           { background-image: url(/assets/inc/img/cards.svg); }
+
+.icon.active.icon-dashboard       { background-image: url(/assets/inc/img/dashboard-active.svg); }
+.icon.active.icon-chart-2         { background-image: url(/assets/inc/img/chart-2-active.svg); }
+.icon.active.icon-chart-square    { background-image: url(/assets/inc/img/chart-square-active.svg); }
+.icon.active.icon-briefcase       { background-image: url(/assets/inc/img/briefcase-active.svg); }
+.icon.active.icon-buildings       { background-image: url(/assets/inc/img/buildings-active.svg); }
+.icon.active.icon-profile-2user   { background-image: url(/assets/inc/img/profile-2user-active.svg); }
+.icon.active.icon-user-search     { background-image: url(/assets/inc/img/user-search-active.svg); }
+.icon.active.icon-tag             { background-image: url(/assets/inc/img/tag-active.svg); }
+.icon.active.icon-document-copy   { background-image: url(/assets/inc/img/document-copy-active.svg); }
+.icon.active.icon-timer           { background-image: url(/assets/inc/img/timer-active.svg); }
+.icon.active.icon-airplane        { background-image: url(/assets/inc/img/airplane-active.svg); }
+.icon.active.icon-message-question{ background-image: url(/assets/inc/img/message-question-active.svg); }
+.icon.active.icon-receipt-2       { background-image: url(/assets/inc/img/receipt-2-active.svg); }
+.icon.active.icon-receipt-item    { background-image: url(/assets/inc/img/receipt-item-active.svg); }
+.icon.active.icon-archive-book    { background-image: url(/assets/inc/img/archive-book-active.svg); }
+.icon.active.icon-setting         { background-image: url(/assets/inc/img/setting-active.svg); }
+.icon.active.icon-wallet-money    { background-image: url(/assets/inc/img/wallet-money-active.svg); }
+.icon.active.icon-production      { background-image: url(/assets/inc/img/production-active.svg); }
+.icon.active.icon-clipboard-text  { background-image: url(/assets/inc/img/clipboard-text-active.svg); }
+.icon.active.icon-coin            { background-image: url(/assets/inc/img/coin-active.svg); }
+.icon.active.icon-cards           { background-image: url(/assets/inc/img/cards-active.svg); }

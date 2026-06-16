@@ -14,5 +14,10 @@ namespace Porteo.Models.Configurations
         public string Telephone { get; set; }
         public string SiteWeb { get; set; }
         public string Iban { get; set; }
+
+        /// <summary>Logo de l'agence (data URI base64) — affiché sur les factures et l'app.</summary>
+        public string Logo { get; set; }
+        /// <summary>Signature/cachet (data URI base64) — affiché sur toutes les factures PDF.</summary>
+        public string Signature { get; set; }
     }
 }

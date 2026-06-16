@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Porteo.Models.Users;
 using Porteo.ModelViews.Factures;
 using Porteo.Services;
+using Porteo.Services.Factures;
 
 namespace Porteo.Api.Controllers
 {
@@ -32,6 +33,17 @@ namespace Porteo.Api.Controllers
         {
             var facture = await _services.Factures.GetDto(id, User.OwnerConsultantId());
             return facture == null ? NotFound() : Ok(facture);
+        }
+
+        /// <summary>Télécharge la facture au format PDF (logo + signature de l'agence).</summary>
+        [HttpGet("{id:int}/pdf")]
+        public async Task<IActionResult> Pdf(int id)
+        {
+            var facture = await _services.Factures.GetDto(id, User.OwnerConsultantId());
+            if (facture == null) return NotFound();
+            var agency = await _services.Config.GetAgency();
+            var bytes = FacturePdfBuilder.Build(facture, agency);
+            return File(bytes, "application/pdf", $"{facture.Numero ?? "facture"}.pdf");
         }
 
         [HttpPost]

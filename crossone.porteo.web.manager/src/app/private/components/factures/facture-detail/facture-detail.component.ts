@@ -46,7 +46,18 @@ export class FactureDetailComponent implements OnInit {
     this.api.factures.relance(this.facture.id).subscribe(res => this.toastr.success(res.message, 'Relance envoyée'));
   }
 
-  pdf(): void { this.toastr.info('Génération PDF non disponible dans cette démonstration.', 'PDF'); }
+  pdf(): void {
+    if (!this.facture) return;
+    this.api.factures.downloadPdf(this.facture.id).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${this.facture!.numero || 'facture'}.pdf`; a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.toastr.error('Téléchargement du PDF impossible.', 'Erreur'),
+    });
+  }
   openMission(): void { if (this.facture) this.router.navigate(['/missions', this.facture.missionId]); }
   openClient(): void { if (this.isAdmin && this.facture?.clientId) this.router.navigate(['/clients', this.facture.clientId]); }
   back(): void { this.router.navigate(['/factures']); }

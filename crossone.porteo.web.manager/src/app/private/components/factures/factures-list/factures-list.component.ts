@@ -75,6 +75,18 @@ export class FacturesListComponent implements OnInit {
     this.api.factures.relance(f.id).subscribe(res => { this.toastr.success(res.message, 'Relance envoyée'); });
   }
 
+  downloadPdf(f: Facture): void {
+    this.api.factures.downloadPdf(f.id).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${f.numero || 'facture'}.pdf`; a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.toastr.error('Téléchargement du PDF impossible.', 'Erreur'),
+    });
+  }
+
   exportCsv(): void {
     downloadCsv('factures-porteo.csv', this.filtered, [
       { key: 'numero', label: 'Numéro' }, { key: 'missionTitre', label: 'Mission' }, { key: 'clientNom', label: 'Client' },

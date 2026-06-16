@@ -33,6 +33,11 @@ export class FactureApiService {
     return this.http.post<{ message: string }>(`${this.base}/${id}/relance`, {});
   }
 
+  /** Télécharge le PDF de la facture (logo + signature de l'agence). */
+  downloadPdf(id: number): Observable<Blob> {
+    return this.http.get(`${this.base}/${id}/pdf`, { responseType: 'blob' });
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
   }

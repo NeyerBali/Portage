@@ -101,6 +101,29 @@ export class SettingsComponent implements OnInit {
     this.api.config.updateAgency(this.agency).subscribe(() => this.toastr.success("Profil de l'agence enregistré.", 'Agence'));
   }
 
+  /** Upload du logo ou de la signature → base64, puis enregistrement. */
+  onAgencyImage(event: Event, field: 'logo' | 'signature'): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { this.toastr.warning('Sélectionnez une image (PNG, JPG, SVG).', 'Image'); return; }
+    if (file.size > 1_500_000) { this.toastr.warning('Image trop lourde (1,5 Mo maximum).', 'Image'); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.agency[field] = reader.result as string;
+      this.api.config.updateAgency(this.agency).subscribe(() =>
+        this.toastr.success(field === 'logo' ? 'Logo enregistré — il apparaît sur les factures.' : 'Signature enregistrée — elle apparaît sur les factures.', 'Agence'));
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  removeAgencyImage(field: 'logo' | 'signature'): void {
+    this.agency[field] = '';
+    this.api.config.updateAgency(this.agency).subscribe(() =>
+      this.toastr.info(field === 'logo' ? 'Logo retiré.' : 'Signature retirée.', 'Agence'));
+  }
+
   // ----- Profil -----
   saveProfile(): void {
     if (this.profileForm.invalid) { this.profileForm.markAllAsTouched(); return; }

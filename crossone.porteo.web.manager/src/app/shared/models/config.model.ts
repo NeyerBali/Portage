@@ -17,6 +17,8 @@ export interface AgencyProfile {
   telephone?: string;
   siteWeb?: string;
   iban?: string;
+  logo?: string;
+  signature?: string;
 }
 
 export interface SimulationRequest {

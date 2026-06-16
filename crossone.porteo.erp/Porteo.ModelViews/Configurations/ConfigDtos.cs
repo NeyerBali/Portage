@@ -23,6 +23,8 @@ namespace Porteo.ModelViews.Configurations
         public string Telephone { get; set; }
         public string SiteWeb { get; set; }
         public string Iban { get; set; }
+        public string Logo { get; set; }
+        public string Signature { get; set; }
     }
 
     /// <summary>Entrée du simulateur de rémunération en portage.</summary>
