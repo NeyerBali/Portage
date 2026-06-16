@@ -109,9 +109,9 @@
   --emerald-50:#EAF3FE; --emerald-100:#CFE3FC; --emerald-200:#A3CAF9; --emerald-300:#6BA8F5;
   --emerald-400:#3B88F2; --emerald-500:#2370DA; --emerald-600:#1A5AB4; --emerald-700:#134A8C;
   --emerald-800:#0F3A6E; --emerald-900:#0B2A50; --emerald-950:#061830;
-  --accent:#F5C518; --bg-brand-soft:#EAF3FE; --border-brand:#A3CAF9; --ring:0 0 0 3px rgba(59,136,242,0.38);
+  --accent:#FFC400; --bg-brand-soft:#EAF3FE; --border-brand:#A3CAF9; --ring:0 0 0 3px rgba(59,136,242,0.38);
 }
-[data-theme="dark"][data-palette="azur"]{ --bg-brand-soft:#0C2238; --border-brand:#1A5AB4; --ring:0 0 0 3px rgba(59,136,242,0.32); }
+[data-theme="dark"][data-palette="azur"]{ --accent:#FFCE1F; --bg-brand-soft:#0C2238; --border-brand:#1A5AB4; --ring:0 0 0 3px rgba(59,136,242,0.32); }
 
 [data-palette="violet"] {
   --emerald-50:#F3EEFE; --emerald-100:#E5DAFD; --emerald-200:#CDB6FB; --emerald-300:#AE8BF6;

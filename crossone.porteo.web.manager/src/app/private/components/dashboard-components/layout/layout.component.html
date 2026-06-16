@@ -79,7 +79,7 @@
       <!-- Recherche -->
       <div class="searchbar-wrap">
         <div class="searchbar">
-          <span class="s-ic">⌕</span>
+          <span class="s-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
           <input type="text" placeholder="Rechercher une mission, un client, un consultant…"
                  [ngModel]="searchTerm" (ngModelChange)="onSearchInput($event)" (keyup.enter)="doSearch()" />
           <kbd>⌘K</kbd>
