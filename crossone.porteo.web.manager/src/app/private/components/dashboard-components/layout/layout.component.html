@@ -62,6 +62,7 @@
         </div>
       </ng-container>
       <ng-template #railFooter>
+        <span class="cx-avatar" [style.background]="getAvatarColor()" (click)="goToProfile()" title="Mon profil">{{ initials }}</span>
         <button type="button" class="cx-rail-btn" title="Étendre le menu" (click)="toggleCollapse()">
           <span class="cx-panel-left cx-panel-left--right"></span>
         </button>

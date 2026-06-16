@@ -48,7 +48,7 @@ export class LoginComponent {
     this.auth.login({ email: email!, password: password! }).subscribe({
       next: challenge => {
         this.loading = false;
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
         // Étape 2 : double authentification (email ou application).
         this.router.navigate(['/auth/2fa'], {
           state: { email: challenge.email, fullName: challenge.fullName, hasTotp: challenge.hasTotp, returnUrl },

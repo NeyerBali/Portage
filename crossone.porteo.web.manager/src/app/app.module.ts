@@ -11,6 +11,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { VitrineComponent } from './public/components/vitrine/vitrine.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { environment } from 'src/environments/environment';
@@ -18,7 +19,7 @@ import { environment } from 'src/environments/environment';
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, VitrineComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

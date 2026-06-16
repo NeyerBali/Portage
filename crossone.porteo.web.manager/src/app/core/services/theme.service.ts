@@ -60,6 +60,7 @@ export class ThemeService {
   }
 
   private readPalette(): Palette {
-    return (localStorage.getItem(PALETTE_KEY) as Palette) || 'emerald';
+    // Palette par défaut = azur (bleu ciel + jaune), identité visuelle Portéo.
+    return (localStorage.getItem(PALETTE_KEY) as Palette) || 'azur';
   }
 }
