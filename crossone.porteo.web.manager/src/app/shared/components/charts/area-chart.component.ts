@@ -16,7 +16,11 @@ export interface AreaPoint { label: string; value: number; }
         </defs>
         <path [attr.d]="areaPath" fill="url(#areaGrad)"></path>
         <path [attr.d]="linePath" fill="none" stroke="var(--primary)" stroke-width="2.5"></path>
-        <circle *ngFor="let p of dots" [attr.cx]="p.x" [attr.cy]="p.y" r="2.5" fill="var(--primary)"></circle>
+        <circle *ngFor="let p of dots" [attr.cx]="p.x" [attr.cy]="p.y" r="3" fill="var(--bg-surface)" stroke="var(--primary)" stroke-width="2"></circle>
+        <!-- Zones de survol (tooltip mois + valeur) -->
+        <circle *ngFor="let p of dots; let i = index" [attr.cx]="p.x" [attr.cy]="p.y" r="16"
+                fill="transparent" class="hit"
+                [appTooltip]="points[i].label + '\n' + (points[i].value | number:'1.0-0') + ' €'"></circle>
       </svg>
       <div class="labels">
         <span *ngFor="let p of points">{{ p.label }}</span>
@@ -25,7 +29,9 @@ export interface AreaPoint { label: string; value: number; }
   `,
   styles: [`
     .area-wrap { width: 100%; }
-    .area { width: 100%; height: 200px; display: block; }
+    .area { width: 100%; height: 200px; display: block; overflow: visible; }
+    .hit { cursor: pointer; transition: fill .12s, fill-opacity .12s; }
+    .hit:hover { fill: var(--accent); fill-opacity: .16; }
     .labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-subtle); margin-top: 6px; }
     .labels span { flex: 1; text-align: center; text-transform: capitalize; }
   `],

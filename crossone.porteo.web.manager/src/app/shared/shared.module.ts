@@ -12,6 +12,7 @@ import { BarListComponent } from './components/charts/bar-list.component';
 import { AreaChartComponent } from './components/charts/area-chart.component';
 import { SparkComponent } from './components/charts/spark.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
+import { TooltipDirective } from './directives/tooltip.directive';
 
 const SHARED_COMPONENTS = [
   StatusBadgeComponent,
@@ -22,6 +23,7 @@ const SHARED_COMPONENTS = [
   AreaChartComponent,
   SparkComponent,
   ToggleComponent,
+  TooltipDirective,
 ];
 
 @NgModule({

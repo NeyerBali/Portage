@@ -3,6 +3,8 @@
 .alert.warning { background: var(--warning-50); color: var(--warning-700); border: 1px solid color-mix(in srgb, var(--warning-500) 28%, transparent); }
 
 .kpis { grid-template-columns: repeat(4, 1fr); margin-bottom: var(--sp-6); }
+.kpi { cursor: help; transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s; }
+.kpi:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--border-brand); }
 .kpi-icon.tone-brand { background: var(--bg-brand-soft); color: var(--emerald-700); }
 .kpi-icon.tone-info { background: var(--info-50); color: var(--info-600); }
 .kpi-icon.tone-warn { background: var(--warning-50); color: var(--warning-600); }

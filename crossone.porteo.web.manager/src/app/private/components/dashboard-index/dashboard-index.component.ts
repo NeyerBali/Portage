@@ -55,6 +55,21 @@ export class DashboardIndexComponent implements OnInit {
     return { ca: '€', missions: '◆', consultants: '◉', impayees: '▤' }[cle] ?? '◧';
   }
 
+  /** Détail affiché dans la tooltip au survol d'un KPI. */
+  kpiTip(k: Kpi): string {
+    const val = `${Math.round(k.valeur).toLocaleString('fr-FR')}${k.format === 'currency' ? ' €' : ''}`;
+    const desc: Record<string, string> = {
+      ca: "Chiffre d'affaires facturé cumulé.",
+      missions: 'Missions actuellement actives.',
+      consultants: "Consultants rattachés à l'agence.",
+      impayees: 'Factures émises non encore réglées.',
+    };
+    const lines = [`${k.libelle} : ${val}`];
+    if (k.deltaLabel) lines.push(`${k.deltaDir === 'down' ? '↓' : '↑'} ${k.deltaLabel} vs mois précédent`);
+    if (desc[k.cle]) lines.push(desc[k.cle]);
+    return lines.join('\n');
+  }
+
   sparkColor(tone?: string): string {
     return {
       brand: 'var(--emerald-700)', info: 'var(--info-600)',

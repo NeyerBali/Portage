@@ -7,7 +7,7 @@ export interface BarItem { label: string; value: number; sub?: string; }
   standalone: false,
   template: `
     <ul class="bars">
-      <li *ngFor="let it of items">
+      <li *ngFor="let it of items" [appTooltip]="it.label + '\n' + (it.value | number:'1.0-0') + ' €' + (it.sub ? '\n' + it.sub : '') + '\n' + pct(it.value) + '% du top'">
         <div class="bar-top">
           <span class="lbl">{{ it.label }}</span>
           <span class="val mono">{{ it.value | number:'1.0-0' }} €</span>
@@ -18,6 +18,8 @@ export interface BarItem { label: string; value: number; sub?: string; }
   `,
   styles: [`
     .bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-4); }
+    .bars li { cursor: default; }
+    .bars li:hover .fill { filter: brightness(1.08); }
     .bar-top { display: flex; justify-content: space-between; font-size: var(--t-sm); margin-bottom: 6px; }
     .bar-top .val { color: var(--text-muted); }
     .track { height: 9px; background: var(--bg-sunken); border-radius: var(--r-pill); overflow: hidden; }

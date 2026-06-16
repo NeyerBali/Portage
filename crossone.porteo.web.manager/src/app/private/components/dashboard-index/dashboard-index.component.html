@@ -13,7 +13,7 @@
 
   <!-- KPIs -->
   <section class="grid kpis">
-    <div class="card card-pad kpi" *ngFor="let k of kpis">
+    <div class="card card-pad kpi" *ngFor="let k of kpis" [appTooltip]="kpiTip(k)">
       <div class="kpi-top">
         <span class="kpi-icon" [ngClass]="'tone-' + (k.tone || 'brand')">{{ kpiIcon(k.cle) }}</span>
         <app-spark *ngIf="k.sparkline && k.sparkline.length > 1" [data]="k.sparkline" [color]="sparkColor(k.tone)"></app-spark>

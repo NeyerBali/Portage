@@ -98,6 +98,34 @@
 .cx-backdrop { position: fixed; inset: 0; background: rgba(13,21,18,.42); opacity: 0; visibility: hidden; transition: opacity .26s ease, visibility .26s ease; z-index: 29; }
 .cx-backdrop.show { opacity: 1; visibility: visible; }
 
+/* ============================================================
+   Menu — MODE SOMBRE (suit le thème de l'application)
+   data-theme="dark" est sur <html> (ancêtre) → ces règles
+   s'appliquent au menu de ce composant.
+   ============================================================ */
+[data-theme="dark"] .cx-sidebar {
+  --cx-accent: var(--emerald-400);
+  --cx-text: var(--text-default);
+  --cx-muted: var(--text-muted);
+  --cx-hover: rgba(255, 255, 255, 0.06);
+  --cx-border: var(--border-default);
+  background: var(--bg-surface);
+  border-right-color: var(--border-default);
+}
+[data-theme="dark"] .cx-brand-name,
+[data-theme="dark"] .cx-profile-name { color: var(--text-strong); }
+[data-theme="dark"] .cx-iconbtn { background: var(--bg-surface-2); border-color: var(--border-default); color: var(--cx-muted); }
+[data-theme="dark"] .cx-iconbtn:hover { border-color: var(--border-strong); color: var(--text-default); }
+/* Icônes : éclaircies en sombre (les SVG sont des traits sombres). */
+[data-theme="dark"] .cx-grp-ico,
+[data-theme="dark"] .cx-chip .icon,
+[data-theme="dark"] .cx-rail-btn .icon,
+[data-theme="dark"] .cx-foot-action.icon { filter: brightness(0) invert(0.72); }
+[data-theme="dark"] .cx-item.active .cx-chip .icon,
+[data-theme="dark"] .cx-rail-btn.active .icon { filter: brightness(0) invert(1); }
+[data-theme="dark"] .cx-chevron { filter: brightness(0) invert(0.55); }
+[data-theme="dark"] .cx-scroll::-webkit-scrollbar-thumb { background: #2a3a32; }
+
 /* Topbar */
 .main { display: flex; flex-direction: column; min-width: 0; }
 .topbar { position: sticky; top: 0; z-index: 20; height: var(--topbar-h); display: flex; align-items: center; gap: var(--sp-3); padding: 0 var(--sp-6); background: color-mix(in srgb, var(--bg-surface) 82%, transparent); backdrop-filter: saturate(140%) blur(12px); -webkit-backdrop-filter: saturate(140%) blur(12px); border-bottom: 1px solid var(--border-subtle); }
