@@ -5,16 +5,16 @@
    Palette claire stable → icônes lignes parfaitement lisibles.
    ============================================================ */
 .cx-sidebar {
-  --cx-accent: var(--emerald-700);
+  --cx-accent: var(--primary);
   --cx-row-h: 42px;
-  --cx-text: #4a4a55;
-  --cx-muted: #8a8a96;
-  --cx-hover: #f3f5f4;
-  --cx-border: #e8eceb;
+  --cx-text: var(--text-default);
+  --cx-muted: var(--text-muted);
+  --cx-hover: var(--bg-sunken);
+  --cx-border: var(--border-default);
 
   width: var(--sidebar-w); height: 100vh;
   position: sticky; top: 0;
-  background: #fff; border-right: 1px solid var(--cx-border);
+  background: var(--bg-surface); border-right: 1px solid var(--cx-border);
   display: flex; flex-direction: column; overflow: hidden;
   transition: width .2s cubic-bezier(.4,0,.2,1);
   z-index: 30;
@@ -26,7 +26,7 @@
 .cx-sidebar.collapsed .cx-brand { justify-content: center; padding: 18px 0; }
 .cx-logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
 .cx-mark { width: 36px; height: 36px; border-radius: 10px; background: var(--cx-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 600; font-size: 20px; flex-shrink: 0; }
-.cx-brand-name { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: #16201c; white-space: nowrap; }
+.cx-brand-name { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-strong); white-space: nowrap; }
 .cx-close { display: none; border: none; background: transparent; font-size: 18px; color: var(--cx-muted); cursor: pointer; }
 
 /* Nav scroll */
@@ -35,7 +35,7 @@
 
 /* Group header */
 .cx-group-header { display: flex; align-items: center; gap: 9px; width: 100%; height: 34px; padding: 0 10px; border: none; cursor: pointer; background: transparent; border-radius: 8px; font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--cx-muted); transition: color .12s; }
-.cx-group-header:hover { color: #5a5a66; }
+.cx-group-header:hover { color: var(--text-default); }
 .cx-group-header.has-active { color: var(--cx-accent); }
 .cx-grp-ico { width: 17px; height: 17px; flex-shrink: 0; opacity: .72; }
 .cx-group-header.has-active .cx-grp-ico { opacity: 1; }
@@ -76,17 +76,17 @@
 .cx-profile { display: flex; align-items: center; gap: 10px; padding: 4px 6px; }
 .cx-avatar { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 12.5px; cursor: pointer; text-transform: uppercase; }
 .cx-profile-meta { min-width: 0; cursor: pointer; flex: 1; }
-.cx-profile-name { font-weight: 600; font-size: 13.5px; color: #222; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cx-profile-name { font-weight: 600; font-size: 13.5px; color: var(--text-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cx-profile-sub { font-size: 11.5px; color: var(--cx-muted); }
-.cx-iconbtn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--cx-border); background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--cx-muted); flex-shrink: 0; }
-.cx-iconbtn:hover { color: #5a5a66; border-color: #d8dddb; }
+.cx-iconbtn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--cx-border); background: var(--bg-surface); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--cx-muted); flex-shrink: 0; }
+.cx-iconbtn:hover { color: var(--text-default); border-color: var(--border-strong); }
 .cx-panel-left { width: 9px; height: 9px; border-left: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg); margin-left: 3px; }
 .cx-panel-left--right { transform: rotate(225deg); margin-left: 0; margin-right: 3px; }
-.cx-footer-menu { display: flex; gap: 4px; }
-.cx-foot-action { flex: 1; height: 34px; border: none; cursor: pointer; border-radius: 8px; background: transparent; display: flex; align-items: center; justify-content: center; color: var(--cx-muted); font-size: 15px; text-decoration: none; }
-.cx-foot-action:hover { background: var(--cx-hover); }
-.cx-foot-action.icon { background-repeat: no-repeat; background-position: center; background-size: 18px; }
-.cx-foot-action.danger-action:hover { color: var(--error-600); }
+.cx-footer-menu { display: flex; gap: 6px; }
+.cx-foot-action { flex: 1; height: 36px; border: 1px solid var(--cx-border); cursor: pointer; border-radius: 9px; background: var(--cx-hover); display: flex; align-items: center; justify-content: center; color: var(--cx-muted); text-decoration: none; transition: background .12s, color .12s, border-color .12s; }
+.cx-foot-action svg { width: 18px; height: 18px; }
+.cx-foot-action:hover { color: var(--primary); border-color: var(--border-brand); }
+.cx-foot-action.danger-action:hover { color: var(--error-600); border-color: color-mix(in srgb, var(--error-500) 40%, transparent); background: var(--error-50); }
 
 /* Scrollbar */
 .cx-scroll { scrollbar-width: thin; }
@@ -99,32 +99,17 @@
 .cx-backdrop.show { opacity: 1; visibility: visible; }
 
 /* ============================================================
-   Menu — MODE SOMBRE (suit le thème de l'application)
-   data-theme="dark" est sur <html> (ancêtre) → ces règles
-   s'appliquent au menu de ce composant.
+   Menu — MODE SOMBRE : la sidebar suit déjà les tokens (--bg-surface…).
+   Il ne reste qu'à éclaircir les icônes SVG (traits sombres) via
+   :host-context (méthode Angular fiable pour un ancêtre <html>).
    ============================================================ */
-[data-theme="dark"] .cx-sidebar {
-  --cx-accent: var(--emerald-400);
-  --cx-text: var(--text-default);
-  --cx-muted: var(--text-muted);
-  --cx-hover: rgba(255, 255, 255, 0.06);
-  --cx-border: var(--border-default);
-  background: var(--bg-surface);
-  border-right-color: var(--border-default);
-}
-[data-theme="dark"] .cx-brand-name,
-[data-theme="dark"] .cx-profile-name { color: var(--text-strong); }
-[data-theme="dark"] .cx-iconbtn { background: var(--bg-surface-2); border-color: var(--border-default); color: var(--cx-muted); }
-[data-theme="dark"] .cx-iconbtn:hover { border-color: var(--border-strong); color: var(--text-default); }
-/* Icônes : éclaircies en sombre (les SVG sont des traits sombres). */
-[data-theme="dark"] .cx-grp-ico,
-[data-theme="dark"] .cx-chip .icon,
-[data-theme="dark"] .cx-rail-btn .icon,
-[data-theme="dark"] .cx-foot-action.icon { filter: brightness(0) invert(0.72); }
-[data-theme="dark"] .cx-item.active .cx-chip .icon,
-[data-theme="dark"] .cx-rail-btn.active .icon { filter: brightness(0) invert(1); }
-[data-theme="dark"] .cx-chevron { filter: brightness(0) invert(0.55); }
-[data-theme="dark"] .cx-scroll::-webkit-scrollbar-thumb { background: #2a3a32; }
+:host-context([data-theme="dark"]) .cx-grp-ico,
+:host-context([data-theme="dark"]) .cx-chip .icon,
+:host-context([data-theme="dark"]) .cx-rail-btn .icon { filter: brightness(0) invert(0.72); }
+:host-context([data-theme="dark"]) .cx-item.active .cx-chip .icon,
+:host-context([data-theme="dark"]) .cx-rail-btn.active .icon { filter: brightness(0) invert(1); }
+:host-context([data-theme="dark"]) .cx-chevron { filter: brightness(0) invert(0.55); }
+:host-context([data-theme="dark"]) .cx-scroll::-webkit-scrollbar-thumb { background: #2a3a32; }
 
 /* Topbar */
 .main { display: flex; flex-direction: column; min-width: 0; }
