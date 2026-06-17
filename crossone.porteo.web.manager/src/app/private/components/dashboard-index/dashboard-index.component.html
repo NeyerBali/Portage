@@ -18,7 +18,7 @@
         <span class="kpi-icon" [ngClass]="'tone-' + (k.tone || 'brand')">{{ kpiIcon(k.cle) }}</span>
         <app-spark *ngIf="k.sparkline && k.sparkline.length > 1" [data]="k.sparkline" [color]="sparkColor(k.tone)"></app-spark>
       </div>
-      <div class="kpi-label">{{ k.libelle }}</div>
+      <div class="kpi-label">{{ k.libelle | tr }}</div>
       <div class="kpi-value">
         <span *ngIf="k.format === 'currency'">{{ k.valeur | number:'1.0-0' }} €</span>
         <span *ngIf="k.format !== 'currency'">{{ k.valeur | number:'1.0-0' }}</span>
@@ -36,12 +36,12 @@
   <!-- Graphiques -->
   <section class="grid charts">
     <div class="card">
-      <div class="card-header"><div><div class="h5">Chiffre d'affaires</div><span class="caption text-subtle">12 derniers mois</span></div></div>
+      <div class="card-header"><div><div class="h5">{{ "Chiffre d'affaires" | tr }}</div><span class="caption text-subtle">{{ '12 derniers mois' | tr }}</span></div></div>
       <div class="card-pad"><app-area-chart [points]="area"></app-area-chart></div>
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="h5">Missions par statut</div></div>
+      <div class="card-header"><div class="h5">{{ 'Missions par statut' | tr }}</div></div>
       <div class="card-pad">
         <app-donut-chart [segments]="donut"></app-donut-chart>
       </div>
@@ -50,7 +50,7 @@
 
   <section class="grid charts" *ngIf="isAdmin">
     <div class="card">
-      <div class="card-header"><div class="h5">Top 5 clients</div></div>
+      <div class="card-header"><div class="h5">{{ 'Top 5 clients' | tr }}</div></div>
       <div class="card-pad">
         <app-bar-list [items]="topClients"></app-bar-list>
         <app-empty-state *ngIf="!topClients.length" icon="◢" title="Aucun client" message="Ajoutez des clients pour voir le classement."></app-empty-state>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="h5">Dernières activités</div></div>
+      <div class="card-header"><div class="h5">{{ 'Dernières activités' | tr }}</div></div>
       <div class="card-pad">
         <ul class="timeline">
           <li *ngFor="let a of activites">
@@ -79,8 +79,8 @@
   <section *ngIf="!isAdmin">
     <div class="card">
       <div class="card-header">
-        <div class="h5">Mes missions</div>
-        <a class="link" routerLink="/missions">Tout voir →</a>
+        <div class="h5">{{ 'Mes missions' | tr }}</div>
+        <a class="link" routerLink="/missions">{{ 'Tout voir →' | tr }}</a>
       </div>
       <div class="card-pad">
         <ul class="mes-missions">

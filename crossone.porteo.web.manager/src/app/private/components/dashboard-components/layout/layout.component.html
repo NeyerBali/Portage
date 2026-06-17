@@ -16,7 +16,7 @@
         <button type="button" class="cx-group-header" [class.has-active]="isGroupActive(group)"
                 [attr.aria-expanded]="isGroupOpen(group)" (click)="toggleGroup(group)">
           <span class="cx-grp-ico icon {{group.icon}}" [class.active]="isGroupActive(group)"></span>
-          <span class="cx-grp-label">{{ group.name }}</span>
+          <span class="cx-grp-label">{{ group.name | tr }}</span>
           <span class="cx-chevron" [class.open]="isGroupOpen(group)"></span>
         </button>
         <div class="cx-collapser" [class.open]="isGroupOpen(group)">
@@ -27,7 +27,7 @@
                 <span class="cx-chip" [class.active]="isItemActive(child.route)">
                   <span class="icon {{child.icon}}" [class.active]="isItemActive(child.route)"></span>
                 </span>
-                <span class="cx-item-label">{{ child.label }}</span>
+                <span class="cx-item-label">{{ child.label | tr }}</span>
                 <span class="cx-badge" *ngIf="badgeFor(child.route) > 0">{{ badgeFor(child.route) }}</span>
               </a>
             </div>
@@ -51,7 +51,7 @@
           <span class="cx-avatar" [style.background]="getAvatarColor()" (click)="goToProfile()">{{ initials }}</span>
           <div class="cx-profile-meta" (click)="goToProfile()">
             <div class="cx-profile-name">{{ auth.fullName }}</div>
-            <div class="cx-profile-sub">{{ roleLabel }}</div>
+            <div class="cx-profile-sub">{{ roleLabel | tr }}</div>
           </div>
           <button type="button" class="cx-iconbtn" title="Réduire le menu" (click)="toggleCollapse()"><span class="cx-panel-left"></span></button>
         </div>
@@ -89,7 +89,7 @@
       <div class="searchbar-wrap">
         <div class="searchbar">
           <span class="s-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
-          <input type="text" placeholder="Rechercher une mission, un client, un consultant…"
+          <input type="text" [placeholder]="'Rechercher une mission, un client, un consultant…' | tr"
                  [ngModel]="searchTerm" (ngModelChange)="onSearchInput($event)" (keyup.enter)="doSearch()" />
           <kbd>⌘K</kbd>
         </div>
@@ -104,7 +104,12 @@
 
       <div class="flex items-center gap-2 ml-auto">
         <!-- Rôle (affichage) -->
-        <span class="role-chip">{{ roleLabel }}</span>
+        <span class="role-chip">{{ roleLabel | tr }}</span>
+
+        <!-- Langue FR / EN -->
+        <button class="btn btn-icon btn-ghost lang-btn" (click)="lang.toggle()" [title]="'Langue : ' + (lang.lang() === 'fr' ? 'Français' : 'English')">
+          {{ lang.lang() === 'fr' ? 'FR' : 'EN' }}
+        </button>
 
         <!-- Palette -->
         <div class="dd">
@@ -151,7 +156,7 @@
             <span class="avatar" style="background: var(--primary)">{{ initials }}</span>
             <span class="u-meta">
               <strong>{{ auth.fullName }}</strong>
-              <small>{{ roleLabel }}</small>
+              <small>{{ roleLabel | tr }}</small>
             </span>
           </button>
           <div class="dd-menu right" *ngIf="userMenuOpen">

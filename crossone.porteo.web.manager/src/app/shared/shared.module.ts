@@ -16,6 +16,7 @@ import { TooltipDirective } from './directives/tooltip.directive';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { ColumnCellDirective } from './components/data-table/column-cell.directive';
 import { DocumentViewerComponent } from './components/document-viewer/document-viewer.component';
+import { TrPipe } from './pipes/tr.pipe';
 
 const SHARED_COMPONENTS = [
   StatusBadgeComponent,
@@ -30,6 +31,7 @@ const SHARED_COMPONENTS = [
   DataTableComponent,
   ColumnCellDirective,
   DocumentViewerComponent,
+  TrPipe,
 ];
 
 @NgModule({

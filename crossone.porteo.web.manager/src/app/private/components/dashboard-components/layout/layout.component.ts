@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ThemeService, PALETTES, Palette } from 'src/app/core/services/theme.service';
 import { RealtimeService, RealtimeNotification } from 'src/app/core/services/realtime.service';
+import { LangService } from 'src/app/core/services/lang.service';
 import { ApiService } from '../../../http/api.service';
 import { SearchResult } from 'src/app/shared/models';
 
@@ -101,6 +102,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   constructor(
     public auth: AuthService, public theme: ThemeService, private api: ApiService,
     private router: Router, private toastr: ToastrService, private realtime: RealtimeService,
+    public lang: LangService,
   ) {}
 
   ngOnInit(): void {
