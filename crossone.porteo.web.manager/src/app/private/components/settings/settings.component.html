@@ -87,15 +87,38 @@
               <span *ngIf="!agency.signature" class="upload-placeholder">Aucune signature</span>
             </div>
             <div class="upload-actions">
+              <button type="button" class="btn btn-primary btn-sm" (click)="openSigPad()">✍ Signer</button>
               <label class="btn btn-secondary btn-sm">
-                {{ agency.signature ? 'Changer' : 'Importer' }}
+                Importer
                 <input type="file" accept="image/*" hidden (change)="onAgencyImage($event, 'signature')" />
               </label>
               <button *ngIf="agency.signature" class="btn btn-ghost btn-sm danger" (click)="removeAgencyImage('signature')">Retirer</button>
             </div>
           </div>
         </div>
-        <p class="caption text-subtle mt-2">PNG, JPG ou SVG · 1,5 Mo max. L'enregistrement est automatique après l'import.</p>
+
+        <!-- Pad de signature manuscrite -->
+        <div class="sigpad" *ngIf="signPadOpen">
+          <div class="sigpad-head">
+            <strong>Signez ci-dessous</strong>
+            <span class="caption text-subtle">Dessinez avec la souris ou le doigt</span>
+          </div>
+          <div class="sigpad-canvas-wrap">
+            <canvas #sigCanvas class="sigpad-canvas"
+                    (pointerdown)="onSigDown($event)" (pointermove)="onSigMove($event)"
+                    (pointerup)="onSigUp()" (pointerleave)="onSigUp()"></canvas>
+            <span class="sigpad-baseline"></span>
+            <span class="sigpad-hint" *ngIf="sigEmpty">✍ Votre signature</span>
+          </div>
+          <div class="sigpad-actions">
+            <button type="button" class="btn btn-ghost btn-sm" (click)="clearSig()">Effacer</button>
+            <span class="grow"></span>
+            <button type="button" class="btn btn-ghost btn-sm" (click)="closeSigPad()">Annuler</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="saveSig()">Enregistrer la signature</button>
+          </div>
+        </div>
+
+        <p class="caption text-subtle mt-2">PNG, JPG ou SVG · 1,5 Mo max — ou dessinez votre signature avec « Signer ». Enregistrement automatique.</p>
       </div>
     </div>
   </div>

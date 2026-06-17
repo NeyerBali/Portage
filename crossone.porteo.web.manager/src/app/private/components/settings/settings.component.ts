@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -122,6 +122,72 @@ export class SettingsComponent implements OnInit {
     this.agency[field] = '';
     this.api.config.updateAgency(this.agency).subscribe(() =>
       this.toastr.info(field === 'logo' ? 'Logo retiré.' : 'Signature retirée.', 'Agence'));
+  }
+
+  // ----- Pad de signature manuscrite -----
+  @ViewChild('sigCanvas') sigCanvas?: ElementRef<HTMLCanvasElement>;
+  signPadOpen = false;
+  sigEmpty = true;
+  private sigCtx?: CanvasRenderingContext2D;
+  private sigDrawing = false;
+
+  openSigPad(): void { this.signPadOpen = true; setTimeout(() => this.initSigCanvas(), 30); }
+  closeSigPad(): void { this.signPadOpen = false; this.sigCtx = undefined; }
+
+  private initSigCanvas(): void {
+    const c = this.sigCanvas?.nativeElement;
+    if (!c) return;
+    const ratio = window.devicePixelRatio || 1;
+    c.width = c.offsetWidth * ratio;
+    c.height = c.offsetHeight * ratio;
+    const ctx = c.getContext('2d');
+    if (!ctx) return;
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#16201C';
+    this.sigCtx = ctx;
+    this.sigEmpty = true;
+  }
+
+  private sigPos(e: PointerEvent): { x: number; y: number } {
+    const r = this.sigCanvas!.nativeElement.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  onSigDown(e: PointerEvent): void {
+    if (!this.sigCtx) return;
+    e.preventDefault();
+    this.sigDrawing = true;
+    const p = this.sigPos(e);
+    this.sigCtx.beginPath();
+    this.sigCtx.moveTo(p.x, p.y);
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+  }
+  onSigMove(e: PointerEvent): void {
+    if (!this.sigDrawing || !this.sigCtx) return;
+    const p = this.sigPos(e);
+    this.sigCtx.lineTo(p.x, p.y);
+    this.sigCtx.stroke();
+    this.sigEmpty = false;
+  }
+  onSigUp(): void { this.sigDrawing = false; }
+
+  clearSig(): void {
+    const c = this.sigCanvas?.nativeElement;
+    if (c && this.sigCtx) this.sigCtx.clearRect(0, 0, c.width, c.height);
+    this.sigEmpty = true;
+  }
+
+  saveSig(): void {
+    if (this.sigEmpty) { this.toastr.warning('Dessinez votre signature avant d’enregistrer.', 'Signature'); return; }
+    const dataUrl = this.sigCanvas!.nativeElement.toDataURL('image/png');
+    this.agency.signature = dataUrl;
+    this.api.config.updateAgency(this.agency).subscribe(() => {
+      this.toastr.success('Signature enregistrée — elle apparaît sur les factures.', 'Agence');
+      this.signPadOpen = false;
+    });
   }
 
   // ----- Profil -----

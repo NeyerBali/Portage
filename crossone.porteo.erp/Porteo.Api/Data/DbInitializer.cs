@@ -142,6 +142,16 @@ namespace Porteo.Api.Data
             var oldCons = await db.Users.FirstOrDefaultAsync(u => u.Email == "consultant@porteo.dev");
             if (oldCons != null) { oldCons.Email = "neyerbali6+consultant@gmail.com"; changed = true; }
 
+            // Nettoyage : supprime les lignes dont le texte contient le caractère de
+            // remplacement U+FFFD (« � ») — accents corrompus par un ancien encodage.
+            const char MOJIBAKE = '�';
+            var badActs = (await db.Activities.ToListAsync())
+                .Where(a => (a.Titre?.IndexOf(MOJIBAKE) >= 0) || (a.Description?.IndexOf(MOJIBAKE) >= 0)).ToList();
+            if (badActs.Count > 0) { db.Activities.RemoveRange(badActs); changed = true; logger.LogInformation("Nettoyage : {N} activité(s) corrompue(s) supprimée(s).", badActs.Count); }
+            var badJustifs = (await db.Justificatifs.ToListAsync())
+                .Where(j => (j.Libelle?.IndexOf(MOJIBAKE) >= 0) || (j.Notes?.IndexOf(MOJIBAKE) >= 0)).ToList();
+            if (badJustifs.Count > 0) { db.Justificatifs.RemoveRange(badJustifs); changed = true; logger.LogInformation("Nettoyage : {N} justificatif(s) corrompu(s) supprimé(s).", badJustifs.Count); }
+
             if (!await db.GlobalParameters.AnyAsync())
             {
                 db.GlobalParameters.AddRange(
