@@ -1,0 +1,43 @@
+<div class="page fade-in">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Missions</p>
+      <h1 class="h2">Tableau Kanban</h1>
+    </div>
+    <a class="btn btn-secondary" routerLink="/missions">≣ Vue liste</a>
+  </header>
+
+  <p class="board-hint" *ngIf="isAdmin">
+    <span class="board-hint-ic">↔</span> Glissez une mission d'une colonne à l'autre pour changer son statut.
+  </p>
+
+  <div class="board cx-scroll" cdkDropListGroup>
+    <div class="board-col" *ngFor="let col of columns">
+      <div class="board-col-head">
+        <span class="dot s-{{col.value}}"></span>
+        <strong>{{ col.label }}</strong>
+        <span class="board-count">{{ col.missions.length }}</span>
+      </div>
+      <div class="board-total" *ngIf="col.missions.length">{{ columnTotal(col) | number:'1.0-0' }} €</div>
+
+      <div class="board-list" cdkDropList [cdkDropListData]="col.missions" (cdkDropListDropped)="drop($event, col)">
+        <div class="board-card" *ngFor="let m of col.missions" cdkDrag [cdkDragDisabled]="!isAdmin" (click)="view(m)">
+          <div class="bc-top">
+            <span class="bc-title">{{ m.titre }}</span>
+            <span class="bc-amount">{{ m.montant | number:'1.0-0' }} €</span>
+          </div>
+          <div class="bc-meta">
+            <span class="bc-avatar" [style.background]="avatarColor(m.consultantNom)">{{ initials(m.consultantNom) }}</span>
+            <span class="bc-client">{{ m.clientNom }}</span>
+            <span class="bc-days">{{ m.jours }}j · {{ m.tjm }}€/j</span>
+          </div>
+          <div class="bc-drag-placeholder" *cdkDragPlaceholder></div>
+        </div>
+
+        <div class="board-empty" *ngIf="!col.missions.length && !loading">Aucune mission</div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
+</div>

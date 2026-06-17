@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Porteo.Api.Data;
+using Porteo.Api.Hubs;
+using Porteo.Services.Realtime;
 using Porteo.Dapper.Dashboard;
 using Porteo.Mappers.Missions;
 using Porteo.Repositories;
@@ -111,6 +113,10 @@ builder.Services.AddScoped<IPayslipService, PayslipService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IServices, Porteo.Services.Services>();
 
+// ---- Temps réel (SignalR) ----
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IRealtimeNotifier, SignalRNotifier>();
+
 // ---- AutoMapper ----
 builder.Services.AddAutoMapper(typeof(MissionProfile).Assembly);
 
@@ -128,6 +134,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(1)
+        };
+        // SignalR (WebSocket) ne peut pas envoyer l'en-tête Authorization :
+        // on lit le token dans la query string « access_token » pour le hub.
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = ctx =>
+            {
+                var accessToken = ctx.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(accessToken) && ctx.HttpContext.Request.Path.StartsWithSegments("/hub"))
+                    ctx.Token = accessToken;
+                return Task.CompletedTask;
+            }
         };
     });
 builder.Services.AddAuthorization();
@@ -183,5 +201,6 @@ app.UseCors(CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<NotificationsHub>("/hub");
 
 app.Run();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Porteo.Models.Activities;
 using Porteo.ModelViews.Activities;
 using Porteo.Repositories;
+using Porteo.Services.Realtime;
 
 namespace Porteo.Services.Activities
 {
@@ -16,11 +17,13 @@ namespace Porteo.Services.Activities
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private readonly IRealtimeNotifier _notifier;
 
-        public ActivityService(IUnitOfWork uow, IMapper mapper)
+        public ActivityService(IUnitOfWork uow, IMapper mapper, IRealtimeNotifier notifier)
         {
             _uow = uow;
             _mapper = mapper;
+            _notifier = notifier;
         }
 
         public async Task Log(string type, string titre, string description, int? userId = null, string userName = null, int? consultantId = null)
@@ -32,6 +35,10 @@ namespace Porteo.Services.Activities
                 CreatedAt = DateTime.UtcNow,
             });
             await _uow.CompleteAsync();
+
+            // Diffusion temps réel (SignalR) — ne doit jamais faire échouer l'action.
+            try { await _notifier.Notify(type, titre, description, consultantId); }
+            catch { /* hub indisponible : on ignore */ }
         }
 
         public async Task<IEnumerable<ActivityDto>> GetRecent(int take = 50, int? ownerConsultantId = null)

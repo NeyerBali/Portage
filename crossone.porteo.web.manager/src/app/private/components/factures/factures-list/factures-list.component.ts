@@ -8,6 +8,7 @@ import { Facture, FACTURE_STATUTS } from 'src/app/shared/models';
 import { FacturePopupComponent } from '../facture-popup/facture-popup.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { downloadCsv } from 'src/app/shared/utils/csv';
+import { downloadXlsx } from 'src/app/shared/utils/xlsx';
 
 @Component({
   selector: 'app-factures-list',
@@ -87,13 +88,20 @@ export class FacturesListComponent implements OnInit {
     });
   }
 
+  private readonly exportCols = [
+    { key: 'numero', label: 'Numéro' }, { key: 'missionTitre', label: 'Mission' }, { key: 'clientNom', label: 'Client' },
+    { key: 'dateEmission', label: 'Émise le' }, { key: 'dateEcheance', label: 'Échéance' },
+    { key: 'statut', label: 'Statut' }, { key: 'montantHT', label: 'Montant HT' }, { key: 'montantTTC', label: 'Montant TTC' },
+  ];
+
   exportCsv(): void {
-    downloadCsv('factures-porteo.csv', this.filtered, [
-      { key: 'numero', label: 'Numéro' }, { key: 'missionTitre', label: 'Mission' }, { key: 'clientNom', label: 'Client' },
-      { key: 'dateEmission', label: 'Émise le' }, { key: 'dateEcheance', label: 'Échéance' },
-      { key: 'statut', label: 'Statut' }, { key: 'montantHT', label: 'Montant HT' }, { key: 'montantTTC', label: 'Montant TTC' },
-    ]);
+    downloadCsv('factures-porteo.csv', this.filtered, this.exportCols);
     this.toastr.success('Export CSV généré.');
+  }
+
+  exportXlsx(): void {
+    downloadXlsx('factures-porteo.xlsx', this.filtered, this.exportCols, 'Factures');
+    this.toastr.success('Export Excel généré.');
   }
 
   remove(f: Facture): void {

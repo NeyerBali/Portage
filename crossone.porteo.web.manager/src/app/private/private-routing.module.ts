@@ -4,6 +4,7 @@ import { roleGuard } from 'src/app/core/guards/role.guard';
 import { LayoutComponent } from './components/dashboard-components/layout/layout.component';
 import { DashboardIndexComponent } from './components/dashboard-index/dashboard-index.component';
 import { MissionsListComponent } from './components/missions/missions-list/missions-list.component';
+import { MissionsBoardComponent } from './components/missions/missions-board/missions-board.component';
 import { MissionDetailComponent } from './components/missions/mission-detail/mission-detail.component';
 import { ClientsListComponent } from './components/clients/clients-list/clients-list.component';
 import { ClientDetailComponent } from './components/clients/client-detail/client-detail.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardIndexComponent },
       { path: 'missions', component: MissionsListComponent },
+      { path: 'missions/tableau', component: MissionsBoardComponent },
       { path: 'missions/:id', component: MissionDetailComponent },
       { path: 'clients', component: ClientsListComponent, ...admin },
       { path: 'clients/:id', component: ClientDetailComponent, ...admin },

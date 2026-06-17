@@ -5,7 +5,8 @@
       <h1 class="h2">Factures</h1>
     </div>
     <div class="flex gap-2">
-      <button class="btn btn-secondary" (click)="exportCsv()">⤓ Exporter CSV</button>
+      <button class="btn btn-secondary" (click)="exportXlsx()">⤓ Excel</button>
+      <button class="btn btn-secondary" (click)="exportCsv()">⤓ CSV</button>
       <button *ngIf="isAdmin" class="btn btn-primary" (click)="create()">＋ Nouvelle facture</button>
     </div>
   </header>

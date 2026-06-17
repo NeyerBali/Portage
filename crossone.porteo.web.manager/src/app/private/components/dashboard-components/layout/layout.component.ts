@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subject, debounceTime, filter } from 'rxjs';
+import { Subject, Subscription, debounceTime, filter } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ThemeService, PALETTES, Palette } from 'src/app/core/services/theme.service';
+import { RealtimeService, RealtimeNotification } from 'src/app/core/services/realtime.service';
 import { ApiService } from '../../../http/api.service';
 import { SearchResult } from 'src/app/shared/models';
 
@@ -73,7 +75,7 @@ const LABELS: Record<string, string> = {
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
   collapsed = false;
   mobileOpen = false;
   userMenuOpen = false;
@@ -94,8 +96,12 @@ export class LayoutComponent implements OnInit {
   crumbs: Crumb[] = [];
   searchResults: SearchResult[] = [];
   private search$ = new Subject<string>();
+  private rtSub?: Subscription;
 
-  constructor(public auth: AuthService, public theme: ThemeService, private api: ApiService, private router: Router) {}
+  constructor(
+    public auth: AuthService, public theme: ThemeService, private api: ApiService,
+    private router: Router, private toastr: ToastrService, private realtime: RealtimeService,
+  ) {}
 
   ngOnInit(): void {
     this.groups = this.auth.isAdmin ? NAV_ADMIN : NAV_CONSULTANT;
@@ -120,6 +126,30 @@ export class LayoutComponent implements OnInit {
       if (!q || q.trim().length < 2) { this.searchResults = []; return; }
       this.api.alerts.search(q).subscribe(r => (this.searchResults = r));
     });
+
+    // Temps réel (SignalR) : notifications live.
+    this.realtime.connect();
+    this.rtSub = this.realtime.notifications$.subscribe(n => this.onRealtime(n));
+  }
+
+  ngOnDestroy(): void {
+    this.rtSub?.unsubscribe();
+    this.realtime.disconnect();
+  }
+
+  private onRealtime(n: RealtimeNotification): void {
+    const tone = this.toneFor(n.type);
+    this.notifications.unshift({ type: tone, title: n.titre, detail: n.description, when: n.when });
+    if (this.notifications.length > 20) this.notifications.pop();
+    const toast = { success: 'success', warning: 'warning', error: 'error', info: 'info' }[tone];
+    (this.toastr as any)[toast](n.description, n.titre, { timeOut: 4000 });
+  }
+
+  private toneFor(type: string): Notif['type'] {
+    if (/paid|valid/.test(type)) return 'success';
+    if (/relance|retard|echu/.test(type)) return 'warning';
+    if (/refus|delete|supprim|error/.test(type)) return 'error';
+    return 'info';
   }
 
   onSearchInput(value: string): void { this.searchTerm = value; this.search$.next(value); }

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
@@ -11,6 +12,7 @@ import { MissionEffects } from './store/missions/mission.effects';
 import { LayoutComponent } from './components/dashboard-components/layout/layout.component';
 import { DashboardIndexComponent } from './components/dashboard-index/dashboard-index.component';
 import { MissionsListComponent } from './components/missions/missions-list/missions-list.component';
+import { MissionsBoardComponent } from './components/missions/missions-board/missions-board.component';
 import { MissionDetailComponent } from './components/missions/mission-detail/mission-detail.component';
 import { MissionPopupComponent } from './components/missions/mission-popup/mission-popup.component';
 import { ClientsListComponent } from './components/clients/clients-list/clients-list.component';
@@ -38,6 +40,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     LayoutComponent,
     DashboardIndexComponent,
     MissionsListComponent,
+    MissionsBoardComponent,
     MissionDetailComponent,
     MissionPopupComponent,
     ClientsListComponent,
@@ -62,6 +65,7 @@ import { SettingsComponent } from './components/settings/settings.component';
   ],
   imports: [
     SharedModule,
+    DragDropModule,
     PrivateRoutingModule,
     StoreModule.forFeature(MISSIONS_FEATURE_KEY, missionsReducer),
     EffectsModule.forFeature([MissionEffects]),

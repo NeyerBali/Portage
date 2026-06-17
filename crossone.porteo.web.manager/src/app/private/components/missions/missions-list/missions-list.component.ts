@@ -15,6 +15,7 @@ import { Client, Consultant, Mission, MISSION_STATUTS, MissionQueryParams } from
 import { MissionPopupComponent } from '../mission-popup/mission-popup.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { downloadCsv } from 'src/app/shared/utils/csv';
+import { downloadXlsx } from 'src/app/shared/utils/xlsx';
 
 @Component({
   selector: 'app-missions-list',
@@ -49,14 +50,23 @@ export class MissionsListComponent implements OnInit, OnDestroy {
 
   view(m: Mission): void { this.router.navigate(['/missions', m.id]); }
 
+  private readonly exportCols = [
+    { key: 'titre', label: 'Mission' }, { key: 'clientNom', label: 'Client' }, { key: 'consultantNom', label: 'Consultant' },
+    { key: 'dateDebut', label: 'Début' }, { key: 'dateFin', label: 'Fin' }, { key: 'statut', label: 'Statut' },
+    { key: 'tjm', label: 'TJM' }, { key: 'jours', label: 'Jours' }, { key: 'montant', label: 'Montant' },
+  ];
+
   exportCsv(): void {
     this.store.select(selectMissions).pipe(take(1)).subscribe(missions => {
-      downloadCsv('missions-porteo.csv', missions, [
-        { key: 'titre', label: 'Mission' }, { key: 'clientNom', label: 'Client' }, { key: 'consultantNom', label: 'Consultant' },
-        { key: 'dateDebut', label: 'Début' }, { key: 'dateFin', label: 'Fin' }, { key: 'statut', label: 'Statut' },
-        { key: 'tjm', label: 'TJM' }, { key: 'jours', label: 'Jours' }, { key: 'montant', label: 'Montant' },
-      ]);
+      downloadCsv('missions-porteo.csv', missions, this.exportCols);
       this.toastr.success('Export CSV généré.');
+    });
+  }
+
+  exportXlsx(): void {
+    this.store.select(selectMissions).pipe(take(1)).subscribe(missions => {
+      downloadXlsx('missions-porteo.xlsx', missions, this.exportCols, 'Missions');
+      this.toastr.success('Export Excel généré.');
     });
   }
 
