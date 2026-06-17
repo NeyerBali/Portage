@@ -40,6 +40,7 @@
             <td><app-status-badge [status]="j.statut" kind="justificatif"></app-status-badge></td>
             <td>
               <div class="row-actions">
+                <button *ngIf="j.hasFile" class="btn btn-icon btn-ghost" title="Visualiser" (click)="view(j)">👁</button>
                 <button *ngIf="j.hasFile" class="btn btn-icon btn-ghost" title="Télécharger" (click)="download(j)">⤓</button>
                 <ng-container *ngIf="isAdmin && j.statut==='en_attente'">
                   <button class="btn btn-icon btn-ghost" title="Valider" (click)="validate(j)" style="color:var(--success-600)">✓</button>

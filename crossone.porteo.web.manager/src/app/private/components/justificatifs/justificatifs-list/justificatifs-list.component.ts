@@ -6,6 +6,7 @@ import { ApiService } from '../../../http/api.service';
 import { Justificatif, JUSTIF_STATUTS, justifTypeLabel } from 'src/app/shared/models';
 import { JustificatifPopupComponent } from '../justificatif-popup/justificatif-popup.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { DocumentViewerComponent } from 'src/app/shared/components/document-viewer/document-viewer.component';
 
 @Component({
   selector: 'app-justificatifs-list',
@@ -85,6 +86,18 @@ export class JustificatifsListComponent implements OnInit {
       a.href = url; a.download = j.fileName || `justificatif-${j.id}`;
       a.click();
       URL.revokeObjectURL(url);
+    });
+  }
+
+  /** Aperçu de la pièce jointe dans la visionneuse (image zoomable / PDF intégré). */
+  view(j: Justificatif): void {
+    if (!j.hasFile) { this.toastr.info('Aucune pièce jointe à afficher.', 'Justificatif'); return; }
+    this.api.justificatifs.download(j.id).subscribe({
+      next: blob => this.dialog.open(DocumentViewerComponent, {
+        panelClass: 'porteo-dialog', maxWidth: '96vw',
+        data: { blob, fileName: j.fileName || `justificatif-${j.id}`, contentType: blob.type },
+      }),
+      error: () => this.toastr.error('Impossible de charger le document.', 'Erreur'),
     });
   }
 }

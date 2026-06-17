@@ -18,48 +18,30 @@
     <div class="card card-pad kpi"><div class="kpi-value" style="color: var(--error-600)">{{ retard | number:'1.0-0' }} €</div><div class="kpi-label">En retard</div></div>
   </section>
 
-  <div class="card">
-    <div class="toolbar">
-      <input class="search" type="text" placeholder="Rechercher une facture…" [(ngModel)]="search" />
-      <div class="segmented">
-        <button [class.active]="!statutFilter" (click)="statutFilter=null">Toutes</button>
-        <button *ngFor="let s of statuts" [class.active]="statutFilter===s.value" (click)="statutFilter=s.value">{{ s.label }}</button>
-      </div>
+  <div class="card card-pad">
+    <div class="segmented mb-4">
+      <button [class.active]="!statutFilter" (click)="statutFilter=null">Toutes</button>
+      <button *ngFor="let s of statuts" [class.active]="statutFilter===s.value" (click)="statutFilter=s.value">{{ s.label }}</button>
     </div>
 
-    <div class="p-table-wrap">
-      <table class="p-table">
-        <thead>
-          <tr>
-            <th>Facture</th><th>Mission</th><th *ngIf="isAdmin">Client</th><th>Émise le</th><th>Échéance</th><th>Statut</th><th class="num">Montant TTC</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let f of filtered" class="clickable" (click)="open(f)">
-            <td class="mono">{{ f.numero }}</td>
-            <td>{{ f.missionTitre }}</td>
-            <td *ngIf="isAdmin">{{ f.clientNom }}</td>
-            <td>{{ f.dateEmission | date:'dd/MM/yy' }}</td>
-            <td [class.overdue-date]="isOverdue(f)">{{ f.dateEcheance | date:'dd/MM/yy' }}</td>
-            <td>
-              <app-status-badge *ngIf="!isOverdue(f)" [status]="f.statut" kind="facture"></app-status-badge>
-              <span *ngIf="isOverdue(f)" class="badge overdue"><span class="dot"></span>En retard</span>
-            </td>
-            <td class="num">{{ f.montantTTC | number:'1.2-2' }} €</td>
-            <td>
-              <div class="row-actions">
-                <button class="btn btn-icon btn-ghost" title="Voir" (click)="$event.stopPropagation(); open(f)">👁</button>
-                <button class="btn btn-icon btn-ghost" title="Télécharger le PDF" (click)="$event.stopPropagation(); downloadPdf(f)">⤓</button>
-                <button *ngIf="isAdmin && f.statut === 'emise'" class="btn btn-icon btn-ghost" title="Relancer" (click)="$event.stopPropagation(); relance(f)">✉</button>
-                <button *ngIf="isAdmin && f.statut !== 'payee'" class="btn btn-icon btn-ghost" title="Marquer payée" (click)="$event.stopPropagation(); markPaid(f)">✓</button>
-                <button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Supprimer" (click)="$event.stopPropagation(); remove(f)">🗑</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
-      <app-empty-state *ngIf="!loading && filtered.length === 0" icon="▤" title="Aucune facture" message="Les factures apparaîtront ici."></app-empty-state>
-    </div>
+    <app-data-table [columns]="tableColumns" [rows]="byStatut" [pageSize]="8" [clickable]="true"
+                    searchPlaceholder="Rechercher une facture…" (rowClick)="open($event)">
+      <ng-template [appColumnCell]="'numero'" let-f><span class="mono">{{ f.numero }}</span></ng-template>
+      <ng-template [appColumnCell]="'statut'" let-f>
+        <app-status-badge *ngIf="!isOverdue(f)" [status]="f.statut" kind="facture"></app-status-badge>
+        <span *ngIf="isOverdue(f)" class="badge overdue"><span class="dot"></span>En retard</span>
+      </ng-template>
+      <ng-template [appColumnCell]="'actions'" let-f>
+        <div class="row-actions" (click)="$event.stopPropagation()">
+          <button class="btn btn-icon btn-ghost" title="Voir" (click)="open(f)">👁</button>
+          <button class="btn btn-icon btn-ghost" title="Télécharger le PDF" (click)="downloadPdf(f)">⤓</button>
+          <button *ngIf="isAdmin && f.statut === 'emise'" class="btn btn-icon btn-ghost" title="Relancer" (click)="relance(f)">✉</button>
+          <button *ngIf="isAdmin && f.statut !== 'payee'" class="btn btn-icon btn-ghost" title="Marquer payée" (click)="markPaid(f)">✓</button>
+          <button *ngIf="isAdmin" class="btn btn-icon btn-ghost" title="Supprimer" (click)="remove(f)">🗑</button>
+        </div>
+      </ng-template>
+    </app-data-table>
+
+    <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement…</div>
   </div>
 </div>

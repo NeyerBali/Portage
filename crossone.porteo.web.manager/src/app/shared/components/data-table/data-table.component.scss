@@ -1,0 +1,26 @@
+.dt-toolbar { display: flex; align-items: center; gap: var(--sp-3); padding: 0 0 var(--sp-3); }
+.dt-search { display: flex; align-items: center; gap: 8px; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--r-pill); padding: 8px 14px; flex: 0 1 320px; }
+.dt-search:focus-within { border-color: var(--border-brand); box-shadow: var(--ring); }
+.dt-search-ic { color: var(--text-subtle); }
+.dt-search input { border: none; background: transparent; outline: none; font-family: inherit; font-size: var(--t-sm); color: var(--text-default); flex: 1; }
+.dt-count { margin-left: auto; font-size: var(--t-caption); color: var(--text-subtle); }
+
+.dt-wrap { overflow-x: auto; }
+.dt-table { width: 100%; border-collapse: collapse; }
+.dt-table th { text-align: left; font-size: var(--t-caption); font-weight: 600; color: var(--text-subtle); text-transform: uppercase; letter-spacing: .04em; padding: 10px 14px; border-bottom: 1px solid var(--border-default); white-space: nowrap; }
+.dt-table th.sortable { cursor: pointer; user-select: none; }
+.dt-table th.sortable:hover { color: var(--text-default); }
+.dt-table th.num, .dt-table td.num { text-align: right; }
+.dt-sort { margin-left: 5px; color: var(--text-subtle); font-size: 11px; }
+.dt-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); font-size: var(--t-sm); color: var(--text-default); }
+.dt-table tr.clickable { cursor: pointer; }
+.dt-table tbody tr.clickable:hover { background: var(--bg-sunken); }
+.dt-empty { padding: 28px; text-align: center; color: var(--text-subtle); font-size: var(--t-sm); }
+
+.dt-foot { display: flex; align-items: center; justify-content: space-between; padding-top: var(--sp-3); }
+.dt-range { font-size: var(--t-caption); color: var(--text-subtle); }
+.dt-pager { display: flex; align-items: center; gap: 10px; }
+.dt-pg { width: 30px; height: 30px; border-radius: var(--r-sm); border: 1px solid var(--border-default); background: var(--bg-surface); cursor: pointer; color: var(--text-default); }
+.dt-pg:disabled { opacity: .4; cursor: default; }
+.dt-pg:not(:disabled):hover { border-color: var(--border-brand); color: var(--primary); }
+.dt-pg-info { font-size: var(--t-sm); color: var(--text-muted); font-variant-numeric: tabular-nums; }

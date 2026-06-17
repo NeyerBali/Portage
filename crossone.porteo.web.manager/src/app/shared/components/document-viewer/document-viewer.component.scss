@@ -1,0 +1,18 @@
+.dv { display: flex; flex-direction: column; width: 86vw; max-width: 1000px; height: 86vh; background: var(--bg-surface); }
+.dv-head { display: flex; align-items: center; gap: var(--sp-3); padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); background: var(--bg-surface); }
+.dv-name { flex: 1; font-size: var(--t-sm); font-weight: 600; color: var(--text-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dv-tools { display: flex; align-items: center; gap: 4px; }
+.dv-btn { width: 34px; height: 34px; border-radius: var(--r-sm); border: 1px solid var(--border-default); background: var(--bg-surface); cursor: pointer; color: var(--text-default); font-size: 15px; display: grid; place-items: center; }
+.dv-btn:hover { border-color: var(--border-brand); color: var(--primary); }
+.dv-btn.dv-close:hover { color: var(--error-600); border-color: var(--error-500); }
+.dv-zoom { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); min-width: 44px; text-align: center; }
+.dv-sep { width: 1px; height: 22px; background: var(--border-default); margin: 0 4px; }
+
+.dv-body { flex: 1; overflow: auto; background: var(--bg-sunken); display: flex; }
+.dv-body.img { align-items: center; justify-content: center; padding: 20px; }
+.dv-body img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform .15s ease; transform-origin: center; box-shadow: var(--shadow-lg); background: #fff; border-radius: var(--r-sm); }
+.dv-body iframe { width: 100%; height: 100%; border: none; background: #fff; }
+.dv-fallback { margin: auto; text-align: center; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.dv-fallback-ic { font-size: 42px; }
+
+@media (max-width: 640px) { .dv { width: 96vw; height: 90vh; } }

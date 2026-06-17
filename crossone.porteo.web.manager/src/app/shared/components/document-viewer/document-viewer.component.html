@@ -1,0 +1,26 @@
+<div class="dv">
+  <header class="dv-head">
+    <span class="dv-name" [title]="fileName">📄 {{ fileName }}</span>
+    <div class="dv-tools">
+      <ng-container *ngIf="isImage">
+        <button class="dv-btn" (click)="zoomOut()" title="Zoom arrière">−</button>
+        <span class="dv-zoom">{{ zoomPct }}%</span>
+        <button class="dv-btn" (click)="zoomIn()" title="Zoom avant">+</button>
+        <button class="dv-btn" (click)="resetZoom()" title="Réinitialiser">⟲</button>
+        <span class="dv-sep"></span>
+      </ng-container>
+      <button class="dv-btn" (click)="download()" title="Télécharger">⤓</button>
+      <button class="dv-btn dv-close" (click)="close()" title="Fermer">✕</button>
+    </div>
+  </header>
+
+  <div class="dv-body" [class.img]="isImage">
+    <img *ngIf="isImage" [src]="rawUrl" [style.transform]="'scale(' + zoom + ')'" alt="{{ fileName }}" />
+    <iframe *ngIf="isPdf" [src]="safeUrl" title="{{ fileName }}"></iframe>
+    <div class="dv-fallback" *ngIf="!isImage && !isPdf">
+      <span class="dv-fallback-ic">📎</span>
+      <p>Aperçu non disponible pour ce type de fichier.</p>
+      <button class="btn btn-primary btn-sm" (click)="download()">⤓ Télécharger</button>
+    </div>
+  </div>
+</div>

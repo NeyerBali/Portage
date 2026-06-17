@@ -9,6 +9,7 @@ import { FacturePopupComponent } from '../facture-popup/facture-popup.component'
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { downloadCsv } from 'src/app/shared/utils/csv';
 import { downloadXlsx } from 'src/app/shared/utils/xlsx';
+import { DataColumn } from 'src/app/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-factures-list',
@@ -46,13 +47,25 @@ export class FacturesListComponent implements OnInit {
     return f.statut === 'emise' && new Date(f.dateEcheance) < new Date();
   }
 
-  get filtered(): Facture[] {
-    return this.factures.filter(f => {
-      const s = this.search.trim().toLowerCase();
-      const matchSearch = !s || f.numero.toLowerCase().includes(s) || (f.clientNom || '').toLowerCase().includes(s) || (f.missionTitre || '').toLowerCase().includes(s);
-      const matchStatut = !this.statutFilter || f.statut === this.statutFilter;
-      return matchSearch && matchStatut;
-    });
+  /** Filtré par statut (la recherche texte + tri + pagination sont gérés par <app-data-table>). */
+  get byStatut(): Facture[] {
+    return this.statutFilter ? this.factures.filter(f => f.statut === this.statutFilter) : this.factures;
+  }
+
+  get tableColumns(): DataColumn[] {
+    const cols: DataColumn[] = [
+      { key: 'numero', label: 'Facture', sortable: true },
+      { key: 'missionTitre', label: 'Mission', sortable: true },
+    ];
+    if (this.isAdmin) cols.push({ key: 'clientNom', label: 'Client', sortable: true });
+    cols.push(
+      { key: 'dateEmission', label: 'Émise le', sortable: true, format: 'date' },
+      { key: 'dateEcheance', label: 'Échéance', sortable: true, format: 'date' },
+      { key: 'statut', label: 'Statut', sortable: true },
+      { key: 'montantTTC', label: 'Montant TTC', sortable: true, align: 'right', format: 'currency' },
+      { key: 'actions', label: '', align: 'right' },
+    );
+    return cols;
   }
 
   get encaisse(): number { return this.factures.filter(f => f.statut === 'payee').reduce((s, f) => s + f.montantTTC, 0); }
@@ -95,12 +108,12 @@ export class FacturesListComponent implements OnInit {
   ];
 
   exportCsv(): void {
-    downloadCsv('factures-porteo.csv', this.filtered, this.exportCols);
+    downloadCsv('factures-porteo.csv', this.byStatut, this.exportCols);
     this.toastr.success('Export CSV généré.');
   }
 
   exportXlsx(): void {
-    downloadXlsx('factures-porteo.xlsx', this.filtered, this.exportCols, 'Factures');
+    downloadXlsx('factures-porteo.xlsx', this.byStatut, this.exportCols, 'Factures');
     this.toastr.success('Export Excel généré.');
   }
 

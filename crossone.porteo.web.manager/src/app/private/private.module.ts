@@ -10,6 +10,7 @@ import { MISSIONS_FEATURE_KEY, missionsReducer } from './store/missions/mission.
 import { MissionEffects } from './store/missions/mission.effects';
 
 import { LayoutComponent } from './components/dashboard-components/layout/layout.component';
+import { CommandPaletteComponent } from './components/dashboard-components/command-palette/command-palette.component';
 import { DashboardIndexComponent } from './components/dashboard-index/dashboard-index.component';
 import { MissionsListComponent } from './components/missions/missions-list/missions-list.component';
 import { MissionsBoardComponent } from './components/missions/missions-board/missions-board.component';
@@ -38,6 +39,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 @NgModule({
   declarations: [
     LayoutComponent,
+    CommandPaletteComponent,
     DashboardIndexComponent,
     MissionsListComponent,
     MissionsBoardComponent,

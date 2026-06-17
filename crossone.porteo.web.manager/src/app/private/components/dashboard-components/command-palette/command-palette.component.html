@@ -1,0 +1,29 @@
+<div class="cmd-overlay" *ngIf="open" (click)="close()">
+  <div class="cmd-panel" (click)="$event.stopPropagation()">
+    <div class="cmd-input">
+      <span class="cmd-ic">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </span>
+      <input #input [ngModel]="query" (ngModelChange)="onInput($event)" placeholder="Rechercher ou aller à une page…" autocomplete="off" />
+      <kbd>Esc</kbd>
+    </div>
+
+    <div class="cmd-list cx-scroll">
+      <ng-container *ngFor="let it of items; let i = index">
+        <div class="cmd-group" *ngIf="i === 0 || items[i-1].group !== it.group">{{ it.group }}</div>
+        <button class="cmd-item" [class.sel]="i === selected" (mouseenter)="selected = i" (click)="go(it)">
+          <span class="cmd-item-ic">{{ it.icon }}</span>
+          <span class="cmd-item-label">{{ it.label }}<span class="cmd-item-sub" *ngIf="it.sub"> · {{ it.sub }}</span></span>
+          <span class="cmd-enter" *ngIf="i === selected">↵</span>
+        </button>
+      </ng-container>
+      <div class="cmd-empty" *ngIf="!items.length">Aucun résultat.</div>
+    </div>
+
+    <div class="cmd-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> naviguer</span>
+      <span><kbd>↵</kbd> ouvrir</span>
+      <span><kbd>⌘</kbd><kbd>K</kbd> ouvrir / fermer</span>
+    </div>
+  </div>
+</div>
