@@ -1,4 +1,6 @@
 .shell { display: grid; grid-template-columns: auto 1fr; min-height: 100vh; }
+/* La palette (overlay) ne doit pas occuper une cellule de la grille. */
+app-command-palette { display: contents; }
 
 /* ============================================================
    Menu latéral — accordéon (design de référence, accent émeraude).
