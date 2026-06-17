@@ -9,6 +9,17 @@
 .kpi-icon.tone-info { background: var(--info-50); color: var(--info-600); }
 .kpi-icon.tone-warn { background: var(--warning-50); color: var(--warning-600); }
 .kpi-icon.tone-error { background: var(--error-50); color: var(--error-600); }
+.kpi-icon.tone-success { background: var(--success-50); color: var(--success-600); }
+
+/* Consultant — Mes missions */
+.mes-missions { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.mes-missions li { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; border-radius: var(--r-sm); transition: background .12s; }
+.mes-missions li:last-child { border-bottom: none; }
+.mes-missions li:hover { background: var(--bg-sunken); }
+.mm-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+.mm-body { flex: 1; display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.mm-body strong { font-size: var(--t-sm); color: var(--text-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mm-amount { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--primary); font-weight: 700; white-space: nowrap; }
 .kpi-delta { display: flex; align-items: center; gap: 5px; font-size: var(--t-caption); font-weight: 700; margin-top: var(--sp-2); }
 .kpi-delta.up { color: var(--success-600); }
 .kpi-delta.down { color: var(--error-600); }

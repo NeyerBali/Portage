@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { ApiService } from '../../http/api.service';
-import { Activite, Kpi, TopClient } from 'src/app/shared/models';
+import { Activite, Kpi, Mission, TopClient } from 'src/app/shared/models';
 import { missionStatutLabel } from 'src/app/shared/models';
 import { DonutSegment } from 'src/app/shared/components/charts/donut-chart.component';
 import { AreaPoint } from 'src/app/shared/components/charts/area-chart.component';
@@ -25,8 +25,11 @@ export class DashboardIndexComponent implements OnInit {
   area: AreaPoint[] = [];
   topClients: BarItem[] = [];
   activites: Activite[] = [];
+  mesMissions: Mission[] = [];
 
   constructor(public auth: AuthService, private api: ApiService) {}
+
+  statutLabel = missionStatutLabel;
 
   get isAdmin(): boolean { return this.auth.isAdmin; }
   get greeting(): string {
@@ -49,11 +52,19 @@ export class DashboardIndexComponent implements OnInit {
       },
       error: () => (this.loading = false),
     });
+
+    // Consultant : ses missions récentes (widget « Mes missions »).
+    if (!this.isAdmin) {
+      this.api.missions.list({ pageSize: 6, sortBy: 'debut', sortDir: 'desc' })
+        .subscribe(res => (this.mesMissions = res.items ?? []));
+    }
   }
 
   kpiIcon(cle: string): string {
-    return { ca: '€', missions: '◆', consultants: '◉', impayees: '▤' }[cle] ?? '◧';
+    return { ca: '€', missions: '◆', consultants: '◉', impayees: '▤', jours: '◷', justif: '📎' }[cle] ?? '◧';
   }
+
+  statutDot(statut: string): string { return STATUT_COLORS[statut] ?? '#64748B'; }
 
   /** Détail affiché dans la tooltip au survol d'un KPI. */
   kpiTip(k: Kpi): string {
@@ -63,6 +74,8 @@ export class DashboardIndexComponent implements OnInit {
       missions: 'Missions actuellement actives.',
       consultants: "Consultants rattachés à l'agence.",
       impayees: 'Factures émises non encore réglées.',
+      jours: 'Jours déclarés dans vos CRA ce mois-ci.',
+      justif: 'Vos justificatifs en attente de validation.',
     };
     const lines = [`${k.libelle} : ${val}`];
     if (k.deltaLabel) lines.push(`${k.deltaDir === 'down' ? '↓' : '↑'} ${k.deltaLabel} vs mois précédent`);
@@ -73,7 +86,7 @@ export class DashboardIndexComponent implements OnInit {
   sparkColor(tone?: string): string {
     return {
       brand: 'var(--emerald-700)', info: 'var(--info-600)',
-      warn: 'var(--warning-600)', error: 'var(--error-600)',
+      warn: 'var(--warning-600)', error: 'var(--error-600)', success: 'var(--success-600)',
     }[tone ?? 'brand'] ?? 'var(--primary)';
   }
 }

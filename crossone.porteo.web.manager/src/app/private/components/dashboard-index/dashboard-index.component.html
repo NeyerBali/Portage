@@ -74,4 +74,27 @@
       </div>
     </div>
   </section>
+
+  <!-- Consultant : mes missions -->
+  <section *ngIf="!isAdmin">
+    <div class="card">
+      <div class="card-header">
+        <div class="h5">Mes missions</div>
+        <a class="link" routerLink="/missions">Tout voir →</a>
+      </div>
+      <div class="card-pad">
+        <ul class="mes-missions">
+          <li *ngFor="let m of mesMissions" routerLink="/missions/{{ m.id }}">
+            <span class="mm-dot" [style.background]="statutDot(m.statut)"></span>
+            <div class="mm-body">
+              <strong>{{ m.titre }}</strong>
+              <span class="caption text-subtle">{{ m.clientNom }} · {{ statutLabel(m.statut) }}</span>
+            </div>
+            <span class="mm-amount">{{ m.montant | number:'1.0-0' }} €</span>
+          </li>
+        </ul>
+        <app-empty-state *ngIf="!mesMissions.length" icon="◆" title="Aucune mission" message="Vos missions apparaîtront ici."></app-empty-state>
+      </div>
+    </div>
+  </section>
 </div>

@@ -1,7 +1,9 @@
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Porteo.Dapper.Dashboard;
+using Porteo.Models.Justificatifs;
 using Porteo.Models.Missions;
+using Porteo.Models.Productions;
 using Porteo.ModelViews.Dashboard;
 using Porteo.Repositories;
 
@@ -61,10 +63,29 @@ namespace Porteo.Services.Dashboard
             var missDelta = IntDelta(miss);
             var factDelta = IntDelta(fact);
 
+            var caKpi = new KpiDto { Cle = "ca", Libelle = consultantId.HasValue ? "Mon CA cumulé" : "Chiffre d'affaires", Valeur = agg.CaTotal, Format = "currency", Tone = "brand", Sparkline = ca, DeltaLabel = caDelta.label, DeltaDir = caDelta.dir };
+            var missionsKpi = new KpiDto { Cle = "missions", Libelle = consultantId.HasValue ? "Mes missions en cours" : "Missions actives", Valeur = agg.MissionsActives, Format = "number", Tone = "info", Sparkline = miss, DeltaLabel = missDelta.label, DeltaDir = missDelta.dir };
+
+            // ---- Vue CONSULTANT : KPIs personnels (jamais le total « Consultants ») ----
+            if (consultantId.HasValue)
+            {
+                var mois = DateTime.UtcNow.ToString("yyyy-MM");
+                var joursMois = (await _uow.Cras.Find(c => c.ConsultantId == consultantId.Value && c.Mois == mois)).Sum(c => c.JoursTravailles);
+                var justifEnAttente = (await _uow.Justificatifs.Find(j => j.ConsultantId == consultantId.Value && j.Statut == JustificatifStatut.EnAttente)).Count();
+                return new List<KpiDto>
+                {
+                    caKpi,
+                    missionsKpi,
+                    new() { Cle = "jours", Libelle = "Jours saisis (ce mois)", Valeur = joursMois, Format = "number", Tone = "success", Sparkline = Flat(joursMois) },
+                    new() { Cle = "justif", Libelle = "Justificatifs en attente", Valeur = justifEnAttente, Format = "number", Tone = "warn", Sparkline = Flat(justifEnAttente) },
+                };
+            }
+
+            // ---- Vue ADMINISTRATEUR : vue globale ----
             return new List<KpiDto>
             {
-                new() { Cle = "ca", Libelle = consultantId.HasValue ? "Mon CA cumulé" : "Chiffre d'affaires", Valeur = agg.CaTotal, Format = "currency", Tone = "brand", Sparkline = ca, DeltaLabel = caDelta.label, DeltaDir = caDelta.dir },
-                new() { Cle = "missions", Libelle = consultantId.HasValue ? "Missions en cours" : "Missions actives", Valeur = agg.MissionsActives, Format = "number", Tone = "info", Sparkline = miss, DeltaLabel = missDelta.label, DeltaDir = missDelta.dir },
+                caKpi,
+                missionsKpi,
                 new() { Cle = "consultants", Libelle = "Consultants", Valeur = agg.Consultants, Format = "number", Tone = "warn", Sparkline = Flat(agg.Consultants) },
                 // Pour les impayées, une hausse est défavorable → direction "down" (rouge).
                 new() { Cle = "impayees", Libelle = "Factures impayées", Valeur = agg.FacturesImpayees, Format = "number", Tone = "error", Sparkline = fact,
