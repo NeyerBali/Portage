@@ -31,3 +31,14 @@
 .loading-row { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-9); color: var(--text-muted); justify-content: center; }
 
 @media (max-width: 1080px) { .detail-grid { grid-template-columns: 1fr; } .dl { grid-template-columns: 130px 1fr; } }
+
+/* Résumé IA */
+.ai-summary { background: var(--bg-brand-soft); border: 1px solid var(--border-brand); border-radius: var(--r-md); padding: 14px 16px; margin-bottom: var(--sp-5); }
+.ai-summary-head { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--primary); font-size: var(--t-sm); margin-bottom: 8px; }
+.ai-orb-sm { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; background: radial-gradient(circle at 30% 30%, var(--accent), var(--primary)); }
+.ai-x { margin-left: auto; border: none; background: transparent; color: var(--text-subtle); cursor: pointer; font-size: 13px; }
+.ai-summary-text { white-space: pre-wrap; line-height: 1.6; color: var(--text-default); font-size: var(--t-sm); }
+.ai-typing { display: inline-flex; gap: 5px; }
+.ai-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); animation: aiblink2 1.2s infinite; }
+.ai-typing span:nth-child(2) { animation-delay: .2s; } .ai-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes aiblink2 { 0%,60%,100% { opacity: .25; } 30% { opacity: 1; } }

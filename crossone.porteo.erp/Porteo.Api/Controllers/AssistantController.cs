@@ -37,5 +37,40 @@ namespace Porteo.Api.Controllers
                 return StatusCode(500, new { message = "L'assistant est momentanément indisponible.", detail = ex.Message });
             }
         }
+
+        /// <summary>Réponse en flux (mot-à-mot) — texte brut envoyé au fil de l'eau.</summary>
+        [HttpPost("ask-stream")]
+        public async Task AskStream([FromBody] AssistantQuestionDto dto, CancellationToken ct)
+        {
+            Response.ContentType = "text/plain; charset=utf-8";
+            Response.Headers["X-Accel-Buffering"] = "no";  // pas de tampon côté proxy
+            Response.Headers.CacheControl = "no-cache";
+            if (string.IsNullOrWhiteSpace(dto?.Question)) { await Response.WriteAsync("Question vide.", ct); return; }
+            try
+            {
+                await foreach (var token in _assistant.AskStream(dto.Question, ct))
+                {
+                    await Response.WriteAsync(token, ct);
+                    await Response.Body.FlushAsync(ct);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Streaming IA en échec");
+                await Response.WriteAsync("\n⚠️ Flux interrompu.", ct);
+            }
+        }
+
+        /// <summary>Résumé IA d'une mission.</summary>
+        [HttpPost("mission-summary/{id:int}")]
+        public async Task<IActionResult> MissionSummary(int id)
+        {
+            try { return Ok(new { summary = await _assistant.SummarizeMission(id) }); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Résumé mission IA en échec");
+                return StatusCode(500, new { message = "Résumé indisponible.", detail = ex.Message });
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ const EN: Record<string, string> = {
   'Mon activité': 'My activity', 'RH': 'HR', 'Outils': 'Tools',
   // Éléments de navigation
   'Tableau de bord': 'Dashboard', 'Mon tableau de bord': 'My dashboard',
-  "Centre d'alerte": 'Alert center', 'Mes alertes': 'My alerts', 'Journal': 'Activity log',
+  "Centre d'alerte": 'Alert center', "Centre d'analyse": 'Analytics center', 'Mes alertes': 'My alerts', 'Journal': 'Activity log',
   'Missions': 'Missions', 'Mes missions': 'My missions',
   'Clients': 'Clients', 'Consultants': 'Consultants',
   'Factures': 'Invoices', 'Mes factures': 'My invoices',

@@ -20,18 +20,14 @@
       </div>
 
       <!-- Messages -->
-      <div class="ai-msg" *ngFor="let m of messages" [class.user]="m.role === 'user'">
+      <div class="ai-msg" *ngFor="let m of messages; let last = last" [class.user]="m.role === 'user'">
         <div class="ai-avatar" *ngIf="m.role === 'assistant'">✦</div>
         <div class="ai-bubble">
-          <div class="ai-text">{{ m.text }}</div>
-          <button class="ai-copy" *ngIf="m.role === 'assistant'" (click)="copy(m.text)" title="Copier">⧉ Copier</button>
+          <!-- bulle vide en attente du 1ᵉʳ token → points animés -->
+          <div class="ai-typing" *ngIf="m.role === 'assistant' && !m.text && streaming && last"><span></span><span></span><span></span></div>
+          <div class="ai-text" *ngIf="m.text">{{ m.text }}<span class="ai-cursor" *ngIf="last && streaming && m.role === 'assistant'">▋</span></div>
+          <button class="ai-copy" *ngIf="m.role === 'assistant' && m.text && !(last && streaming)" (click)="copy(m.text)" title="Copier">⧉ Copier</button>
         </div>
-      </div>
-
-      <!-- Indicateur de saisie -->
-      <div class="ai-msg" *ngIf="loading">
-        <div class="ai-avatar">✦</div>
-        <div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>
       </div>
     </div>
 

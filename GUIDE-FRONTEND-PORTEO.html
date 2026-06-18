@@ -81,7 +81,8 @@
   <a href="#pipes">10 · Pipes &amp; directives</a>
   <div class="grp">Les fonctionnalités</div>
   <a href="#features">11 · Fonctionnalités clés</a>
-  <a href="#advanced">12 · Les 7 features avancées</a>
+  <a href="#advanced">12 · Les features avancées</a>
+  <a href="#ia-parallel">12b · Assistant IA &amp; Parallélisme ★</a>
   <div class="grp">Pratique</div>
   <a href="#deploy">13 · Build &amp; déploiement</a>
   <a href="#files">14 · Carte des fichiers</a>
@@ -363,6 +364,55 @@ this.hub.on(<span class="s">'notification'</span>, (type,titre,desc,when) =&gt; 
     <p>Le back (.NET) diffuse un événement à chaque action (facture payée, justificatif déposé…) → le front affiche un <b>toast</b> et incrémente la cloche, <b>sans recharger</b>.</p>
   </section>
 
+  <section id="ia-parallel">
+    <h2><span class="n">12b</span> Assistant IA &amp; Parallélisme ★ (le bonus qui impressionne)</h2>
+
+    <h3>🤖 Assistant IA (Groq)</h3>
+    <p>Page <b>Administration ▸ Assistant IA</b>. Le front n'appelle <b>jamais</b> Groq directement (la clé resterait exposée)&nbsp;: il appelle <b>notre API</b> (<code>/api/assistant/ask</code>), qui&nbsp;:</p>
+    <ol>
+      <li>construit un <b>contexte</b> à partir des <b>vraies données</b> (factures impayées + retards, missions en cours, CA)&nbsp;;</li>
+      <li>l'injecte dans le prompt et interroge <b>Groq</b> (modèle <code>llama-3.3-70b-versatile</code>, API compatible OpenAI)&nbsp;;</li>
+      <li>renvoie la réponse. La <b>clé Groq</b> est une variable d'environnement <b>serveur</b> (jamais dans le bundle).</li>
+    </ol>
+    <p>On peut ainsi&nbsp;: lister les impayés, <b>générer un e-mail de relance</b>, repérer les missions à risque, obtenir une synthèse. Bonus&nbsp;: <b>résumé IA d'une mission</b> (bouton sur la fiche mission).</p>
+
+    <h4>Streaming mot-à-mot (Server-Sent Events → Observable RxJS)</h4>
+    <p>L'endpoint <code>/api/assistant/ask-stream</code> demande à Groq un flux (<code>stream:true</code>) et <b>réécrit les tokens au fil de l'eau</b> (<code>Response.WriteAsync</code> + <code>FlushAsync</code>). Côté Angular, on lit ce flux avec <code>fetch</code> + <code>ReadableStream</code>, enveloppé dans un <b>Observable</b> qui émet token par token&nbsp;:</p>
+    <pre>askStream(question): Observable&lt;string&gt; {
+  return new Observable(sub =&gt; {
+    fetch(url, { method:<span class="s">'POST'</span>, headers:{Authorization:<span class="s">`Bearer ...`</span>}, body }).then(async res =&gt; {
+      const reader = res.body.getReader(); const dec = new TextDecoder();
+      for(;;){ const {done,value}=await reader.read(); if(done) break; sub.next(dec.decode(value)); }
+      sub.complete();
+    }).catch(e =&gt; sub.error(e));
+  });
+}</pre>
+    <p>Le composant ajoute chaque chunk au message en cours (curseur clignotant). <b>Repli automatique</b> sur la réponse complète si le flux est indisponible.</p>
+
+    <h3 style="margin-top:26px">⚡ Parallélisme &amp; concurrence (page «&nbsp;Centre d'analyse&nbsp;»)</h3>
+    <p>Page <b>Administration ▸ Centre d'analyse</b>. Elle démontre <b>3 mécanismes</b> distincts&nbsp;:</p>
+
+    <h4>1) Web Worker — vrai parallélisme (multi-thread)</h4>
+    <p>Une <b>simulation Monte-Carlo</b> (≈20&nbsp;000 tirages) du recouvrement des impayés tourne sur un <b>thread séparé</b> via un <b>Web Worker</b>. Le thread principal (UI) <b>ne se fige pas</b>&nbsp;: la barre de progression bouge, la page reste fluide.</p>
+    <pre><span class="c">// création + communication</span>
+const w = new Worker(new URL(<span class="s">'./montecarlo.worker'</span>, import.meta.url));
+w.onmessage = ({data}) =&gt; { if(data.type===<span class="s">'progress'</span>) this.progress=data.value; ... };
+w.postMessage({ invoices, runs: 20000 });
+<span class="c">// dans le worker (.worker.ts) : boucle de calcul + postMessage(progress/done)</span></pre>
+    <div class="callout"><b>C'est LE point «&nbsp;parallèle&nbsp;»</b>&nbsp;: JavaScript est mono-thread sur l'UI&nbsp;; un Web Worker offre un <b>vrai second thread</b> du navigateur pour les calculs lourds, sans bloquer le rendu.</div>
+
+    <h4>2) forkJoin — requêtes HTTP en parallèle</h4>
+    <p>Au chargement, missions + factures + consultants sont demandés <b>simultanément</b> et la suite ne s'exécute qu'une fois <b>tous</b> arrivés (vs en série, bien plus lent)&nbsp;:</p>
+    <pre>forkJoin({ missions: api.missions.list(...), factures: api.factures.list(), consultants: api.consultants.list() })
+  .subscribe(({missions,factures,consultants}) =&gt; { /* tout est prêt */ });</pre>
+
+    <h4>3) combineLatest — combinaison réactive de flux</h4>
+    <p>Deux flux (recherche + statut) sont <b>combinés en continu</b>&nbsp;: à chaque changement de l'un, la liste filtrée se recalcule.</p>
+    <pre>filtered$ = combineLatest([factures$, search$, statut$]).pipe(
+  map(([list, q, st]) =&gt; list.filter(f =&gt; (!st || f.statut===st) &amp;&amp; matches(f, q))));</pre>
+    <p>+ le <b>streaming IA</b> ci-dessus est une 4ᵉ forme de concurrence (un flux asynchrone consommé au fil de l'eau).</p>
+  </section>
+
   <section id="deploy">
     <h2><span class="n">13</span> Build &amp; déploiement</h2>
     <table>
@@ -450,6 +500,16 @@ this.hub.on(<span class="s">'notification'</span>, (type,titre,desc,when) =&gt; 
     <div class="qa"><div class="q">environment.ts, à quoi ça sert&nbsp;?</div><div class="a">À séparer la config <b>dev</b> et <b>prod</b> (notamment <code>apiUrl</code>). Le build de production remplace <code>environment.ts</code> par <code>environment.prod.ts</code> (URL Render).</div></div>
 
     <div class="qa"><div class="q">Comment télécharge-t-on un PDF / un Excel&nbsp;?</div><div class="a">Le PDF facture est généré <b>côté API</b> (QuestPDF) et renvoyé en <b>Blob</b> (<code>responseType:'blob'</code>)&nbsp;; le front crée une URL objet et déclenche le téléchargement. L'Excel est généré <b>côté front</b> avec SheetJS (<code>XLSX.writeFile</code>).</div></div>
+
+    <div class="qa"><div class="q">⚡ JavaScript est mono-thread : comment faites-vous du parallélisme&nbsp;?</div><div class="a">Sur l'UI, oui (un seul thread). Pour un <b>vrai calcul parallèle</b>, on utilise un <b>Web Worker</b> (page «&nbsp;Centre d'analyse&nbsp;»)&nbsp;: la simulation Monte-Carlo tourne sur un <b>thread séparé du navigateur</b>, communique par <code>postMessage</code>, et l'UI <b>reste fluide</b> (la barre de progression bouge pendant le calcul).</div></div>
+
+    <div class="qa"><div class="q">Web Worker : comment ça communique avec le composant&nbsp;?</div><div class="a">Par messages&nbsp;: <code>worker.postMessage(data)</code> côté composant, <code>addEventListener('message', …)</code> + <code>postMessage(résultat)</code> côté worker, et <code>worker.onmessage</code> pour recevoir. Pas de mémoire partagée&nbsp;: on échange des données (clonées). On crée le worker avec <code>new Worker(new URL('./x.worker', import.meta.url))</code>.</div></div>
+
+    <div class="qa"><div class="q">forkJoin vs concat/concatMap (parallèle vs séquentiel)&nbsp;?</div><div class="a"><code>forkJoin</code> lance plusieurs Observables <b>en parallèle</b> et émet quand <b>tous</b> sont terminés (comme <code>Promise.all</code>). <code>concat</code>/<code>concatMap</code> exécute <b>l'un après l'autre</b> (séquentiel). On charge missions+factures+consultants avec <code>forkJoin</code> → plus rapide qu'en série.</div></div>
+
+    <div class="qa"><div class="q">combineLatest, à quoi ça sert&nbsp;?</div><div class="a">À <b>combiner plusieurs flux</b> et réagir dès que <b>n'importe lequel</b> change&nbsp;: on combine «&nbsp;recherche&nbsp;» + «&nbsp;statut&nbsp;» pour recalculer la liste filtrée en temps réel. (À distinguer de <code>forkJoin</code> qui attend la fin de tout, et de <code>zip</code> qui apparie les émissions.)</div></div>
+
+    <div class="qa"><div class="q">Le streaming de l'IA, c'est de la concurrence&nbsp;?</div><div class="a">Oui&nbsp;: le serveur renvoie un <b>flux</b> de tokens (SSE), consommé <b>au fil de l'eau</b> côté client via <code>fetch</code>+<code>ReadableStream</code> enveloppé dans un <b>Observable</b> qui émet morceau par morceau, pendant que l'UI continue de tourner. C'est de la programmation <b>asynchrone/réactive</b>.</div></div>
 
     <hr>
     <p style="color:var(--muted);font-size:13px">Document généré pour l'équipe Portéo · Front-end Angular 19. Garde-le sous la main pendant la soutenance&nbsp;: la section 15 répond à la majorité des questions classiques. Bon courage&nbsp;! 💪</p>

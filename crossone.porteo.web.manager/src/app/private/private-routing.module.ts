@@ -22,6 +22,7 @@ import { SimulateurComponent } from './components/simulateur/simulateur.componen
 import { PayslipsListComponent } from './components/payslips/payslips-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AssistantComponent } from './components/assistant/assistant.component';
+import { AnalyseComponent } from './components/analyse/analyse.component';
 
 const admin = { canActivate: [roleGuard], data: { roles: ['Admin'] } };
 
@@ -50,6 +51,7 @@ const routes: Routes = [
       { path: 'journal', component: JournalComponent, ...admin },
       { path: 'parametres', component: SettingsComponent },
       { path: 'assistant', component: AssistantComponent, ...admin },
+      { path: 'analyse', component: AnalyseComponent, ...admin },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

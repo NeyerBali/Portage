@@ -1,0 +1,81 @@
+<div class="page fade-in">
+  <header class="page-head">
+    <div>
+      <p class="overline">Concurrence &amp; parallélisme</p>
+      <h1 class="h2">Centre d'analyse</h1>
+    </div>
+  </header>
+
+  <!-- 1) Chargement parallèle (forkJoin) -->
+  <section class="card card-pad an-block">
+    <div class="an-head"><span class="an-tag">forkJoin</span> Chargement parallèle</div>
+    <p class="caption text-subtle">Missions, factures et consultants chargés <b>simultanément</b> (3 requêtes en parallèle, résolues ensemble).</p>
+    <div *ngIf="loading" class="loading-row"><span class="spin"></span> Chargement en parallèle…</div>
+    <div class="an-kpis" *ngIf="!loading">
+      <div class="an-kpi"><div class="v">{{ missions.length }}</div><div class="l">Missions ({{ missionsActives }} en cours)</div></div>
+      <div class="an-kpi"><div class="v">{{ factures.length }}</div><div class="l">Factures</div></div>
+      <div class="an-kpi"><div class="v">{{ consultants.length }}</div><div class="l">Consultants</div></div>
+      <div class="an-kpi"><div class="v">{{ caEncaisse | number:'1.0-0' }} €</div><div class="l">CA encaissé</div></div>
+      <div class="an-kpi badge-time"><div class="v">{{ loadMs }} ms</div><div class="l">⚡ chargé en parallèle</div></div>
+    </div>
+  </section>
+
+  <!-- 2) Filtres réactifs (combineLatest) -->
+  <section class="card card-pad an-block">
+    <div class="an-head"><span class="an-tag">combineLatest</span> Filtres réactifs combinés</div>
+    <p class="caption text-subtle">Deux flux (recherche + statut) combinés en temps réel pour dériver la liste.</p>
+    <div class="an-filters">
+      <input type="text" placeholder="Rechercher…" (input)="onSearch($any($event.target).value)" />
+      <div class="segmented">
+        <button [class.active]="(statut$ | async) === null" (click)="onStatut(null)">Toutes</button>
+        <button *ngFor="let s of statuts" [class.active]="(statut$ | async) === s" (click)="onStatut(s)">{{ s }}</button>
+      </div>
+    </div>
+    <div class="an-list">
+      <div class="an-row" *ngFor="let f of (filtered$ | async)">
+        <span class="mono">{{ f.numero }}</span>
+        <span class="grow">{{ f.missionTitre }} <span class="text-subtle" *ngIf="f.clientNom">· {{ f.clientNom }}</span></span>
+        <app-status-badge [status]="f.statut" kind="facture"></app-status-badge>
+        <span class="mono">{{ f.montantTTC | number:'1.0-0' }} €</span>
+      </div>
+      <div class="an-empty" *ngIf="!(filtered$ | async)?.length">Aucune facture.</div>
+    </div>
+  </section>
+
+  <!-- 3) Web Worker (Monte-Carlo) -->
+  <section class="card card-pad an-block">
+    <div class="an-head"><span class="an-tag worker">Web Worker</span> Simulation Monte-Carlo du recouvrement</div>
+    <p class="caption text-subtle">
+      {{ runs | number }} tirages exécutés sur un <b>thread séparé</b> (vrai parallélisme) → l'interface reste fluide.
+      Chaque facture impayée est «&nbsp;encaissée&nbsp;» avec une probabilité décroissant avec le retard.
+    </p>
+    <div class="an-sim-top">
+      <div><b>{{ impayes.length }}</b> factures impayées · total <b>{{ totalImpaye | number:'1.0-0' }} €</b></div>
+      <button class="btn btn-primary btn-sm" (click)="runSimulation()" [disabled]="running || loading">
+        <span *ngIf="!running">▶ Lancer {{ runs | number }} simulations</span>
+        <span *ngIf="running" class="spin"></span>
+      </button>
+    </div>
+
+    <div class="an-progress" *ngIf="running">
+      <div class="an-bar"><div class="an-bar-fill" [style.width.%]="progress"></div></div>
+      <span class="caption">{{ progress }}% — l'UI ne se fige pas pendant le calcul ✦</span>
+    </div>
+
+    <div class="an-result" *ngIf="result && !running">
+      <div class="an-stats">
+        <div class="an-stat"><div class="v">{{ result.p50 | number:'1.0-0' }} €</div><div class="l">Médiane (P50)</div></div>
+        <div class="an-stat"><div class="v ok">{{ result.p90 | number:'1.0-0' }} €</div><div class="l">Optimiste (P90)</div></div>
+        <div class="an-stat"><div class="v warn">{{ result.p10 | number:'1.0-0' }} €</div><div class="l">Prudent (P10)</div></div>
+        <div class="an-stat"><div class="v">{{ result.mean | number:'1.0-0' }} €</div><div class="l">Espérance</div></div>
+      </div>
+      <div class="an-hist">
+        <div class="an-bin" *ngFor="let h of result.hist; let i = index" [title]="binLabel(i) + ' : ' + h">
+          <div class="an-bin-bar" [style.height.%]="histPct(h)"></div>
+          <div class="an-bin-lbl">{{ binLabel(i) }}</div>
+        </div>
+      </div>
+      <p class="caption text-subtle">Distribution du montant recouvré sur {{ runs | number }} scénarios.</p>
+    </div>
+  </section>
+</div>

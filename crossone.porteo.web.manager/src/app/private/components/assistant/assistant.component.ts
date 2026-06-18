@@ -14,6 +14,7 @@ export class AssistantComponent implements AfterViewChecked {
   messages: ChatMessage[] = [];
   input = '';
   loading = false;
+  streaming = false;
   @ViewChild('scroll') scroll?: ElementRef<HTMLElement>;
   private shouldScroll = false;
 
@@ -38,13 +39,27 @@ export class AssistantComponent implements AfterViewChecked {
     if (!q || this.loading) return;
     this.messages.push({ role: 'user', text: q });
     this.input = '';
-    this.loading = true;
-    this.shouldScroll = true;
-    this.api.assistant.ask(q).subscribe({
-      next: r => { this.messages.push({ role: 'assistant', text: r.answer }); this.loading = false; this.shouldScroll = true; },
-      error: () => { this.messages.push({ role: 'assistant', text: "⚠️ L'assistant est momentanément indisponible. Réessayez dans un instant." }); this.loading = false; this.shouldScroll = true; },
+    this.loading = true; this.streaming = true; this.shouldScroll = true;
+
+    const bot: ChatMessage = { role: 'assistant', text: '' };
+    this.messages.push(bot);
+    let received = false;
+
+    this.api.assistant.askStream(q).subscribe({
+      next: chunk => { received = true; bot.text += chunk; this.shouldScroll = true; },
+      error: () => {
+        if (received) { this.finish(); return; }
+        // Repli : réponse complète (non-streaming) si le flux est bloqué.
+        this.api.assistant.ask(q).subscribe({
+          next: r => { bot.text = r.answer; this.finish(); },
+          error: () => { bot.text = "⚠️ L'assistant est momentanément indisponible. Réessayez dans un instant."; this.finish(); },
+        });
+      },
+      complete: () => this.finish(),
     });
   }
+
+  private finish(): void { this.loading = false; this.streaming = false; this.shouldScroll = true; }
 
   copy(text: string): void {
     navigator.clipboard?.writeText(text).then(

@@ -36,6 +36,7 @@ import { SimulateurComponent } from './components/simulateur/simulateur.componen
 import { PayslipsListComponent } from './components/payslips/payslips-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AssistantComponent } from './components/assistant/assistant.component';
+import { AnalyseComponent } from './components/analyse/analyse.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { AssistantComponent } from './components/assistant/assistant.component';
     PayslipsListComponent,
     SettingsComponent,
     AssistantComponent,
+    AnalyseComponent,
   ],
   imports: [
     SharedModule,

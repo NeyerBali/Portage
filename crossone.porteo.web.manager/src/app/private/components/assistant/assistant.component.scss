@@ -18,6 +18,8 @@
 .ai-bubble { background: var(--bg-sunken); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px 15px; position: relative; }
 .ai-msg.user .ai-bubble { background: var(--primary); border-color: var(--primary); color: #fff; }
 .ai-text { white-space: pre-wrap; line-height: 1.6; font-size: var(--t-body); word-break: break-word; }
+.ai-cursor { display: inline-block; color: var(--primary); animation: aicursor 1s steps(2) infinite; font-weight: 700; }
+@keyframes aicursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 .ai-copy { margin-top: 8px; background: transparent; border: 1px solid var(--border-default); border-radius: 7px; padding: 3px 9px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; }
 .ai-copy:hover { color: var(--primary); border-color: var(--border-brand); }
 

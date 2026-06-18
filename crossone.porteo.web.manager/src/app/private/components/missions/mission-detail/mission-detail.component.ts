@@ -29,6 +29,17 @@ export class MissionDetailComponent implements OnInit {
 
   get isAdmin(): boolean { return this.auth.isAdmin; }
 
+  aiSummary = '';
+  aiLoading = false;
+  summarize(): void {
+    if (!this.mission) return;
+    this.aiLoading = true; this.aiSummary = '';
+    this.api.assistant.missionSummary(this.mission.id).subscribe({
+      next: r => { this.aiSummary = r.summary; this.aiLoading = false; },
+      error: () => { this.aiSummary = '⚠️ Résumé indisponible pour le moment.'; this.aiLoading = false; },
+    });
+  }
+
   ngOnInit(): void {
     this.load();
     if (this.isAdmin) {

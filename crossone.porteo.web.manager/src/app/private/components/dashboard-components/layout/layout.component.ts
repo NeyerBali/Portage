@@ -18,6 +18,7 @@ const NAV_ADMIN: NavGroup[] = [
   { name: 'Général', icon: 'icon-dashboard', children: [
     { label: 'Tableau de bord', icon: 'icon-dashboard', route: '/dashboard' },
     { label: "Centre d'alerte", icon: 'icon-chart-2', route: '/alertes' },
+    { label: "Centre d'analyse", icon: 'icon-chart-square', route: '/analyse' },
     { label: 'Journal', icon: 'icon-archive-book', route: '/journal' },
   ]},
   { name: 'Activité', icon: 'icon-briefcase', children: [

@@ -15,10 +15,20 @@
       <p class="text-muted">{{ m.clientNom }} · {{ m.consultantNom }}</p>
     </div>
     <div class="flex gap-2" *ngIf="isAdmin">
+      <button class="btn btn-secondary" (click)="summarize()" [disabled]="aiLoading">✦ Résumé IA</button>
       <button class="btn btn-secondary" (click)="edit()">✎ Modifier</button>
       <button class="btn btn-secondary" style="color:var(--error-600)" (click)="remove()">🗑 Supprimer</button>
     </div>
   </header>
+
+  <!-- Résumé IA de la mission -->
+  <div class="ai-summary" *ngIf="isAdmin && (aiLoading || aiSummary)">
+    <div class="ai-summary-head"><span class="ai-orb-sm">✦</span> Résumé IA<button class="ai-x" *ngIf="aiSummary && !aiLoading" (click)="aiSummary=''">✕</button></div>
+    <div class="ai-summary-body">
+      <span *ngIf="aiLoading" class="ai-typing"><span></span><span></span><span></span></span>
+      <div *ngIf="aiSummary" class="ai-summary-text">{{ aiSummary }}</div>
+    </div>
+  </div>
 
   <div class="detail-grid">
     <!-- Colonne principale : onglets -->
