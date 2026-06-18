@@ -37,6 +37,7 @@ const NAV_ADMIN: NavGroup[] = [
     { label: 'Simulateur', icon: 'icon-chart-square', route: '/simulateur' },
   ]},
   { name: 'Administration', icon: 'icon-setting', children: [
+    { label: 'Assistant IA', icon: 'icon-message-question', route: '/assistant' },
     { label: 'Paramètres', icon: 'icon-setting', route: '/parametres' },
   ]},
 ];

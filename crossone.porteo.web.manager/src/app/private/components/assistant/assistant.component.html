@@ -1,0 +1,47 @@
+<div class="page fade-in ai-page">
+  <header class="page-head flex items-center justify-between wrap gap-4">
+    <div>
+      <p class="overline">Intelligence artificielle</p>
+      <h1 class="h2">✦ Assistant Portéo</h1>
+    </div>
+    <button class="btn btn-secondary" *ngIf="messages.length" (click)="clear()">Effacer la conversation</button>
+  </header>
+
+  <div class="ai-card card">
+    <div class="ai-scroll" #scroll>
+      <!-- État initial -->
+      <div class="ai-welcome" *ngIf="!messages.length">
+        <div class="ai-orb">✦</div>
+        <h3>Comment puis-je vous aider&nbsp;?</h3>
+        <p class="text-muted">Je connais vos factures impayées, vos missions et votre activité. Posez une question ou choisissez une suggestion.</p>
+        <div class="ai-suggestions">
+          <button class="ai-chip" *ngFor="let s of suggestions" (click)="ask(s)">{{ s }}</button>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="ai-msg" *ngFor="let m of messages" [class.user]="m.role === 'user'">
+        <div class="ai-avatar" *ngIf="m.role === 'assistant'">✦</div>
+        <div class="ai-bubble">
+          <div class="ai-text">{{ m.text }}</div>
+          <button class="ai-copy" *ngIf="m.role === 'assistant'" (click)="copy(m.text)" title="Copier">⧉ Copier</button>
+        </div>
+      </div>
+
+      <!-- Indicateur de saisie -->
+      <div class="ai-msg" *ngIf="loading">
+        <div class="ai-avatar">✦</div>
+        <div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>
+      </div>
+    </div>
+
+    <div class="ai-input">
+      <input type="text" [(ngModel)]="input" (keyup.enter)="ask()" [disabled]="loading"
+             placeholder="Posez votre question (factures, missions, relance…)" />
+      <button class="btn btn-primary" (click)="ask()" [disabled]="loading || !input.trim()">
+        <span *ngIf="!loading">Envoyer ▸</span><span *ngIf="loading" class="spin"></span>
+      </button>
+    </div>
+    <p class="ai-foot caption text-subtle">L'assistant s'appuie sur vos données réelles (Groq · IA générative). Vérifiez toujours les montants avant envoi.</p>
+  </div>
+</div>

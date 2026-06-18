@@ -44,6 +44,10 @@
       </div>
 
       <div class="p-table-wrap" *ngIf="tab==='factures'">
+        <div *ngIf="isAdmin" class="flex justify-between items-center mb-4" style="padding:0 2px">
+          <span class="caption text-subtle">{{ m.factures.length }} facture(s) rattachée(s)</span>
+          <button class="btn btn-primary btn-sm" (click)="newFacture()">＋ Nouvelle facture</button>
+        </div>
         <table class="p-table" *ngIf="m.factures.length">
           <thead><tr><th>Facture</th><th>Émise le</th><th>Échéance</th><th>Statut</th><th class="num">Montant TTC</th></tr></thead>
           <tbody>

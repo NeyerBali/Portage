@@ -20,7 +20,7 @@ const EN: Record<string, string> = {
   'Absences': 'Time off', 'Mes absences': 'My time off',
   'Demandes': 'Requests', 'Mes demandes': 'My requests',
   'Bulletins': 'Payslips', 'Mes bulletins': 'My payslips',
-  'Simulateur': 'Simulator', 'Paramètres': 'Settings', 'Mon profil': 'My profile',
+  'Simulateur': 'Simulator', 'Paramètres': 'Settings', 'Mon profil': 'My profile', 'Assistant IA': 'AI Assistant',
   // Barre du haut
   'Administrateur': 'Administrator', 'Consultant': 'Consultant',
   'Rechercher une mission, un client, un consultant…': 'Search a mission, client or consultant…',

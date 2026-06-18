@@ -25,7 +25,7 @@ export class FacturePopupComponent implements OnInit {
     private fb: FormBuilder,
     private ref: MatDialogRef<FacturePopupComponent>,
     private toastr: ToastrService,
-    @Inject(MAT_DIALOG_DATA) public data: { missions: Mission[] },
+    @Inject(MAT_DIALOG_DATA) public data: { missions: Mission[]; preselectMissionId?: number },
   ) {}
 
   get f() { return this.form.controls; }
@@ -39,6 +39,7 @@ export class FacturePopupComponent implements OnInit {
     const today = new Date().toISOString().substring(0, 10);
     const due = new Date(Date.now() + 30 * 864e5).toISOString().substring(0, 10);
     this.form.patchValue({ dateEmission: today, dateEcheance: due });
+    if (this.data.preselectMissionId) this.form.patchValue({ missionId: this.data.preselectMissionId });
   }
 
   submit(): void {

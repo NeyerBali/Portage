@@ -35,6 +35,7 @@ import { DemandesListComponent } from './components/demandes/demandes-list.compo
 import { SimulateurComponent } from './components/simulateur/simulateur.component';
 import { PayslipsListComponent } from './components/payslips/payslips-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { AssistantComponent } from './components/assistant/assistant.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     SimulateurComponent,
     PayslipsListComponent,
     SettingsComponent,
+    AssistantComponent,
   ],
   imports: [
     SharedModule,

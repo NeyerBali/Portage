@@ -21,6 +21,7 @@ import { DemandesListComponent } from './components/demandes/demandes-list.compo
 import { SimulateurComponent } from './components/simulateur/simulateur.component';
 import { PayslipsListComponent } from './components/payslips/payslips-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { AssistantComponent } from './components/assistant/assistant.component';
 
 const admin = { canActivate: [roleGuard], data: { roles: ['Admin'] } };
 
@@ -48,6 +49,7 @@ const routes: Routes = [
       { path: 'alertes', component: AlertesComponent },
       { path: 'journal', component: JournalComponent, ...admin },
       { path: 'parametres', component: SettingsComponent },
+      { path: 'assistant', component: AssistantComponent, ...admin },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

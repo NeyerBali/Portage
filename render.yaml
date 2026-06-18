@@ -53,3 +53,8 @@ services:
       # NON versionnée — à saisir dans le dashboard Render (Environment).
       - key: Brevo__ApiKey
         sync: false
+      # Assistant IA (Groq). Clé NON versionnée — à saisir dans le dashboard Render.
+      - key: Groq__ApiKey
+        sync: false
+      - key: Groq__Model
+        value: llama-3.3-70b-versatile

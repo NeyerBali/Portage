@@ -111,6 +111,7 @@ builder.Services.AddScoped<IDemandeService, DemandeService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IPayslipService, PayslipService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<Porteo.Services.Assistant.IAssistantService, Porteo.Services.Assistant.AssistantService>();
 builder.Services.AddScoped<IServices, Porteo.Services.Services>();
 
 // ---- Temps réel (SignalR) ----

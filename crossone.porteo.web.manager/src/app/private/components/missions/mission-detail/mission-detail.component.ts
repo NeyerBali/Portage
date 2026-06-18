@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/core/auth/auth.service';
 import { ApiService } from '../../../http/api.service';
 import { Client, Consultant, MissionDetail } from 'src/app/shared/models';
 import { MissionPopupComponent } from '../mission-popup/mission-popup.component';
+import { FacturePopupComponent } from '../../factures/facture-popup/facture-popup.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -81,6 +82,18 @@ export class MissionDetailComponent implements OnInit {
       data: { title: 'Supprimer la mission', message: `Confirmer la suppression de « ${this.mission.titre} » ?`, confirmLabel: 'Supprimer', destructive: true },
     }).afterClosed().subscribe(ok => {
       if (ok && this.mission) this.api.missions.delete(this.mission.id).subscribe(() => { this.toastr.success('Mission supprimée.'); this.router.navigate(['/missions']); });
+    });
+  }
+
+  /** Crée une facture directement rattachée à cette mission, puis recharge la fiche. */
+  newFacture(): void {
+    if (!this.mission) return;
+    const ref = this.dialog.open(FacturePopupComponent, {
+      panelClass: 'porteo-dialog', width: '640px', maxWidth: '95vw',
+      data: { missions: [this.mission], preselectMissionId: this.mission.id },
+    });
+    ref.afterClosed().subscribe(r => {
+      if (r?.dto) this.api.factures.create(r.dto).subscribe(() => { this.toastr.success('Facture créée et rattachée à la mission.'); this.load(); });
     });
   }
 

@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portéo — Guide du Front-End Angular (pour le binôme)</title>
+<style>
+  :root{
+    --blue:#134A8C; --blue-soft:#EAF3FE; --blue-bright:#3B88F2; --yellow:#FFC400;
+    --ink:#16201C; --ink2:#3C4843; --muted:#586860; --line:#E2E8E5; --bg:#F6F8F7; --card:#fff;
+    --code-bg:#0E1B2A; --code:#D7E3F4; --ok:#15A66A; --warn:#E29215; --err:#D8483B;
+    --r:12px; --shadow:0 6px 20px rgba(13,21,18,.08);
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--sans);color:var(--ink2);background:var(--bg);line-height:1.6;font-size:15px}
+  a{color:var(--blue)}
+  .wrap{display:grid;grid-template-columns:270px 1fr;max-width:1400px;margin:0 auto;gap:0}
+  /* TOC */
+  nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;background:#0B1A2E;color:#cdd9ea;padding:22px 16px}
+  nav.toc .brand{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  nav.toc .brand .m{width:34px;height:34px;border-radius:9px;background:var(--blue);color:var(--yellow);display:grid;place-items:center;font-weight:800;font-size:18px}
+  nav.toc .brand b{font-size:18px;color:#fff}
+  nav.toc a{display:block;color:#9fb3cf;text-decoration:none;padding:5px 10px;border-radius:7px;font-size:13.5px}
+  nav.toc a:hover{background:#16263e;color:#fff}
+  nav.toc .grp{margin:14px 0 4px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b80a0;font-weight:700;padding-left:10px}
+  main{padding:34px 44px 80px;min-width:0}
+  h1{font-size:30px;color:var(--ink);margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 26px;font-size:16px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px 26px;margin-bottom:22px;box-shadow:var(--shadow)}
+  section>h2{margin:0 0 4px;font-size:22px;color:var(--blue);display:flex;align-items:center;gap:10px}
+  section>h2 .n{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex:none}
+  h3{color:var(--ink);font-size:17px;margin:20px 0 8px}
+  h4{color:var(--ink);font-size:15px;margin:16px 0 6px}
+  p{margin:8px 0}
+  code{font-family:var(--mono);background:#eef3f1;color:#0b3a52;padding:1px 6px;border-radius:5px;font-size:13px}
+  pre{background:var(--code-bg);color:var(--code);border-radius:10px;padding:16px 18px;overflow:auto;font-family:var(--mono);font-size:12.8px;line-height:1.55;margin:12px 0}
+  pre .c{color:#7c93b3}      /* comment */
+  pre .k{color:#79c0ff}      /* keyword */
+  pre .s{color:#a5d6a4}      /* string */
+  pre .t{color:#ffd479}      /* type/tag */
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--blue-soft);color:var(--blue);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .pill{display:inline-block;background:var(--blue-soft);color:var(--blue);border:1px solid #cfe0f7;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;margin:2px 4px 2px 0}
+  .pill.y{background:#FFF7DB;color:#8a6500;border-color:#f3df9a}
+  .pill.g{background:#E7F7EE;color:#0b6843;border-color:#bfe6d0}
+  .callout{border-left:4px solid var(--yellow);background:#FFFBEC;padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .callout.b{border-color:var(--blue-bright);background:var(--blue-soft)}
+  .callout.g{border-color:var(--ok);background:#E7F7EE}
+  .qa{border:1px solid var(--line);border-radius:10px;margin:10px 0;overflow:hidden}
+  .qa .q{background:#F0F5FF;color:var(--blue);font-weight:700;padding:12px 16px;font-size:14.5px}
+  .qa .a{padding:12px 16px}
+  .qa .a b{color:var(--ink)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .files{font-family:var(--mono);font-size:12.5px;background:#f4f7f5;border:1px solid var(--line);border-radius:8px;padding:14px 16px;white-space:pre;overflow:auto;color:#34433d}
+  .tag{font-family:var(--mono);color:#0b3a52}
+  hr{border:none;border-top:1px solid var(--line);margin:22px 0}
+  @media(max-width:1000px){.wrap{grid-template-columns:1fr}nav.toc{position:static;height:auto}main{padding:24px}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="brand"><span class="m">P</span><b>Portéo</b></div>
+  <div style="color:#6b80a0;font-size:12px;padding:0 10px 10px">Guide Front-End Angular</div>
+  <a href="#intro">0 · À lire en premier</a>
+  <div class="grp">Fondations</div>
+  <a href="#overview">1 · Vue d'ensemble</a>
+  <a href="#archi">2 · Architecture &amp; modules</a>
+  <a href="#routing">3 · Routing &amp; Guards</a>
+  <a href="#auth">4 · Authentification &amp; 2FA</a>
+  <a href="#api">5 · Communication API (RxJS)</a>
+  <a href="#ngrx">6 · NgRx (gestion d'état)</a>
+  <a href="#forms">7 · Formulaires réactifs</a>
+  <div class="grp">Le visuel</div>
+  <a href="#charts">8 · Les graphiques (SVG) ★</a>
+  <a href="#theme">9 · Thème &amp; design system</a>
+  <a href="#pipes">10 · Pipes &amp; directives</a>
+  <div class="grp">Les fonctionnalités</div>
+  <a href="#features">11 · Fonctionnalités clés</a>
+  <a href="#advanced">12 · Les 7 features avancées</a>
+  <div class="grp">Pratique</div>
+  <a href="#deploy">13 · Build &amp; déploiement</a>
+  <a href="#files">14 · Carte des fichiers</a>
+  <a href="#qa">15 · ★ Questions de la prof</a>
+</nav>
+
+<main>
+  <h1>Portéo — Guide complet du Front-End Angular</h1>
+  <p class="sub">Tout ce qu'il faut comprendre du code Angular du projet pour répondre aux questions de la prof. Lis-le dans l'ordre&nbsp;: chaque section est courte et va à l'essentiel.</p>
+
+  <section id="intro">
+    <h2><span class="n">0</span> À lire en premier (le pitch en 60 s)</h2>
+    <p><b>Portéo</b> est une application de <b>portage salarial</b>&nbsp;: une agence place des <b>consultants</b> chez des <b>clients</b> sur des <b>missions</b>, puis facture les clients et paie les consultants.</p>
+    <p>Le projet est en <b>2 parties</b>&nbsp;:</p>
+    <ul>
+      <li><b>Front-end Angular 19</b> (ce guide) — dossier <code>crossone.porteo.web.manager</code>, hébergé sur <b>Firebase Hosting</b>.</li>
+      <li><b>Back-end .NET 8 / PostgreSQL</b> (API REST) — dossier <code>crossone.porteo.erp</code>, hébergé sur <b>Render</b>.</li>
+    </ul>
+    <p>Le front <b>ne contient aucune logique métier serveur</b>&nbsp;: il appelle l'API REST en HTTP (JSON) et affiche les résultats. Toute la sécurité réelle est côté back (JWT, rôles, propriété des données).</p>
+    <div class="callout b"><b>Comptes de démo</b> (mot de passe <code>Porteo2026!</code>)&nbsp;: <code>neyerbali6@gmail.com</code> (admin) · <code>neyerbali6+consultant@gmail.com</code> (consultant). La connexion passe par une <b>double authentification</b> (code reçu par e-mail).</p>
+  </section>
+
+  <section id="overview">
+    <h2><span class="n">1</span> Vue d'ensemble &amp; pile technique</h2>
+    <table>
+      <tr><th>Domaine</th><th>Technologie</th><th>Rôle dans le projet</th></tr>
+      <tr><td>Framework</td><td><b>Angular 19</b> (mode <b>NgModule</b>)</td><td>SPA (Single Page Application)</td></tr>
+      <tr><td>Langage</td><td>TypeScript</td><td>Typage fort, classes, décorateurs</td></tr>
+      <tr><td>Réactif</td><td><b>RxJS</b> (Observables)</td><td>Appels HTTP, recherche, temps réel</td></tr>
+      <tr><td>État global</td><td><b>NgRx</b> (Store/Effects/Entity)</td><td>Gestion des <b>missions</b> (démonstration)</td></tr>
+      <tr><td>UI</td><td>Angular <b>Material/CDK</b></td><td>Dialogues (modales), Drag&amp;Drop (Kanban)</td></tr>
+      <tr><td>Temps réel</td><td><b>@microsoft/signalr</b></td><td>Notifications live</td></tr>
+      <tr><td>Excel</td><td><b>SheetJS (xlsx)</b></td><td>Export <code>.xlsx</code></td></tr>
+      <tr><td>Notifications</td><td>ngx-toastr</td><td>Messages «&nbsp;toast&nbsp;»</td></tr>
+      <tr><td>Style</td><td>SCSS + <b>variables CSS</b> (design tokens)</td><td>Thème clair/sombre + 5 palettes</td></tr>
+    </table>
+    <div class="callout"><b>Mode NgModule</b> (et non «&nbsp;standalone&nbsp;»)&nbsp;: on déclare les composants dans des <code>@NgModule</code>. C'est un choix assumé pour reproduire l'architecture du projet de référence de l'entreprise. À savoir&nbsp;: <code>tsconfig</code> force <code>useDefineForClassFields:false</code> et <code>baseUrl:"./"</code> pour rester compatible NgModule.</p></div>
+  </section>
+
+  <section id="archi">
+    <h2><span class="n">2</span> Architecture &amp; modules</h2>
+    <p>L'application est découpée en <b>modules</b>. Deux sont <b>chargés à la demande (lazy loading)</b> pour alléger le démarrage.</p>
+    <div class="files">AppModule (racine, eager)
+├── AppComponent              ← &lt;router-outlet&gt;
+├── VitrineComponent          ← page d'accueil publique "/"
+│
+├── PublicModule   (lazy, préfixe /auth)   → Login, 2FA, Mot de passe oublié/reset
+├── PrivateModule  (lazy, préfixe "",  protégé par authGuard)
+│     ├── LayoutComponent (menu + topbar + &lt;router-outlet&gt;)
+│     ├── DashboardIndexComponent, MissionsList/Board/Detail, Clients, Consultants,
+│     ├── Factures, Justificatifs, CRA, Absences, Demandes, Bulletins, Simulateur,
+│     ├── Alertes, Journal, Settings, CommandPalette …
+│     └── StoreModule.forFeature('missions') + EffectsModule.forFeature(MissionEffects)
+│
+└── SharedModule   (importé par Private &amp; Public)
+      CommonModule, FormsModule, ReactiveFormsModule, RouterModule, MatDialogModule
+      + composants/charts/pipes/directives réutilisables</div>
+    <h3>Rôle de chaque module</h3>
+    <table>
+      <tr><th>Module</th><th>Contenu</th></tr>
+      <tr><td><b>AppModule</b></td><td>Bootstrap, providers globaux (HttpClient, intercepteurs, locale FR, NgRx root, Toastr), la vitrine.</td></tr>
+      <tr><td><b>PublicModule</b></td><td>Écrans <b>avant connexion</b> (login, double-auth, reset). Lazy.</td></tr>
+      <tr><td><b>PrivateModule</b></td><td>Toute l'<b>application connectée</b>. Lazy + protégé. Contient le feature store NgRx des missions.</td></tr>
+      <tr><td><b>SharedModule</b></td><td>Ce qui est <b>réutilisé partout</b>&nbsp;: charts, tableau générique, badges, dialogues, pipe de traduction, directives. Réexporte CommonModule/Forms… pour éviter les imports répétés.</td></tr>
+      <tr><td><b>core/</b></td><td>Pas un module&nbsp;: services <code>providedIn:'root'</code> (Auth, Token, Theme, Lang, Realtime), <b>guards</b> et <b>interceptors</b>.</td></tr>
+    </table>
+  </section>
+
+  <section id="routing">
+    <h2><span class="n">3</span> Routing &amp; Guards</h2>
+    <p>Le routeur Angular associe une URL à un composant. Les <b>guards</b> protègent l'accès.</p>
+    <pre><span class="c">// app-routing.module.ts — routes racine</span>
+const routes: Routes = [
+  { path: <span class="s">''</span>, pathMatch: <span class="s">'full'</span>, component: VitrineComponent },        <span class="c">// accueil public</span>
+  { path: <span class="s">'auth'</span>, loadChildren: () =&gt; PublicModule },                <span class="c">// lazy</span>
+  { path: <span class="s">''</span>, canActivate:[authGuard], loadChildren: () =&gt; PrivateModule }, <span class="c">// lazy + protégé</span>
+  { path: <span class="s">'**'</span>, redirectTo: <span class="s">''</span> },
+];</pre>
+    <h3>Les 3 guards (ce sont des <code>CanActivateFn</code> — fonctions, pas des classes)</h3>
+    <table>
+      <tr><th>Guard</th><th>Rôle</th></tr>
+      <tr><td><code>authGuard</code></td><td>Bloque les pages privées si non connecté → redirige vers <code>/auth/login?returnUrl=…</code>.</td></tr>
+      <tr><td><code>loginGuard</code></td><td>Empêche d'afficher le login si <b>déjà connecté</b> → redirige vers <code>/dashboard</code>.</td></tr>
+      <tr><td><code>roleGuard</code></td><td>Réserve certaines routes à l'<b>admin</b> (ex. Clients, Consultants) via <code>data:{roles:['Admin']}</code>.</td></tr>
+    </table>
+    <pre><span class="c">// auth.guard.ts</span>
+export const authGuard: CanActivateFn = (_route, state) =&gt; {
+  const auth = inject(AuthService); const router = inject(Router);
+  if (auth.isLoggedIn()) return <span class="k">true</span>;
+  return router.createUrlTree([<span class="s">'/auth/login'</span>], { queryParams:{ returnUrl: state.url } });
+};</pre>
+  </section>
+
+  <section id="auth">
+    <h2><span class="n">4</span> Authentification &amp; double authentification (2FA)</h2>
+    <p>La connexion se fait en <b>2 étapes</b> (sécurité renforcée)&nbsp;:</p>
+    <ol>
+      <li><b>Identifiants</b> → l'API renvoie un «&nbsp;<b>défi 2FA</b>&nbsp;» (pas encore de jeton).</li>
+      <li><b>Code à 6 chiffres</b> (reçu par e-mail) <i>ou</i> code d'<b>application d'authentification (TOTP)</b> → l'API renvoie le <b>jeton JWT</b> → session ouverte.</li>
+    </ol>
+    <h3>AuthService (cœur de l'auth)</h3>
+    <ul>
+      <li>Garde l'utilisateur courant dans un <code>BehaviorSubject&lt;AuthResult&gt;</code> (flux observable) → la sidebar/topbar se mettent à jour automatiquement.</li>
+      <li>Le <b>jeton JWT</b> est stocké en <code>localStorage</code> via <code>TokenService</code> (qui sait lire l'<code>exp</code> pour vérifier la validité).</li>
+      <li>Getters pratiques&nbsp;: <code>isAdmin</code>, <code>role</code>, <code>consultantId</code>, <code>fullName</code>.</li>
+    </ul>
+    <pre>login(payload): Observable&lt;TwoFactorChallenge&gt; { ... }        <span class="c">// étape 1</span>
+verifyCode(email, code): Observable&lt;AuthResult&gt; {              <span class="c">// étape 2 (email)</span>
+  return this.http.post&lt;AuthResult&gt;(url, {email,code})
+    .pipe(<span class="k">tap</span>(r =&gt; this.store(r)));   <span class="c">// stocke jeton + user, pousse dans le BehaviorSubject</span>
+}</pre>
+    <h3>Les 2 intercepteurs HTTP (très demandés à l'oral)</h3>
+    <table>
+      <tr><th>Intercepteur</th><th>Rôle</th></tr>
+      <tr><td><b>JwtInterceptor</b></td><td>Ajoute l'en-tête <code>Authorization: Bearer &lt;token&gt;</code> à <b>chaque</b> requête sortante.</td></tr>
+      <tr><td><b>ErrorInterceptor</b></td><td>Gère les erreurs <b>de façon centralisée</b>&nbsp;: <code>401</code> → déconnexion + toast, <code>403</code> → «&nbsp;accès refusé&nbsp;», <code>0</code> → «&nbsp;serveur injoignable&nbsp;», sinon toast d'erreur.</td></tr>
+    </table>
+    <p>Ils sont enregistrés dans <code>AppModule</code> via <code>HTTP_INTERCEPTORS</code> avec <code>multi:true</code> (on peut en empiler plusieurs).</p>
+  </section>
+
+  <section id="api">
+    <h2><span class="n">5</span> Communication avec l'API (HttpClient + RxJS)</h2>
+    <p>Tous les appels passent par une <b>façade</b> <code>ApiService</code> qui regroupe un service par domaine&nbsp;:</p>
+    <pre><span class="c">// api.service.ts</span>
+@Injectable({ providedIn: <span class="s">'root'</span> })
+export class ApiService {
+  constructor(
+    public missions: MissionApiService,
+    public clients: ClientApiService,
+    public factures: FactureApiService,
+    public dashboard: DashboardApiService,
+    public justificatifs: JustificatifApiService,
+    public alerts: AlertApiService,
+    public rh: RhApiService,
+    public config: ConfigApiService,
+  ) {}
+}</pre>
+    <p>Chaque service domaine utilise <code>HttpClient</code> et renvoie un <b>Observable typé</b>&nbsp;:</p>
+    <pre>list(q): Observable&lt;PagedResult&lt;Mission&gt;&gt; {
+  let params = new HttpParams();
+  Object.entries(q).forEach(([k,v]) =&gt; { if (v != null) params = params.set(k, String(v)); });
+  return this.http.get&lt;PagedResult&lt;Mission&gt;&gt;(this.base, { params });
+}</pre>
+    <div class="callout b"><b>Observable vs Promise</b>&nbsp;: un <b>Observable</b> est un <i>flux</i> (peut émettre plusieurs valeurs, annulable, composable avec des opérateurs RxJS). On s'y «&nbsp;abonne&nbsp;» avec <code>.subscribe()</code>, ou avec le <b>pipe <code>async</code></b> dans le template (qui se désabonne tout seul).</div>
+    <p><b>Opérateurs RxJS</b> utilisés&nbsp;: <code>debounceTime</code> (recherche), <code>switchMap</code> (annule la requête précédente), <code>mergeMap</code> (laisse passer en parallèle), <code>map</code>, <code>catchError</code>, <code>tap</code>, <code>filter</code>, <code>takeUntil</code> (désabonnement).</p>
+  </section>
+
+  <section id="ngrx">
+    <h2><span class="n">6</span> NgRx — gestion d'état (sur les Missions)</h2>
+    <p>NgRx applique le pattern <b>Redux</b> à Angular&nbsp;: un <b>état</b> centralisé, modifié uniquement par des <b>actions</b>, via des <b>reducers</b> (purs), les effets de bord (HTTP) étant dans des <b>effects</b>. On l'a mis sur les <b>missions</b> pour démontrer la maîtrise (le reste utilise des services classiques, plus simples).</p>
+    <table>
+      <tr><th>Brique</th><th>Rôle</th><th>Exemple</th></tr>
+      <tr><td><b>Action</b></td><td>«&nbsp;Un événement&nbsp;»</td><td><code>MissionActions.load({params})</code></td></tr>
+      <tr><td><b>Reducer</b></td><td>Fonction <b>pure</b> état+action→nouvel état</td><td>met <code>loading=true</code>, range les missions</td></tr>
+      <tr><td><b>Effect</b></td><td>Effets de bord (HTTP), écoute une action et en émet une autre</td><td><code>load$</code> appelle l'API puis <code>loadSuccess</code></td></tr>
+      <tr><td><b>Selector</b></td><td>Lit une tranche de l'état (mémoïsé)</td><td><code>selectMissions</code>, <code>selectMissionsTotal</code></td></tr>
+      <tr><td><b>EntityAdapter</b></td><td>Stocke une collection normalisée + helpers</td><td><code>adapter.setAll(...)</code></td></tr>
+    </table>
+    <pre><span class="c">// effect : recharge la liste, annule la requête précédente (switchMap)</span>
+load$ = createEffect(() =&gt; this.actions$.pipe(
+  ofType(MissionActions.load),
+  <span class="k">switchMap</span>(({params}) =&gt; this.api.missions.list(params).pipe(
+    map(result =&gt; MissionActions.loadSuccess({result})),
+    catchError(err =&gt; of(MissionActions.loadFailure({error: err.message}))))
+)));</pre>
+    <p>Le composant ne fait que <b>dispatcher</b> et <b>sélectionner</b>&nbsp;:</p>
+    <pre>missions$ = this.store.select(selectMissions);   <span class="c">// flux affiché avec | async</span>
+reload() { this.store.dispatch(MissionActions.load({ params: this.params })); }</pre>
+    <div class="callout"><b>Pourquoi switchMap pour le chargement et mergeMap pour create/update/delete&nbsp;?</b> Pour une <b>recherche/liste</b>, seule la dernière requête compte → <code>switchMap</code> annule la précédente. Pour des <b>mutations</b> indépendantes, on veut toutes les laisser aboutir → <code>mergeMap</code>.</div>
+  </section>
+
+  <section id="forms">
+    <h2><span class="n">7</span> Formulaires réactifs (Reactive Forms)</h2>
+    <p>On utilise les <b>formulaires réactifs</b> (le modèle est défini en TypeScript, pas dans le HTML) — plus testables et puissants que les «&nbsp;template-driven&nbsp;».</p>
+    <pre>form = this.fb.group({
+  email:    [<span class="s">''</span>, [Validators.required, Validators.email]],
+  password: [<span class="s">''</span>, [Validators.required]],
+  remember: [<span class="k">true</span>],
+});
+get f() { return this.form.controls; }      <span class="c">// accès aux contrôles dans le template</span>
+submit() { if (this.form.invalid) { this.form.markAllAsTouched(); return; } /* ... */ }</pre>
+    <p>Côté template&nbsp;: <code>[formGroup]="form"</code>, <code>formControlName="email"</code>, et affichage des erreurs avec <code>*ngIf="f.email.touched &amp;&amp; f.email.errors?.['required']"</code>. Exemples concrets&nbsp;: login, popups mission/client/consultant/facture, justificatif, profil/sécurité.</p>
+  </section>
+
+  <section id="charts">
+    <h2><span class="n">8</span> Les graphiques ★ (100&nbsp;% SVG fait main, sans librairie)</h2>
+    <div class="callout g"><b>Point fort à mettre en avant&nbsp;:</b> les graphiques ne dépendent d'<b>aucune librairie</b> (pas de Chart.js). Ce sont des composants Angular qui dessinent du <b>SVG</b> à partir des données, dans <code>shared/components/charts/</code>. Ça montre la maîtrise du SVG + du data-binding.</div>
+
+    <h3>① Courbe d'aire — <code>app-area-chart</code> (CA sur 12 mois)</h3>
+    <p>On calcule, dans <code>ngOnChanges</code>, les coordonnées <code>(x,y)</code> de chaque point&nbsp;: <code>x</code> régulier, <code>y</code> proportionnel à la valeur / max. On construit&nbsp;:</p>
+    <ul>
+      <li>un <b>chemin ligne</b> <code>M x y L x y L …</code> (move-to / line-to),</li>
+      <li>un <b>chemin aire</b> = la ligne refermée vers le bas (<code>… L xN bas L x0 bas Z</code>) rempli d'un dégradé <code>&lt;linearGradient&gt;</code>,</li>
+      <li>des <b>cercles invisibles</b> (rayon 16) au-dessus de chaque point pour afficher une <b>tooltip</b> (mois + montant) au survol.</li>
+    </ul>
+    <pre>const max = Math.max(1, ...pts.map(p =&gt; p.value));
+const coords = pts.map((p,i) =&gt; ({ x: pad + i*stepX,
+                                   y: H - pad - (p.value/max)*(H - pad*2) }));
+this.linePath = coords.map((c,i) =&gt; <span class="s">`</span>${i?<span class="s">'L'</span>:<span class="s">'M'</span>} ${c.x} ${c.y}<span class="s">`</span>).join(<span class="s">' '</span>);
+this.areaPath = <span class="s">`</span>${this.linePath} L ${last.x} ${H-pad} L ${first.x} ${H-pad} Z<span class="s">`</span>;</pre>
+
+    <h3>② Donut — <code>app-donut-chart</code> (missions par statut)</h3>
+    <p>Astuce classique&nbsp;: un seul <code>&lt;circle&gt;</code> par segment, coloré via <b><code>stroke-dasharray</code></b> (longueur du trait = part du segment sur la circonférence <code>2πr</code>) et décalé via <b><code>stroke-dashoffset</code></b>. Le tout tourné de <code>-90°</code> pour démarrer en haut.</p>
+    <pre>const C = 2*Math.PI*46;                  <span class="c">// circonférence (r=46)</span>
+const len = (segment.value/total) * C;   <span class="c">// longueur du segment</span>
+{ dash: <span class="s">`</span>${len} ${C-len}<span class="s">`</span>, offset: -acc }   <span class="c">// acc = cumul des segments précédents</span></pre>
+
+    <h3>③ Barres — <code>app-bar-list</code> (top 5 clients)</h3>
+    <p>Pas de SVG ici&nbsp;: de simples <code>&lt;div&gt;</code> dont la <b>largeur en %</b> = valeur / max, avec un dégradé. Tooltip au survol.</p>
+
+    <h3>④ Mini-courbe — <code>app-spark</code> (tendance dans les cartes KPI)</h3>
+    <p>Même principe que la courbe d'aire mais en miniature (84×30&nbsp;px), normalisée entre min et max&nbsp;: <code>y = H - ((v-min)/(max-min))·H</code>.</p>
+    <div class="callout b">Les couleurs viennent des <b>variables CSS</b> (<code>var(--primary)</code>, <code>var(--accent)</code>) → les graphiques changent de couleur avec le thème/palette, automatiquement.</div>
+  </section>
+
+  <section id="theme">
+    <h2><span class="n">9</span> Thème &amp; design system</h2>
+    <p>Tout le style repose sur des <b>variables CSS</b> (design tokens) définies dans <code>src/styles/_tokens.scss</code>&nbsp;: couleurs, espacements, rayons, ombres, typographies.</p>
+    <ul>
+      <li><b>Mode sombre</b>&nbsp;: attribut <code>[data-theme="dark"]</code> sur <code>&lt;html&gt;</code> qui redéfinit les variables.</li>
+      <li><b>5 palettes</b> de marque (<code>[data-palette="azur"]</code>, gold, violet, coral, emerald) qui redéfinissent l'échelle de couleur. <b>Azur (bleu ciel + jaune)</b> est la palette par défaut.</li>
+      <li><code>ThemeService</code> applique ces attributs et mémorise le choix dans <code>localStorage</code>. Un petit script dans <code>index.html</code> applique le thème <b>avant</b> le rendu (pas de «&nbsp;flash&nbsp;»).</li>
+    </ul>
+    <p>Le <b>menu</b> et tous les composants utilisent ces variables → un seul endroit à changer pour reskins. Les icônes du menu sont des <b>SVG</b> servis depuis <code>public/icons/</code> via des classes CSS <code>.icon.icon-xxx</code>.</p>
+  </section>
+
+  <section id="pipes">
+    <h2><span class="n">10</span> Pipes &amp; directives personnalisés</h2>
+    <table>
+      <tr><th>Élément</th><th>Type</th><th>Rôle</th></tr>
+      <tr><td><code>| tr</code> (<code>TrPipe</code>)</td><td>Pipe <b>impur</b></td><td>Traduction FR→EN. Impur car il doit réagir au changement de langue (signal).</td></tr>
+      <tr><td><code>appTooltip</code></td><td>Directive d'attribut</td><td>Tooltip stylée flottante (KPIs, graphiques). Utilise <code>@HostListener</code> (mouseenter/move/leave).</td></tr>
+      <tr><td><code>appColumnCell</code></td><td>Directive sur <code>ng-template</code></td><td>Permet d'injecter une <b>cellule personnalisée</b> dans le tableau générique (vu en §12).</td></tr>
+    </table>
+    <div class="callout"><b>Pipe pur vs impur</b>&nbsp;: un pipe <b>pur</b> (défaut) n'est recalculé que si son entrée change (performant). Un pipe <b>impur</b> est recalculé à chaque détection de changement&nbsp;; on l'utilise quand le résultat dépend d'un état externe (ici, la langue courante).</div>
+  </section>
+
+  <section id="features">
+    <h2><span class="n">11</span> Fonctionnalités &amp; écrans clés</h2>
+    <table>
+      <tr><th>Écran</th><th>Ce qu'il fait</th><th>Notions Angular</th></tr>
+      <tr><td><b>Vitrine</b> (/)</td><td>Page marketing publique (hero, features, tarifs)</td><td>Composant, <code>@HostListener</code> scroll, animations d'apparition</td></tr>
+      <tr><td><b>Login + 2FA</b></td><td>Connexion en 2 étapes, codes OTP</td><td>Reactive Forms, RxJS, navigation avec <code>state</code></td></tr>
+      <tr><td><b>Dashboard</b></td><td>KPIs + graphiques (différents admin/consultant)</td><td>Charts SVG, tooltips, données selon rôle</td></tr>
+      <tr><td><b>Missions</b></td><td>Liste (tri/filtre/pagination serveur) + détail + <b>Kanban</b></td><td><b>NgRx</b>, <b>CDK Drag&amp;Drop</b></td></tr>
+      <tr><td><b>Clients / Consultants</b></td><td>CRUD + fiches (relation 1‑N)</td><td>MatDialog (modales), services</td></tr>
+      <tr><td><b>Factures</b></td><td>Liste (tableau générique), PDF, relance, export</td><td>Téléchargement <b>Blob</b>, data-table</td></tr>
+      <tr><td><b>Justificatifs</b></td><td>Dépôt (drag&amp;drop), validation, <b>aperçu</b></td><td>FormData/upload, visionneuse</td></tr>
+      <tr><td><b>RH</b> (CRA, absences, demandes, bulletins, simulateur)</td><td>Saisie &amp; suivi RH</td><td>Forms, services</td></tr>
+      <tr><td><b>Paramètres</b></td><td>Profil, sécurité (TOTP), agence (logo + <b>signature dessinée</b>)</td><td><code>&lt;canvas&gt;</code>, base64, pointer events</td></tr>
+    </table>
+  </section>
+
+  <section id="advanced">
+    <h2><span class="n">12</span> Les 7 fonctionnalités «&nbsp;avancées&nbsp;» (à montrer à la prof)</h2>
+    <table>
+      <tr><th>#</th><th>Fonctionnalité</th><th>Notion Angular démontrée</th><th>Où</th></tr>
+      <tr><td>1</td><td><b>Double auth (e-mail + TOTP)</b></td><td>RxJS, flux d'auth, QR code</td><td>écran 2FA, Paramètres ▸ Sécurité</td></tr>
+      <tr><td>2</td><td><b>Export Excel .xlsx</b></td><td>Intégration librairie (SheetJS), Blob</td><td>Missions, Factures</td></tr>
+      <tr><td>3</td><td><b>Kanban Drag &amp; Drop</b></td><td><b>Angular CDK</b> (<code>cdkDropListGroup</code>, <code>transferArrayItem</code>)</td><td>Missions ▸ Vue Kanban</td></tr>
+      <tr><td>4</td><td><b>Temps réel (SignalR)</b></td><td>WebSocket + RxJS <code>Subject</code>, reconnexion auto</td><td>cloche/notifications</td></tr>
+      <tr><td>5</td><td><b>Palette de commandes ⌘K</b></td><td><code>@HostListener</code> clavier, overlay, <code>debounceTime</code></td><td>partout (Ctrl/⌘+K)</td></tr>
+      <tr><td>6</td><td><b>Tableau de données générique</b></td><td>Composant <b>générique <code>&lt;T&gt;</code></b>, <code>ng-template</code> + <code>ngTemplateOutlet</code>, <code>@ContentChildren</code></td><td>Factures</td></tr>
+      <tr><td>7</td><td><b>Multilingue FR/EN</b></td><td><b>Pipe impur</b> + service à <b>signal</b></td><td>bouton FR/EN (topbar)</td></tr>
+    </table>
+    <h3>Zoom — le tableau générique (le plus «&nbsp;Angular&nbsp;»)</h3>
+    <p>Un seul composant <code>&lt;app-data-table&gt;</code> gère <b>tri + recherche + pagination</b> pour n'importe quelles données. Le parent fournit les colonnes en <code>@Input</code> et, pour les cellules spéciales (badge de statut, boutons d'action), des <b>gabarits projetés</b>&nbsp;:</p>
+    <pre>&lt;app-data-table [columns]="cols" [rows]="data" (rowClick)="open($event)"&gt;
+  &lt;ng-template [appColumnCell]="'statut'" let-f&gt;
+     &lt;app-status-badge [status]="f.statut"&gt;&lt;/app-status-badge&gt;
+  &lt;/ng-template&gt;
+&lt;/app-data-table&gt;</pre>
+    <p>En interne, le tableau récupère ces gabarits via <code>@ContentChildren(ColumnCellDirective)</code> et les affiche avec <code>*ngTemplateOutlet</code>. C'est la <b>projection de contenu</b> + la <b>réutilisabilité</b>.</p>
+    <h3>Zoom — SignalR (temps réel)</h3>
+    <pre>this.hub = new HubConnectionBuilder()
+   .withUrl(apiUrl + <span class="s">'hub'</span>, { accessTokenFactory: () =&gt; token })  <span class="c">// JWT en query string</span>
+   .withAutomaticReconnect().build();
+this.hub.on(<span class="s">'notification'</span>, (type,titre,desc,when) =&gt; this._notifs.next({type,titre,desc,when}));</pre>
+    <p>Le back (.NET) diffuse un événement à chaque action (facture payée, justificatif déposé…) → le front affiche un <b>toast</b> et incrémente la cloche, <b>sans recharger</b>.</p>
+  </section>
+
+  <section id="deploy">
+    <h2><span class="n">13</span> Build &amp; déploiement</h2>
+    <table>
+      <tr><th>Commande</th><th>Effet</th></tr>
+      <tr><td><code>npm start</code> / <code>ng serve</code></td><td>Lance en local sur <code>http://localhost:4200</code> (API attendue sur <code>localhost:5080</code>).</td></tr>
+      <tr><td><code>npm run build</code> / <code>ng build</code></td><td>Build de production → <code>dist/porteo-web/browser/</code>.</td></tr>
+      <tr><td><code>firebase deploy --only hosting</code></td><td>Publie le front sur <b>Firebase Hosting</b> → <a href="https://porteo-9cc53.web.app">porteo-9cc53.web.app</a>.</td></tr>
+    </table>
+    <ul>
+      <li><b>Front</b>&nbsp;: Firebase Hosting (réécriture SPA&nbsp;: toutes les URL → <code>index.html</code>).</li>
+      <li><b>Back</b>&nbsp;: Render (image Docker .NET) + base <b>PostgreSQL</b>. URL API&nbsp;: <code>https://porteo-api.onrender.com/api/</code> (définie dans <code>environment.prod.ts</code>).</li>
+    </ul>
+    <div class="callout">⚠️ Render (offre gratuite) <b>s'endort</b> après inactivité&nbsp;: la 1ʳᵉ requête peut prendre ~40&nbsp;s (réveil). C'est normal.</div>
+  </section>
+
+  <section id="files">
+    <h2><span class="n">14</span> Carte des fichiers (où regarder)</h2>
+    <div class="files">src/
+├── index.html, styles.scss, environments/        ← config + style global + URL API
+├── styles/  _tokens.scss _base.scss _auth.scss _icons.scss _tooltip.scss
+├── public/icons/                                  ← icônes SVG du menu
+└── app/
+   ├── app.module.ts / app-routing.module.ts       ← racine + routes
+   ├── core/
+   │   ├── auth/auth.service.ts                     ← session, 2FA, JWT
+   │   ├── services/  token / theme / lang / realtime
+   │   ├── guards/    auth / login / role
+   │   └── interceptors/  jwt / error
+   ├── shared/
+   │   ├── shared.module.ts
+   │   ├── components/charts/  area / donut / bar-list / spark   ← GRAPHIQUES
+   │   ├── components/data-table/                   ← tableau générique
+   │   ├── components/document-viewer/              ← visionneuse
+   │   ├── pipes/tr.pipe.ts   directives/tooltip.directive.ts
+   │   └── models/                                  ← interfaces TypeScript (DTO)
+   ├── public/  (PublicModule)  components/auth/  login,two-fa,forgot,reset + vitrine
+   └── private/ (PrivateModule)
+       ├── http/  api.service.ts + un service par domaine
+       ├── store/missions/  actions / reducer / effects / selectors   ← NgRx
+       └── components/  dashboard-index, layout, command-palette,
+                         missions(list/board/detail/popup), clients, consultants,
+                         factures, justificatifs, cra, absences, demandes,
+                         payslips, simulateur, alertes, journal, settings</div>
+  </section>
+
+  <section id="qa">
+    <h2><span class="n">15</span> ★ Questions probables de la prof — réponses prêtes</h2>
+
+    <div class="qa"><div class="q">Pourquoi NgModule et pas le mode «&nbsp;standalone&nbsp;»&nbsp;?</div><div class="a">Choix d'architecture pour reproduire le projet d'entreprise de référence. En NgModule, on <b>déclare</b> les composants dans des modules (<code>declarations</code>) et on partage via un <code>SharedModule</code>. Le <code>tsconfig</code> est réglé en conséquence (<code>useDefineForClassFields:false</code>).</div></div>
+
+    <div class="qa"><div class="q">C'est quoi le lazy loading, et où l'utilisez-vous&nbsp;?</div><div class="a">Le <b>chargement à la demande</b>&nbsp;: le code d'un module n'est téléchargé que lorsqu'on visite ses routes. On l'utilise pour <code>PublicModule</code> (<code>/auth</code>) et <code>PrivateModule</code> (l'app connectée) via <code>loadChildren</code>. Ça réduit le bundle initial.</div></div>
+
+    <div class="qa"><div class="q">Observable vs Promise&nbsp;? Pourquoi RxJS&nbsp;?</div><div class="a">Une <b>Promise</b> émet <b>une seule</b> valeur et n'est pas annulable. Un <b>Observable</b> est un <b>flux</b> (0..n valeurs), <b>annulable</b> et <b>composable</b> (opérateurs). Idéal pour HTTP, recherche en temps réel (<code>debounceTime</code>+<code>switchMap</code>) et le temps réel. On s'abonne avec <code>subscribe</code> ou le <b>pipe <code>async</code></b>.</div></div>
+
+    <div class="qa"><div class="q">switchMap vs mergeMap&nbsp;?</div><div class="a"><code>switchMap</code> <b>annule</b> l'Observable interne précédent (parfait pour une recherche/liste&nbsp;: on ne veut que le dernier résultat). <code>mergeMap</code> exécute tout <b>en parallèle</b> (parfait pour des créations/suppressions indépendantes).</div></div>
+
+    <div class="qa"><div class="q">Expliquez NgRx&nbsp;: store, action, reducer, effect, selector.</div><div class="a"><b>Store</b> = état unique en lecture seule. <b>Action</b> = un événement (ex. <code>load</code>). <b>Reducer</b> = fonction pure qui produit le nouvel état. <b>Effect</b> = gère les effets de bord (appel HTTP) en écoutant une action et en émettant une autre. <b>Selector</b> = lit/dérive une partie de l'état (mémoïsé). On l'a mis sur les <b>missions</b>&nbsp;; on utilise <code>EntityAdapter</code> pour stocker la collection proprement.</div></div>
+
+    <div class="qa"><div class="q">Pourquoi NgRx seulement sur les missions et pas partout&nbsp;?</div><div class="a">NgRx ajoute de la complexité&nbsp;: il est justifié pour un état <b>partagé/complexe</b> (la liste paginée des missions, rechargée après mutation). Pour des écrans plus simples, des <b>services + Observables</b> suffisent. C'est un choix d'<b>architecture pragmatique</b>.</div></div>
+
+    <div class="qa"><div class="q">À quoi servent les intercepteurs HTTP&nbsp;?</div><div class="a">Intercepter <b>toutes</b> les requêtes/réponses. <code>JwtInterceptor</code> ajoute le jeton <code>Bearer</code>&nbsp;; <code>ErrorInterceptor</code> centralise la gestion d'erreur (401 → déconnexion, etc.). Enregistrés avec <code>HTTP_INTERCEPTORS</code> + <code>multi:true</code>.</div></div>
+
+    <div class="qa"><div class="q">Comment sécurisez-vous les routes&nbsp;?</div><div class="a">Avec des <b>guards</b> (<code>CanActivateFn</code>)&nbsp;: <code>authGuard</code> (connecté&nbsp;?), <code>loginGuard</code> (déjà connecté → dashboard), <code>roleGuard</code> (admin uniquement). ⚠️ C'est une sécurité <b>d'UX</b>&nbsp;; la vraie sécurité est côté <b>API</b> (JWT + rôles + filtre de propriété des données).</div></div>
+
+    <div class="qa"><div class="q">Reactive Forms vs Template-driven&nbsp;?</div><div class="a">On utilise les <b>Reactive Forms</b>&nbsp;: le modèle (<code>FormGroup</code>) est défini en TypeScript, validations explicites (<code>Validators</code>), plus testable et adapté aux formulaires complexes. Template-driven = tout dans le HTML avec <code>ngModel</code>, plus simple mais limité.</div></div>
+
+    <div class="qa"><div class="q">Comment évitez-vous les fuites mémoire (subscriptions)&nbsp;?</div><div class="a">On se désabonne&nbsp;: <code>takeUntil(destroy$)</code> dans <code>ngOnDestroy</code>, ou le <b>pipe <code>async</code></b> (auto-désabonnement), ou on stocke la <code>Subscription</code> et on l'<code>unsubscribe</code> (ex. SignalR dans le layout).</div></div>
+
+    <div class="qa"><div class="q">Quels hooks de cycle de vie utilisez-vous&nbsp;?</div><div class="a"><code>ngOnInit</code> (init/chargement), <code>ngOnDestroy</code> (nettoyage), <code>ngOnChanges</code> (recalcul des graphiques quand les données changent), <code>ngAfterViewInit</code> (accès au DOM&nbsp;: <code>&lt;canvas&gt;</code> de signature, animations de la vitrine).</div></div>
+
+    <div class="qa"><div class="q">Comment sont faits les graphiques&nbsp;? Quelle librairie&nbsp;?</div><div class="a"><b>Aucune librairie</b>&nbsp;: des composants Angular qui génèrent du <b>SVG</b>. La courbe = chemins <code>path</code> (line-to)&nbsp;; le donut = <code>stroke-dasharray</code>/<code>dashoffset</code> sur un cercle&nbsp;; les barres = largeur CSS en %. Les couleurs viennent des variables CSS du thème.</div></div>
+
+    <div class="qa"><div class="q">@Input / @Output / @ViewChild / @ContentChildren&nbsp;?</div><div class="a"><code>@Input</code> = données <b>du parent vers l'enfant</b>&nbsp;; <code>@Output</code> = événement <b>de l'enfant vers le parent</b> (EventEmitter)&nbsp;; <code>@ViewChild</code> = référence à un élément/composant <b>de mon template</b> (ex. canvas)&nbsp;; <code>@ContentChildren</code> = éléments <b>projetés</b> par le parent (ex. les gabarits de cellules du tableau générique).</div></div>
+
+    <div class="qa"><div class="q">Pipe pur vs impur&nbsp;? Donnez un exemple.</div><div class="a">Pur (défaut)&nbsp;: recalculé seulement si l'entrée change → performant. Impur&nbsp;: recalculé à chaque détection. Notre pipe <code>tr</code> (traduction) est <b>impur</b> car son résultat dépend de la <b>langue courante</b> (état externe).</div></div>
+
+    <div class="qa"><div class="q">C'est quoi l'injection de dépendances ici&nbsp;?</div><div class="a">Les services sont <code>@Injectable({providedIn:'root'})</code> (singletons), injectés via le <b>constructeur</b> des composants/services. Ex.&nbsp;: <code>constructor(private api: ApiService, public auth: AuthService)</code>. Angular fournit l'instance automatiquement.</div></div>
+
+    <div class="qa"><div class="q">Comment gérez-vous le multilingue et le thème&nbsp;?</div><div class="a">Le thème via des <b>variables CSS</b> + attributs <code>[data-theme]</code>/<code>[data-palette]</code> pilotés par <code>ThemeService</code>. Le multilingue via <code>LangService</code> (à base de <b>signal</b>) + un <b>pipe impur</b> <code>tr</code>&nbsp;; un dictionnaire EN, le FR étant la valeur par défaut.</div></div>
+
+    <div class="qa"><div class="q">Comment fonctionne le drag &amp; drop du Kanban&nbsp;?</div><div class="a">Avec le <b>Angular CDK</b>&nbsp;: <code>cdkDropListGroup</code> connecte les colonnes, <code>cdkDrag</code> rend les cartes déplaçables, et à la dépose on appelle <code>transferArrayItem</code> + un <code>PUT</code> à l'API pour changer le statut (avec rollback si erreur).</div></div>
+
+    <div class="qa"><div class="q">Comment fonctionne le temps réel&nbsp;?</div><div class="a"><b>SignalR</b> (WebSocket avec repli automatique). Le client (<code>RealtimeService</code>) ouvre une connexion authentifiée (JWT), écoute l'événement <code>notification</code> et le pousse dans un <code>Subject</code> RxJS&nbsp;; le layout s'y abonne pour afficher un toast et la cloche.</div></div>
+
+    <div class="qa"><div class="q">environment.ts, à quoi ça sert&nbsp;?</div><div class="a">À séparer la config <b>dev</b> et <b>prod</b> (notamment <code>apiUrl</code>). Le build de production remplace <code>environment.ts</code> par <code>environment.prod.ts</code> (URL Render).</div></div>
+
+    <div class="qa"><div class="q">Comment télécharge-t-on un PDF / un Excel&nbsp;?</div><div class="a">Le PDF facture est généré <b>côté API</b> (QuestPDF) et renvoyé en <b>Blob</b> (<code>responseType:'blob'</code>)&nbsp;; le front crée une URL objet et déclenche le téléchargement. L'Excel est généré <b>côté front</b> avec SheetJS (<code>XLSX.writeFile</code>).</div></div>
+
+    <hr>
+    <p style="color:var(--muted);font-size:13px">Document généré pour l'équipe Portéo · Front-end Angular 19. Garde-le sous la main pendant la soutenance&nbsp;: la section 15 répond à la majorité des questions classiques. Bon courage&nbsp;! 💪</p>
+  </section>
+
+</main>
+</div>
+</body>
+</html>

@@ -8,6 +8,7 @@ import { JustificatifApiService } from './justificatifs/justificatif-api.service
 import { AlertApiService } from './alerts/alert-api.service';
 import { RhApiService } from './rh/rh-api.service';
 import { ConfigApiService } from './config/config-api.service';
+import { AssistantApiService } from './assistant/assistant-api.service';
 
 /**
  * Façade d'accès à l'API REST, agrégeant un service par domaine
@@ -25,5 +26,6 @@ export class ApiService {
     public alerts: AlertApiService,
     public rh: RhApiService,
     public config: ConfigApiService,
+    public assistant: AssistantApiService,
   ) {}
 }
